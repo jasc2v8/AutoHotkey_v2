@@ -49,7 +49,7 @@ global logDir := EnvGet("LOCALAPPDATA") "\2BrightSparks\SyncBack\Logs"
 
 MyGui := Gui(, "Backup Control Tool v1.0") ; "ToolWindow" does not have tray icon
 MyGui.BackColor := "4682B4" ; Steel Blue
-MyGui.SetFont("S12 CBlack w480", "Segouie UI")
+MyGui.SetFont("S11 CBlack w480", "Segouie UI")
 
 ; #region Create Controls
 
