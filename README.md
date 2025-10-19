@@ -1,4 +1,4 @@
-# Include
+# #Include \<Lib\>
 Many scripts have #Include statements, therefore you must have the Lib files in one of the Script Library Folders:
 
 1. A_ScriptDir "\Lib\"                                      ; Local library.
