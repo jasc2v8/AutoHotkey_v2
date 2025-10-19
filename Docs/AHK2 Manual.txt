@@ -1,0 +1,121 @@
+Auto Hotkey Version 2 Manual
+
+Compiler directives
+	#Warn Unreachable
+	#Warn Unreachable, Off
+	
+DEBUG
+	OutputDebug "The value of a variable is: " . myVariable
+
+FOCUS on a Button
+	MyGui := Gui()
+	Button1 := MyGui.Add("Button", "xm", "OK")
+	MyGui.Show()
+	ControlFocus("OK", MyGui)
+	
+GUID
+	/**
+	 *  Setting a GUID in Inno Setup is crucial for ensuring a 
+	 * consistent and unique identity for your application across
+	 * different versions. The GUID (Globally Unique Identifier)
+	 * is used by the Windows operating system to track your application for
+	 * uninstallation and updates.
+	 * 
+	 *  In Inno Setup, the GUID is defined using the AppId directive
+	 * in the [Setup] section of your script. You should always set a 
+	 * unique GUID for your application and keep it consistent for all
+	 * future installer versions. This prevents the installer from 
+	 * creating multiple uninstall entries and ensures updates work correctly.
+	 * 
+	 *  ;@Inno-AppId is a custom directive that is ignored by
+	 * the Ahk2exe compiler. This application reads this value and writes it to
+	 * the ISS Template you select.
+	 */
+INSTALLATION
+	Download and install AutoHotkey_2.0.19_setup.exe
+
+	AutoHotkey Dash: Editor Settings, Editors with AHK support,
+	Download and install SciTE4AutoHotkey, set as default
+
+	AutoHotkey Dash: Compile, download and install Ahk2Exe, base file: Ahk2Exe
+
+	Explorer context menu not configured - why?
+
+Common A_ Variables
+
+	A_AhkPath: The full path of the AutoHotkey executable that is running the script.
+	A_AppData: The full path of the current user's AppData\Roaming folder.
+	A_AppDataCommon: The full path of the all-users AppData\Roaming folder.
+	A_ComputerName: The computer's network name.
+	A_ComSpec: The full path of the Command Prompt executable (cmd.exe).
+	A_Cursor: The current shape of the mouse cursor (e.g., Arrow, IBeam).
+	A_Desktop: The full path of the current user's Desktop folder.
+	A_IsAdmin: A boolean value that is true if the script is running as an administrator, and false otherwise.
+	A_IsCompiled: A boolean value that is true if the script is running from a compiled executable.
+	A_Language: The language of the operating system (e.g., English).
+	A_MyDocuments: The full path of the current user's My Documents folder.
+	A_OSVersion: The version of the operating system (e.g., 10.0.19045 for Windows 10/11).
+	A_ProgramFiles: The full path of the standard Program Files directory.
+	A_ScriptDir: The directory where the currently executing script is located.
+	A_ScriptFullPath: The full path and filename of the currently executing script.
+	A_ScreenWidth: The width of the primary monitor in pixels.
+	A_ScreenHeight: The height of the primary monitor in pixels.
+	A_UserName: The name of the user who is logged on.
+	A_WorkingDir: The current working directory of the script.
+
+SetTitleMatchMode MatchMode
+	1: A window's title must start with the specified WinTitle to be a match.
+	2: Default behavior. A window's title can contain WinTitle anywhere inside it to be a match.
+	3: A window's title must exactly match WinTitle to be a match.
+
+MsgBox Icons
+	Icon	String Alias	Decimal Value	Hex Value	Description
+	❌ Stop/Error	IconX	16	0x10	Typically a red circle with an 'X' (Error).
+	❓ Question	Icon?	32	0x20	A question mark for user queries.
+	⚠️ Exclamation	Icon!	48	0x30	A yellow triangle with an exclamation point (Warning).
+	ℹ️ Asterisk	Iconi	64	0x40	A circle with an 'i' (Information).
+
+Gui
+	SUMMARY:
+		BENEATH:	XP or XP+0 Below the previous control (bottom edge plus margin). 
+		RIGHT:			YP or YP+0 To the right of the previous control (right edge plus margin).  
+
+	Specified X, Default for Y
+	Xn or XM Beneath all previous controls (maximum Y extent plus margin). 
+	XS Beneath all previous controls since the most recent use of the Section option. 
+	X+n or XP+nonzero Same as the previous control's top edge (YP). 
+	XP or XP+0 Below the previous control (bottom edge plus margin). 
+
+	Specified Y, 	Default for X
+	Yn or YM To the right of all previous controls (maximum X extent plus margin). 
+	YS To the right of all previous controls since the most recent use of the Section option. 
+	Y+n or YP+nonzero Same as the previous control's left edge (XP). 
+	YP or YP+0 To the right of the previous control (right edge plus margin). 
+
+	Add Horizontal Line
+	MyLine := MyGui.Add("Text", "xm w440 h1 0x10") ;SS_ETCHEDHORZ
+  
+Hotkeys
+	Symbol	Key	Full Key Name (in braces)	Example	Result
+	^	Ctrl (Control)	{Ctrl}	Send("^a")	Presses Ctrl+A
+	!	Alt (Alternate)	{Alt}	Send("!f")	Presses Alt+F
+	+	Shift	{Shift}	Send("+a")	Presses Shift+A (sends an uppercase 'A')
+	#	Win (Windows Key)	{LWin}, {RWin}	Send("#e")	Presses Win+E (opens File Explorer)
+
+#include <script>
+	The primary locations AutoHotkey checks for files when using the angle bracket syntax are:
+	The Lib subfolder in the directory containing the main script file.
+	The Lib subfolder in the user's "My Documents" or "Documents" folder (e.g., C:\Users\YourName\Documents\AutoHotkey\Lib).
+	The Lib subfolder in the AutoHotkey installation directory (e.g., C:\Program Files\AutoHotkey\Lib).
+
+Return Code
+	Result is true: -1
+	Result is false: 0
+	Result is true: string
+	Result is false: ''
+
+Script Library Folders
+	A_ScriptDir "\Lib\"  ; Local library.
+	A_MyDocuments "\AutoHotkey\Lib\"  ; User library.
+	"directory-of-the-currently-running-AutoHotkey.exe\Lib\"  ; Standard library.
+

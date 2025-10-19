@@ -1,0 +1,22 @@
+
+If only one component is omitted, its default value depends on which option was used to specify the other component:
+
+Specified X
+
+Default for Y
+
+Xn or XM Beneath all previous controls (maximum Y extent plus margin). 
+XS Beneath all previous controls since the most recent use of the Section option. 
+X+n or XP+nonzero Same as the previous control's top edge (YP). 
+XP or XP+0 Below the previous control (bottom edge plus margin). 
+
+Specified Y
+
+Default for X
+
+Yn or YM To the right of all previous controls (maximum X extent plus margin). 
+YS To the right of all previous controls since the most recent use of the Section option. 
+Y+n or YP+nonzero Same as the previous control's left edge (XP). 
+YP or YP+0 To the right of the previous control (right edge plus margin). 
+
+Storing and Responding to User Input

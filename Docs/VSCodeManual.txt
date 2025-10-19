@@ -1,0 +1,42 @@
+AHK++ (AutoHotkey Plus Plus)
+
+"Open help" (Ctrl+F1) opens language-specific help (and includes your text selection)
+
+Commands
+	With AHK++, you can compile, debug, and run your scripts with keyboard shortcuts. You can also run a selection as a standalone script.
+
+	Compile: Ctrl+Shift+F9
+	Debug: Ctrl+Alt+F9
+	Open help: Ctrl+F1
+	Run: Ctrl+F9
+	Run selection: Ctrl+F8
+	Stop: Ctrl+F6
+
+Extensions:
+
+	AHK++ by Mark Wiener
+	Gemini Copilot / Code Assistant
+	Hex Editor
+	Save Copy As by Gabi Teodoru
+
+	Uninstall: GitHub Copilot, Copilot Chat (after initial trial period)
+
+True/False
+	true is the integer 1.
+	false is the integer 0.
+
+Settings: File, Preferences, Settings
+	Commonly Used, Files: Exclude, Add Pattern: .history
+
+Zoom
+	Action	Windows / Linux	macOS
+	Zoom In	Ctrl+= (or Ctrl+Numpad+)	Cmd+= (or Cmd+Numpad+)
+	Zoom Out	Ctrl+− (or Ctrl+Numpad− )	Cmd+− (or Cmd+Numpad− )
+	Reset Zoom	Ctrl+Numpad0	Cmd+0
+	
+VSCode
+	Select Word, type the quote: ' (single quote) or " (double quote) key.					
+	This works for quotes, parentheses (), square brackets [], and curly braces {}
+
+Debug output:
+	can't copy all. either select and copy, or write to output.txt

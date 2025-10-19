@@ -1,0 +1,21 @@
+---------------------------
+Ahk2Exe Error
+---------------------------
+Error: Unrecognised parameter:
+/help
+
+Command Line Parameters:
+
+Ahk2Exe.exe
+	 [/in infile.ahk]
+	 [/out outfile.exe]
+	 [/icon iconfile.ico]
+	 [/base AutoHotkeySC.bin]
+	 [/resourceid #1]
+	 [/compress 0 (none), 1 (MPRESS), or 2 (UPX)]
+	 [/cp codepage]
+	 [/silent [verbose]]
+	 [/gui]
+---------------------------
+OK   
+---------------------------
