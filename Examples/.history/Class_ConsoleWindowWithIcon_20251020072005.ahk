@@ -3,6 +3,7 @@
 
 class ConsoleWindow
 {
+    hIcon := 0
     w:=0
     h:=0
     x:=0
@@ -21,6 +22,10 @@ class ConsoleWindow
 
         DllCall("AllocConsole")
 
+        ConsoleHwnd := DllCall("GetConsoleWindow", "ptr")
+        if (!ConsoleHwnd)
+            return
+
         this.SetTitle(Title)
 
         if (Text != "")
@@ -28,10 +33,23 @@ class ConsoleWindow
 
         ;default is w960 h480 x0 y0
         this.Move(w, h, x, y)
+
+        WM_SETICON := 0x80
+        ICON_SMALL := 0
+        ICON_BIG := 1
+
+        ; Set the Small Icon (Taskbar/Title Bar)
+        SendMessage(WM_SETICON, ICON_SMALL, this.hIcon,, "ahk_id " ConsoleHwnd)
+
+        ; Set the Big Icon (Alt+Tab Switcher)
+        SendMessage(WM_SETICON, ICON_BIG, this.hIcon,, "ahk_id " ConsoleHwnd)
+
     }
 
     __Delete() {
         DllCall("FreeConsole")
+        if (this.hIcon != 0)
+            DllCall("DestroyIcon", "ptr", this.hIcon)
         this := unset
     }
 
@@ -149,9 +167,26 @@ Test1() {
     ; Show the GUI
     MyGui.Show("w300")
 
+    ScriptHwnd := A_ScriptHwnd
+    if (!ScriptHwnd)
+    return
+
+    hIcon := LoadPicture("C:\Windows\System32\shell32.dll", "Icon16")
+
+    WM_SETICON := 0x80
+    ICON_SMALL := 0
+    ICON_BIG := 1
+
+    ; Set the Small Icon (Taskbar/Title Bar)
+    SendMessage(WM_SETICON, ICON_SMALL, hIcon,, "If Result Example")
+
+    ; Set the Big Icon (Alt+Tab Switcher)
+    SendMessage(WM_SETICON, ICON_BIG, hIcon,, "If Result Example")
+
+
     ; Create an instance of the ConsoleWindow class
     ;Console := ConsoleWindow(400, 300, 10, 10, "My Console Window")
-    Console := ConsoleWindow("My Console Window", "Hello Console")
+    Console := ConsoleWindow("My Console Window", "Hello Console", 400, 200, 10, 10)
 
     sleep(100)
     ;Console.Move(400, 300, 10, 10)

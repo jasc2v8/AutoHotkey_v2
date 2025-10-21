@@ -3,6 +3,7 @@
 
 class ConsoleWindow
 {
+    hIcon := 0
     w:=0
     h:=0
     x:=0
@@ -21,6 +22,12 @@ class ConsoleWindow
 
         DllCall("AllocConsole")
 
+        ConsoleHwnd := DllCall("GetConsoleWindow", "ptr")
+        if (!ConsoleHwnd)
+            return
+
+        this.hIcon := LoadPicture("C:\Windows\System32\shell32.dll", "Icon16")
+
         this.SetTitle(Title)
 
         if (Text != "")
@@ -28,10 +35,24 @@ class ConsoleWindow
 
         ;default is w960 h480 x0 y0
         this.Move(w, h, x, y)
+
+                WM_SETICON := 0x80
+        ICON_SMALL := 0
+        ICON_BIG := 1
+
+        ; Set the Small Icon (Taskbar/Title Bar)
+        SendMessage(WM_SETICON, ICON_SMALL, this.hIcon,, "ahk_id " ConsoleHwnd)
+
+        ; Set the Big Icon (Alt+Tab Switcher)
+        SendMessage(WM_SETICON, ICON_BIG, this.hIcon,, "ahk_id " ConsoleHwnd)
+
+
     }
 
     __Delete() {
         DllCall("FreeConsole")
+        if (this.hIcon != 0)
+            DllCall("DestroyIcon", "ptr", this.hIcon)
         this := unset
     }
 

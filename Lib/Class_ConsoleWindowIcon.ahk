@@ -1,17 +1,21 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Force
 
-class ConsoleWindow
+#Include <ChangeWindowIcon>
+
+class ConsoleWindowIcon
 {
+    hIcon := 0
     w:=0
     h:=0
     x:=0
     y:=0
     Title:="Console Window"
+    static hWnd:=0
 
     ; Constructor method
 
-    __New(Title:="Console Window", Text:="", w:=0, h:=0, x:=0, y:=0)
+    __New(Title:="Console Window", Text:="", w:=400, h:=200, x:=10, y:=10)
     {
         this.w := w
         this.h := h
@@ -21,17 +25,28 @@ class ConsoleWindow
 
         DllCall("AllocConsole")
 
+        ConsoleHwnd := DllCall("GetConsoleWindow", "ptr")
+        if (!ConsoleHwnd)
+            return
+        else
+            this.hWnd := ConsoleHwnd
+
+        this.ChangeIcon()
+
         this.SetTitle(Title)
 
         if (Text != "")
             this.WriteLine(Text )
 
-        ;default is w960 h480 x0 y0
+        ;if (0,0,0,0) then default is w960 h480 x0 y0
         this.Move(w, h, x, y)
+
     }
 
     __Delete() {
         DllCall("FreeConsole")
+        if (this.hIcon != 0)
+            DllCall("DestroyIcon", "ptr", this.hIcon)
         this := unset
     }
 
@@ -39,6 +54,12 @@ class ConsoleWindow
         this.Move()
     }
 
+    ChangeIcon(IconFile:="C:\Windows\System32\shell32.dll", IconNumber:="Icon16")
+    {
+        hIcon := LoadPicture(IconFile, IconNumber, &IconType)
+        SendMessage(WM_SETICON:=0x80, ICON_SMALL:=0, hIcon,, "ahk_id " this.Hwnd)
+        SendMessage(WM_SETICON:=0x80, ICON_BIG:=1, hIcon,, "ahk_id " this.Hwnd)
+    }
     Clear(){
         RunWait( A_ComSpec ' /c cls', , 'Hide')
     }
@@ -102,79 +123,4 @@ class ConsoleWindow
             "int", WinWidth, "int", WinHeight, "int",
             1) ; 1 means repaint the window
         }
-}
-
-If (A_LineFile == A_ScriptFullPath)  ; when run directly, not included
-    DoTest_ConsoleWindow()
-
-;----------------------------------------------------------------
-; --- Usage Example ---
-;----------------------------------------------------------------
-DoTest_ConsoleWindow() {
-
-    #Warn Unreachable
-
-    ; set true to run tests, else false
-    Run_Tests := true
-
-    if !Run_Tests
-        SoundBeep(), ExitApp()
-
-    ; comment out tests to skip:
-    Test1()
-    ;Test2()
-    ;Test3()
-}
-
-Test1() {
-    ; #region Create Gui
-
-    ; Create a new Gui object
-    MyGui := Gui(, "If Result Example")
-    MyGui.BackColor := "4682B4" ; Steel Blue
-    MyGui.SetFont("S11 CBlack w480", "Segouie UI")
-
-    ; Add Buttons
-    buttonWrite := MyGui.Add("Button", "w64", "WRITE")
-    buttonClear := MyGui.AddButton("x+m yp W64", "Clear")
-    buttonCancel := MyGui.AddButton("x+m yp W64 Default", "Cancel")
-
-    ; Assign a function to be called when the button is clicked
-    buttonWrite.OnEvent("Click", ButtonWriteClicked)
-    buttonClear.OnEvent("Click", ButtonClearClicked)
-    buttonCancel.OnEvent("Click", ButtonCancelClicked)
-
-    MyGui.OnEvent("Close", OnGui_Close)
-
-    ; Show the GUI
-    MyGui.Show("w300")
-
-    ; Create an instance of the ConsoleWindow class
-    ;Console := ConsoleWindow(400, 300, 10, 10, "My Console Window")
-    Console := ConsoleWindow("My Console Window", "Hello Console")
-
-    sleep(100)
-    ;Console.Move(400, 300, 10, 10)
-
-    ; Redirect stdout to the new console window
-    Console.WriteLine("This will appear in the new console window.")
-
-    ButtonWriteClicked(Ctrl, Info) {
-        line := "The rain in Spain falls mainly on the plain."
-        msg:= line . line . line . line "`n"
-        Console.WriteLine(msg)
-    }
-
-    ButtonClearClicked(Ctrl, Info) {
-        Console.Clear()
-    }
-
-    ButtonCancelClicked(Ctrl, Info) {
-        MyGui.Destroy()
-    }
-
-    OnGui_Close(*) {
-        DllCall("FreeConsole")
-        ExitApp()
-    }
 }

@@ -1,13 +1,17 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Force
 
+#Include <ChangeWindowIcon>
+
 class ConsoleWindow
 {
+    hIcon := 0
     w:=0
     h:=0
     x:=0
     y:=0
     Title:="Console Window"
+    static hWnd:=0
 
     ; Constructor method
 
@@ -21,17 +25,38 @@ class ConsoleWindow
 
         DllCall("AllocConsole")
 
+        ConsoleHwnd := DllCall("GetConsoleWindow", "ptr")
+        if (!ConsoleHwnd)
+            return
+
         this.SetTitle(Title)
+
+        this.hWnd := WinExist(Title)
 
         if (Text != "")
             this.WriteLine(Text )
 
         ;default is w960 h480 x0 y0
         this.Move(w, h, x, y)
+  
+        this.hIcon := LoadPicture("C:\Windows\System32\shell32.dll", "Icon16", &IconType)
+
+        WM_SETICON := 0x80
+        ICON_SMALL := 0
+        ICON_BIG := 1
+
+        ; Set the Small Icon (Taskbar/Title Bar)
+        SendMessage(WM_SETICON, ICON_SMALL, this.hIcon,, "ahk_id " ConsoleHwnd)
+
+        ; Set the Big Icon (Alt+Tab Switcher)
+        SendMessage(WM_SETICON, ICON_BIG, this.hIcon,, "ahk_id " ConsoleHwnd)
+
     }
 
     __Delete() {
         DllCall("FreeConsole")
+        if (this.hIcon != 0)
+            DllCall("DestroyIcon", "ptr", this.hIcon)
         this := unset
     }
 
@@ -105,43 +130,36 @@ class ConsoleWindow
 }
 
 If (A_LineFile == A_ScriptFullPath)  ; when run directly, not included
-    DoTest_ConsoleWindow()
+    ConsoleWindowWithIcon_Test()
 
 ;----------------------------------------------------------------
 ; --- Usage Example ---
 ;----------------------------------------------------------------
-DoTest_ConsoleWindow() {
+
+ConsoleWindowWithIcon_Test() {
 
     #Warn Unreachable
 
     ; set true to run tests, else false
     Run_Tests := true
 
-    if !Run_Tests
+    if (!Run_Tests )
         SoundBeep(), ExitApp()
 
     ; comment out tests to skip:
-    Test1()
+    ConsoleWindowWithIcon_Test()
     ;Test2()
     ;Test3()
 }
 
-Test1() {
-    ; #region Create Gui
+ConsoleWindowWithIcon_Test1() {
+    
+    MyGui := Gui(, "Change Icon")
 
-    ; Create a new Gui object
-    MyGui := Gui(, "If Result Example")
-    MyGui.BackColor := "4682B4" ; Steel Blue
-    MyGui.SetFont("S11 CBlack w480", "Segouie UI")
-
-    ; Add Buttons
-    buttonWrite := MyGui.Add("Button", "w64", "WRITE")
-    buttonClear := MyGui.AddButton("x+m yp W64", "Clear")
+    buttonReload := MyGui.Add("Button", "w64", "Reload")
     buttonCancel := MyGui.AddButton("x+m yp W64 Default", "Cancel")
 
-    ; Assign a function to be called when the button is clicked
-    buttonWrite.OnEvent("Click", ButtonWriteClicked)
-    buttonClear.OnEvent("Click", ButtonClearClicked)
+    buttonReload.OnEvent("Click", ButtonReloadClicked)
     buttonCancel.OnEvent("Click", ButtonCancelClicked)
 
     MyGui.OnEvent("Close", OnGui_Close)
@@ -149,31 +167,40 @@ Test1() {
     ; Show the GUI
     MyGui.Show("w300")
 
-    ; Create an instance of the ConsoleWindow class
-    ;Console := ConsoleWindow(400, 300, 10, 10, "My Console Window")
-    Console := ConsoleWindow("My Console Window", "Hello Console")
+    Console := ConsoleWindow("My Console Window", , 400, 200, 10, 10)
 
-    sleep(100)
-    ;Console.Move(400, 300, 10, 10)
+    Console.hWnd := WinExist('A')
 
     ; Redirect stdout to the new console window
-    Console.WriteLine("This will appear in the new console window.")
+    Console.WriteLine("MyGui.Hwnd : " MyGui.Hwnd)
+    Console.WriteLine("hWndConsole: " Console.hWnd)
+    
+    ;r := ChangeWindowIcon("D:\Software\DEV\Work\AHK2\Icons\under-construction.ico", , "ahk_id" MyGui.Hwnd)
+    ;Console.WriteLine("Result Gui Under Construction: " r)
 
-    ButtonWriteClicked(Ctrl, Info) {
-        line := "The rain in Spain falls mainly on the plain."
-        msg:= line . line . line . line "`n"
-        Console.WriteLine(msg)
-    }
+    icoFile := "C:\Windows\SystemApps\MicrosoftWindows.Client.Core_cw5n1h2txyewy\StartMenu\Assets\UnplatedFolder\UnplatedFolder.ico"
 
-    ButtonClearClicked(Ctrl, Info) {
-        Console.Clear()
+    r :=ChangeWindowIcon(icoFile, , "ahk_id" MyGui.hWnd)
+    Console.WriteLine("Result Gui: " r)
+
+    ;r := ChangeWindowIcon(icoFile, "Icon1" ,"ahk_id" Console.hWnd) 
+    r := ChangeWindowIcon("C:\Windows\System32\shell32.dll", "Icon16","ahk_id" Console.hWnd) 
+    Console.WriteLine("Result Console: " r)
+
+    WinWaitClose(MyGui.hWnd)
+
+    ; #region Functions
+
+    ButtonReloadClicked(Ctrl, Info) {
+        Reload()
     }
 
     ButtonCancelClicked(Ctrl, Info) {
-        MyGui.Destroy()
+        OnGui_Close()
     }
 
     OnGui_Close(*) {
+        ;MsgBox('OnGui_Close')
         DllCall("FreeConsole")
         ExitApp()
     }
