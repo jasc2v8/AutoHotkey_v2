@@ -45,7 +45,7 @@ ChangeWindowIcon_Test() {
     #Warn Unreachable
 
     ; set true to run tests, else false
-    Run_Tests := false
+    Run_Tests := true
 
     if !Run_Tests
         SoundBeep(), ExitApp()
@@ -66,8 +66,7 @@ Test1() {
     Gui2 := Gui(, "🡄 Change Icon")
     Gu2Text := Gui2.AddText(,"Defaul Icon")
  
-    buttonChange := Gui1.AddButton("w64 Default", "Change").OnEvent("Click", ButtonChange_Click)
-    buttonCancel := Gui1.AddButton("w64 yp", "Cancel").OnEvent("Click",(*)=>ExitApp())
+    buttonChange := Gui1.Add("Button", "w64 Default", "Change").OnEvent("Click", ButtonChange_Click)
 
     Gui1.OnEvent("Close", OnGui_Close)
     Gui2.OnEvent("Close", OnGui_Close)
