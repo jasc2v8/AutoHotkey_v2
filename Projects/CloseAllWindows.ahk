@@ -1,8 +1,17 @@
-﻿; ABOUT: CloseAllWindows updates with larger gui and wide start button
-; 
+﻿; ABOUT: CloseAllWindows v1
+
+;-------------------------------------------------------------------------------
+; Purpose : Closes all Open Windows, except exclusions (e.g. Program Manager).
+; 1st Pass: WinClose() so user can save work from notepad etc.
+; 2nd Pass: Force close remaining windows, except exclusions.
+; Include : <CustomMsgBox>
+; License: The Unlicense: https://unlicense.org/
+;-------------------------------------------------------------------------------
+
 #Requires AutoHotkey >=2.0
 #SingleInstance Force
 #NoTrayIcon
+
 #Include <CustomMsgBox>
 
 TraySetIcon('imageres.dll', 237)
@@ -11,9 +20,9 @@ Title 	:= "Close All Windows"
 Text 	:= "Press Start to close all open windows..."
 Buttons	:= "*&Yes, &No, &All, &Cancel"
 GuiSize := "400, 223, 10, 10"
-GuiOpt	:= ["+AlwaysOnTop", "4682B4"] ; AlwaysOnTop, MaximizeBox, MinimizeBox, SysMenu, ToolWindow
-FontOpt := ["s12", "Cascadia Mono", "s8", "Segoe UI"] ; [text font size, text font name, button font size, button font name]
-TextOpt	:= "Border -Wrap BackgroundWhite" ; Background, Border, Color, Wrap, E0x200=WS_EX_CLIENTEDGE 
+GuiOpt	:= ["+AlwaysOnTop", "4682B4"]
+FontOpt := ["s12", "Cascadia Mono", "s8", "Segoe UI"]
+TextOpt	:= "Border -Wrap BackgroundWhite"
 IconQ   := ["C:\Windows\System32\user32.dll", "Icon3"]
 IconI	:= ["C:\Windows\System32\user32.dll", "Icon5"]
 IconOpt := ""

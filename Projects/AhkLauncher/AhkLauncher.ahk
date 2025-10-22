@@ -33,9 +33,7 @@ Persistent
 
 ; #region Includes
 
-;#Include <AhkFunctions>
 #Include <Class_IniLite>
-;#Include <File>
 #Include <String>
 
 ; #region Globals
@@ -51,10 +49,11 @@ global refreshing := false
 
 ; #region Hotkeys
 
-^!B::Launch_Backup()
+^!C::Run(AhkAppsDir '\CloseAllWindows.ahk')  
+^!B::Run(AhkAppsDir '\BackupControlTool.ahk')
 ^!L::ToggleGui()
 ^!P::SendPassword()
-^!S::Launch_SleepShutdownRestart()
+^!S::Run(AhkAppsDir '\PowerControlTool.ahk')
 ^!U::SendUsername()
 ^!LButton::ToggleGui()
 
@@ -332,14 +331,7 @@ FindFiles() {
 
     return FilesMap
 }
-Launch_Backup() {
-    app := AhkAppsDir '\BackupControlTool.ahk'
-    Run(app)  
-}
-Launch_SleepShutdownRestart() {
-    app := AhkAppsDir '\PowerControlTool.ahk'
-    Run(app)    
-}
+
 ListViewFilter() {
     global refreshing
 
