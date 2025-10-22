@@ -4,8 +4,8 @@
 ## SUMMARY:
 
 The objectives for this project are:
-1. Avoid false positives from antivirus software.
- -  When a .ahk file is compiled and installed, it will ususally create a false positive A/V warning.
+1. Avoid false positives from antivirus software. When a .ahk file is compiled and installed, it will ususally create a false positive A/V warning. This will launch the script as an .ahk file and usually avoid A/V warnings.
+
 
 
 A Launcher for any file that has an associated extension to open/execute.
