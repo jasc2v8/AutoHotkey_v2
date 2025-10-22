@@ -3,6 +3,14 @@
 
 ## SUMMARY:
 
+The objectives for this project are:
+1. Avoid false positives from antivirus software.
+
+ -  When a .ahk file is compiled and installed, it will ususally create a false positive A/V warning.
+
+
+A Launcher for any file that has an associated extension to open/execute.
+
 ## Features:
     - Starts at User Login and remains in the system tray.
     - Hotkeys for Launching AutoHotkey scripts and general use.
