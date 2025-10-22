@@ -5,7 +5,6 @@
 
 The objectives for this project are:
 1. Avoid false positives from antivirus software.
-
  -  When a .ahk file is compiled and installed, it will ususally create a false positive A/V warning.
 
 
