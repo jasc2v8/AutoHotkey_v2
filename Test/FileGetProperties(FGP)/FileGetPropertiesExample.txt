@@ -1,0 +1,61 @@
+---------------------------
+FileGetPropertiesExample.ahk
+---------------------------
+PropName :	AutoHotkey.exe
+
+PropNum :	0 bytes (#1)
+
+List:
+
+0, Name, AutoHotkey.exe
+
+1, Size, 0 bytes
+
+2, Item type, .symlink
+
+3, Date modified, 9/12/2025 6:17 AM
+
+4, Date created, 9/12/2025 6:17 AM
+
+5, Date accessed, 9/12/2025 6:17 AM
+
+6, Attributes, AL
+
+9, Perceived type, Application
+
+10, Owner, Administrators
+
+19, Rating, Unrated
+
+57, Total size, 679 GB
+
+61, Computer, JIM-PC (this PC)
+
+164, File extension, .exe
+
+165, Filename, AutoHotkey.exe
+
+169, Space free, 492 GB
+
+187, Shared, No
+
+190, Folder name, v2
+
+191, File location, C:\Program Files\AutoHotkey\v2
+
+192, Folder, v2 (C:\Program Files\AutoHotkey)
+
+194, Path, C:\Program Files\AutoHotkey\v2\AutoHotkey.exe
+
+196, Type, .symlink
+
+202, Link status, Unresolved
+
+203, Link target, C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe
+
+254, Space used, ‎27%
+
+297, Sharing status, Not shared
+---------------------------
+OK   
+---------------------------

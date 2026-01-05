@@ -1,0 +1,13 @@
+
+global MB := ObjBindMethod(MsgBoxEx(), 'Show')
+global MBM := ObjBindMethod(MsgBoxEx(), 'ShowMatrix')
+
+for MsgBox
+	MsgBoxExExample_20251030111802t
+	
+For WM_ACTION (LButton Click, etc)
+	Class_MBox
+	Class_MBoxTest
+	ClassGuiExampleSimple
+
+

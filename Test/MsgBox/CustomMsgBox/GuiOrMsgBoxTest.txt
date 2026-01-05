@@ -1,0 +1,37 @@
+
+LeftMargin := 12
+RightMargin := 8
+
+Test: AlignLeft
+
+Window:
+Screen: 364x567
+Client  : 344x528
+
+Static1 = WhiteBox
+Screen: 348x482
+
+Static2 = Text
+Screen: 320x465
+
+Buttons
+Screen: 75x23
+
+360-344= 16
+350 -320 = 40
+
+LeftMargin := 
+RightMargin := GuiWidth
+
+				Gui	WB	Text		Text	WB	Gui Client
+				|		|		|			|		|		|
+Size			0		16	24		296	328	344
+LMargin	0		16	40		32	16	0	RMargin
+						    8                   32
+							
+						
+GuiClientWidth := 344
+WhiteBoxWidth := 344
+TextWidth := 320
+
+RightMargin := GuiClientWidth - WhiteBoxWidth - TextWidth

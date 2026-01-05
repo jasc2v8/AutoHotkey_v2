@@ -1,0 +1,87 @@
+
+	; Set an Alias for easier typing
+	;obj := MsgBoxCustom()
+	;global MB := ObjBindMethod(obj, 'Show')
+	
+fix Opt in ClassMBoxText
+
+
+
+
+;---------------------------------------------------------------------------------------------------
+; Purpose: Custom MsgBox with options, icons, sounds, and context menu.
+; Returns: A String with the name of the button pressed.
+; Context: Right-click to copy the text to the clipboard.
+; License: The Unlicense: https://unlicense.org/
+; Params :
+;     Text 	        := "Text Message"				        ; Text Control text
+;     Title 	    := "Custom MsgBox"				        ; Gui title
+;     Buttons	    := "Default &Yes, &No, &All, &Cancel"   ; Default =Default button, &Y=Alt+Y shortcut
+;     Size          := "400, 223, 10, 10" 			        ; w, h, x, y
+;     Opt	        := "+AlwaysOnTop"                       ; this.gui.Opt("+AlwaysOnTop")
+;     BackColor     := "Blue"                               ; this.gui.Backcolor:="Blue"
+;     TextOpt       := "Border -Wrap" 				        ; this.gui.AddText(Options, Text)
+;     TextFontOpt   := "s11 cWhite, Consolas"               ; this.gui.SetFont(Options, FontName)
+;     ButtonFontOpt := "s11, Segoe UI"                      ; this.gui.SetFont(Options, FontName)
+;     IconOpt       := "Icon?"                              ; "Icon?" or "C:\Dir\favicon.ico, Icon1"
+;     SoundOp       := "Icon?"                              ; "Icon?" or "C:\Dir\sound.wav"
+;---------------------------------------------------------------------------------------------------
+
+
+	MB := MBox() ; create Mbox with defaults
+	MB.Theme := "Matrix" ; set theme before show
+	MB.PARAMETER := "" ; set params
+	MB.Show()
+
+	MB := MBox(Theme:="", Text:="", Title:="", Buttons, etc) ; create Mbox with theme and params
+	
+
+	MB := MBoxBSOD
+	MB := MBoxMatirx
+	MB := MBoxTerminal
+
+    set the font, colors, icon, and sound when created
+	
+    MB := MBox(Theme, Text, Title, Buttons, GuiSize, GuiOpt, FontOpt, TextOpt, IconOpt, SoundOpt)
+	
+	MB := MBox(Theme, Text, Title, Buttons, Size, Opt, FontOpt, TextFontSize, TextFontName, TextOpt, ButtonFontSize, ButtonFontName,	IconFileName, IconFileNumber,	Sound)
+	
+	?MB := MBox(Theme, Text, Title, Buttons, Options)
+	
+	MB.Show(Text, Title)
+	MB.Show(Theme, Text, Title)
+	
+	MB.ShowBSOD()
+	MB.ShowMatrix()
+	MB.ShowTerminal()
+	
+	MB.ShowTheme("Matrix", Text, Title)
+	
+	MB := MBox(Theme:="Standard")
+	MB := MBox("Matrix")
+	MB.Show(Text, Title)
+	
+	MB.Theme := "Matrix"
+	MB.Show(Text, Title)
+	
+	
+	
+	Or, one by one:
+	MB := MBox()
+    Theme := "Matrix"
+	Text
+	Title
+    Buttons :=
+	Size :=
+    Opt :=
+    TextFontSize :=
+	TextFontName :=
+    TextOpt :=
+    ButtonFontSize :=
+    ButtonFontName :=
+    IconFileName :=
+    IconNumber :=
+    Sound :=  "IconX" or "C:\Dir\sound.wav"
+	
+	MB.Set(Item, Value)
+	

@@ -1,0 +1,12 @@
+.ahk
+
+Terminal: 0C0C0C (Red=0C Green=0C Blue=0C)
+
+PowerShell: 457AD5 (Red=45 Green=7A Blue=D5)
+
+MsgCustom()
+
+Msg
+Mbox
+
+Msg.ahk

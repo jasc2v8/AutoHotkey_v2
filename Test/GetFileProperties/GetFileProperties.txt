@@ -1,0 +1,39 @@
+---------------------------
+GetFilePropertiesExample.ahk
+---------------------------
+Index 1=1.29 MB
+Index 2=Application
+Index 3=9/25/2025 10:03 AM
+Index 4=9/25/2025 9:26 AM
+Index 5=9/25/2025 12:41 PM
+Index 6=A
+Index 9=Application
+Index 10=JIM-PC\Jim
+Index 11=Program
+Index 19=Unrated
+Index 25=© 2025 jasc2v8
+Index 33=jasc2v8
+Index 34=AutoHotkey Setup Builder
+Index 57=931 GB
+Index 61=JIM-PC (this PC)
+Index 164=.exe
+Index 165=AhkSetupBuilder.exe
+Index 166=2.0.19.0
+Index 169=847 GB
+Index 187=No
+Index 190=AhkSetupBuilder
+Index 191=D:\Software\DEV\Work\AHK2\Projects\AhkSetupBuilder
+Index 192=AhkSetupBuilder (D:\Software\DEV\Work\AHK2\Projects)
+Index 194=D:\Software\DEV\Work\AHK2\Projects\AhkSetupBuilder\AhkSetupBuilder.exe
+Index 196=Application
+Index 199=English (United States)
+Index 202=Unresolved
+Index 254=‎9%
+Index 297=Not shared
+Index 298=Available
+Index 299=AhkSetupBuilder
+Index 300=0.0.0.0
+
+---------------------------
+OK   
+---------------------------

@@ -1,0 +1,1 @@
+Temp := StrReplace(Temp, "#", "`%23")

@@ -1,0 +1,33 @@
+Attributes, A
+Company, jasc2v8
+Computer, JIM-PC (this PC)
+Copyright, ©2025 jasc2v8
+DateAccessed, 10/6/2025 5:24 AM
+DateCreated, 10/5/2025 2:43 PM
+DateModified, 10/5/2025 2:42 PM
+FileDescription, AutoHotkey Launcher
+FileExtension, .exe
+FileLocation, D:\Software\DEV\Work\AHK2\Projects\AhkLauncher
+FileVersion, 0.0.0.1742
+Filename, AhkLauncher.exe
+Folder, AhkLauncher (D:\Software\DEV\Work\AHK2\Projects)
+FolderName, AhkLauncher
+ItemType, Application
+Kind, Program
+Language, English (United States)
+LegalTrademarks, NONE™
+LinkStatus, Unresolved
+Name, AhkLauncher.exe
+Owner, JIM-PC\Jim
+Path, D:\Software\DEV\Work\AHK2\Projects\AhkLauncher\AhkLauncher.exe
+PerceivedType, Application
+ProductName, AhkLauncher
+ProductVersion, 0.0.0.1
+Rating, Unrated
+Shared, No
+SharingStatus, Not shared
+Size, 1.37 MB
+SpaceFree, 847 GB
+SpaceUsed, ?9%
+TotalSize, 931 GB
+Type, Application

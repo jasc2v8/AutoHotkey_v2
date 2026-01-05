@@ -1,0 +1,102 @@
+list: [CSV] => 0, Name, AhkLauncher.exe
+1, Size, 1.37 MB
+2, Item type, Application
+3, Date modified, 10/4/2025 11:02 AM
+4, Date created, 10/1/2025 4:39 PM
+5, Date accessed, 10/4/2025 6:10 PM
+6, Attributes, A
+9, Perceived type, Application
+10, Owner, JIM-PC\Jim
+11, Kind, Program
+19, Rating, Unrated
+25, Copyright, ©2025 jasc2v8
+33, Company, jasc2v8
+34, File description, AutoHotkey Launcher
+57, Total size, 931 GB
+61, Computer, JIM-PC (this PC)
+164, File extension, .exe
+165, Filename, AhkLauncher.exe
+166, File version, 0.0.0.1742
+169, Space free, 847 GB
+187, Shared, No
+190, Folder name, AhkLauncher
+191, File location, D:\Software\DEV\Work\AHK2\Projects\AhkLauncher
+192, Folder, AhkLauncher (D:\Software\DEV\Work\AHK2\Projects)
+194, Path, D:\Software\DEV\Work\AHK2\Projects\AhkLauncher\AhkLauncher.exe
+196, Type, Application
+199, Language, English (United States)
+202, Link status, Unresolved
+254, Space used, ‎9%
+297, Sharing status, Not shared
+299, Product name, AhkLauncher
+300, Product version, 0.0.0.1
+312, Legal trademarks, NONE™
+[Name]
+    [Attributes] => A
+    [Company] => jasc2v8
+    [Computer] => JIM-PC (this PC)
+    [Copyright] => ©2025 jasc2v8
+    [Date accessed] => 10/4/2025 6:10 PM
+    [Date created] => 10/1/2025 4:39 PM
+    [Date modified] => 10/4/2025 11:02 AM
+    [File description] => AutoHotkey Launcher
+    [File extension] => .exe
+    [File location] => D:\Software\DEV\Work\AHK2\Projects\AhkLauncher
+    [File version] => 0.0.0.1742
+    [Filename] => AhkLauncher.exe
+    [Folder] => AhkLauncher (D:\Software\DEV\Work\AHK2\Projects)
+    [Folder name] => AhkLauncher
+    [Item type] => Application
+    [Kind] => Program
+    [Language] => English (United States)
+    [Legal trademarks] => NONE™
+    [Link status] => Unresolved
+    [Name] => AhkLauncher.exe
+    [Owner] => JIM-PC\Jim
+    [Path] => D:\Software\DEV\Work\AHK2\Projects\AhkLauncher\AhkLauncher.exe
+    [Perceived type] => Application
+    [Product name] => AhkLauncher
+    [Product version] => 0.0.0.1
+    [Rating] => Unrated
+    [Shared] => No
+    [Sharing status] => Not shared
+    [Size] => 1.37 MB
+    [Space free] => 847 GB
+    [Space used] => ‎9%
+    [Total size] => 931 GB
+    [Type] => Application
+
+[Num]
+    [0] => AhkLauncher.exe
+    [1] => 1.37 MB
+    [2] => Application
+    [3] => 10/4/2025 11:02 AM
+    [4] => 10/1/2025 4:39 PM
+    [5] => 10/4/2025 6:10 PM
+    [6] => A
+    [9] => Application
+    [10] => JIM-PC\Jim
+    [11] => Program
+    [19] => Unrated
+    [25] => ©2025 jasc2v8
+    [33] => jasc2v8
+    [34] => AutoHotkey Launcher
+    [57] => 931 GB
+    [61] => JIM-PC (this PC)
+    [164] => .exe
+    [165] => AhkLauncher.exe
+    [166] => 0.0.0.1742
+    [169] => 847 GB
+    [187] => No
+    [190] => AhkLauncher
+    [191] => D:\Software\DEV\Work\AHK2\Projects\AhkLauncher
+    [192] => AhkLauncher (D:\Software\DEV\Work\AHK2\Projects)
+    [194] => D:\Software\DEV\Work\AHK2\Projects\AhkLauncher\AhkLauncher.exe
+    [196] => Application
+    [199] => English (United States)
+    [202] => Unresolved
+    [254] => ‎9%
+    [297] => Not shared
+    [299] => AhkLauncher
+    [300] => 0.0.0.1
+    [312] => NONE™
