@@ -1,0 +1,133 @@
+
+AhkLauncher_Setup
+unzip all files to %USERPROFILE%\AutoHotkey\AhkLauncher
+FileCreateShortcut to %APPDATA%\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+Launch Now?
+
+AhkLauncher_Setup.ahk
+AhkLauncher_Files.zip
+
+
+
+Eventually, all files will be installed in %USERPROFILE%\.AhkApps\
+One Icon for AhkLauncher
+
+%USERPROFILE%\.AhkApps\AhkLauncher\AhkLauncher.exe or ProgramFiles?
+%USERPROFILE%\.AhkApps\AhkLauncher\AhkLauncher.ini
+%USERPROFILE%\.AhkApps\BackupControl.exe
+%USERPROFILE%\.AhkApps\BatchConvert.exe
+%USERPROFILE%\.AhkApps\CopyVS.exe
+%USERPROFILE%\.AhkApps\DownloadControl.exe
+%USERPROFILE%\.AhkApps\GetFileProperties.exe (add Shortcuts)
+%USERPROFILE%\.AhkApps\PowerControl.exe
+%USERPROFILE%\.AhkApps\AhkSetupBuilder.exe
+
+[Settings]
+IniPath=%USERPROFILE%\.AhkApps\AhkLauncher\AhkLauncher.ini (necesary?)
+AhkAppsDir=%USERPROFILE%\AhkApps
+
+Help:
+Open:
+Cred: Edit Credentials
+Path: Select AhkApps Folder
+Exit
+
+
+Files: enable Explore button, disablle others
+Mode: cycle through DDL items
+Edit: search list and refresh list
+
+
+
+[Explore] [GUID] [shell::] [EnvVars] [Files] [Run] [Cancel]
+
+[Mode] [Explore] [Run] [Cancel]
+Files, EnvVars, shell::, GUID
+
+AHK_APPS_PATH := 
+
+MyApp, .exe
+MyShortcut, .lnk
+
+
+Shortcut
+
+ShowGui
+
+Edit
+ListView
+
+Find
+
+['AhkApp', 'D:Path\AhkApp.exe']
+
+DoShowGui()
+
+	foundFiles := DoFindFiles()
+
+	DoShowFileList(foundFiles)
+
+
+
+Ctrl+Alt+	C	Copy Visual Studio Project
+Ctrl+Alt+	L	Toggle Launcher Gui
+Ctrl+Alt+	S	Autohotkey Setup Builder
+
+
+
+AhkTools or AhkApps?
+
+C:\Program Files\AhkApps
+
+C:\Program Files\AhkApps\BackupControl\BackupControl.exe
+C:\Program Files\AhkApps\CopyVS\CopyVS.exe
+
+C:\Program Files\AhkApps\AhkAppsl.exe
+C:\Program Files\AhkApps\AhkBuilder.exe
+C:\Program Files\AhkApps\BackupControl.exe
+C:\Program Files\AhkApps\CopyVS.exe
+C:\Program Files\AhkApps\DownloadControl.exe
+C:\Program Files\AhkApps\ShutDownControl.exe
+
+
+LOCALDATA\Temp\AhkApps\AhkBuilder
+LOCALDATA\Temp\AhkApps\CopyVS
+
+	Launched at Startup: C:\Program Files\AhkTools\AhkToolsControl.exe
+	Launched at Startup: C:\Program Files\AhkApps\AhkApps.exe
+	
+	Ctrl+Alt+A Opens the AhkTools Window
+
+A=AhkBuilder
+B=BackupControl (+B=BatchConvert renamed to HandbrakeBatchConvert)
+C=CopyVS
+D=DownloadControl
+E=
+F=FlightSimControl
+G=
+H=HandbrakeBatchConvert
+I=
+J=
+K=
+L=
+M=
+N=
+O=
+P={password} +(P=PowerControl renamed to ShutDownControl)
+Q=
+R=
+S=ShutDownControl
+T=TODO.txt
+U={username}
+V=VSCode
+W=Walt
+X=
+Y=
+Z=
+
+
+Standard Hotkey Modifiers
+	^ (Control): Represents the Ctrl key.
+	! (Alt): Represents the Alt key.
+	+ (Shift): Represents the Shift key.
+	# (Windows/Win): Represents the Windows key.

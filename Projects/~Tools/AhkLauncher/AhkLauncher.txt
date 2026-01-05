@@ -1,0 +1,9 @@
+
+
+;TITLE:
+
+;@Ahk2Exe-Set FileDescription, Backup Control Tool
+;@Ahk2Exe-Set FileVersion, 3.0.0.0
+
+.Title:=
+
