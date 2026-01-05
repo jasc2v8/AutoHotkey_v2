@@ -1,38 +1,45 @@
+;SOURCE: Gemini
+
 #Requires AutoHotkey v2.0
 
-class MyExampleClass {
-    ; Static property (shared across all instances)
-    static MyStaticValue := "This is a static property"
+class MyClass {
 
-    ; Instance property (each object has its own copy)
-    __New(instanceName) {
-        this.Name := instanceName
+    myProperty := "Default Value"
+
+    __New(initialValue := "") {
+
+        if (initialValue != "") {
+            this.myProperty := initialValue
+        }
+        MsgBox "MyClass instance created with property: " this.myProperty
     }
 
-    ; Static method (called directly on the class)
-    static StaticMethod() {
-        MsgBox("I am a static method, called from " . this.MyStaticValue)
-        this.InstanceMethod()
+    getProperty() {
+        MsgBox "The current value of myProperty is: " this.myProperty
     }
 
-    ; Instance method (called on an object of the class)
-    InstanceMethod() {
-        MsgBox("I am an instance method, called from " . this.Name)
-
-        this.StaticMethod()
+    ; Another instance method to modify the property
+    setProperty(newValue) {
+        this.myProperty := newValue
+        MsgBox "myProperty has been updated to: " this.myProperty
     }
-
-
 }
 
-; Call a static method directly from the class
-MyExampleClass.StaticMethod()
+; Create an instance of MyClass
+; This calls the __New method
+myObject := MyClass()
 
-; Create an instance (object) of the class
-myObject := MyExampleClass("MyFirstObject")
+; Access and display the property
+myObject.getProperty()
 
-; Call an instance method on the object
-myObject.InstanceMethod()
+; Create another instance with an initial value
+anotherObject := MyClass("Custom Initial Value")
 
-; Access an instance property
-MsgBox("Object name: " . myObject.Name)
+; Modify the property of the first instance
+myObject.setProperty("New Value for myObject")
+
+; Display the modified property
+myObject.getProperty()
+
+; Display the property of the second instance (it remains unchanged)
+anotherObject.getProperty()

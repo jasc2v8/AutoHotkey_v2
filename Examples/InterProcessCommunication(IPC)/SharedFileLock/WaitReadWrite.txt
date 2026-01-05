@@ -1,0 +1,35 @@
+
+initial state := SetNotReady
+
+Server
+
+command := WaitRead
+output := Run(command)
+WaitWrite("ACK")
+Loop
+
+Client
+
+form command
+WaitWrite(command)
+response := WaitRead
+report response
+Loop
+
+
+WaitWrite
+	WaitReady
+	SetNotReady
+	write
+	Sleep 100
+	SetReady
+
+WaitRead
+	WaitReady
+	SetNotReady
+	read
+	Sleep 100
+	SetReady
+	
+
+

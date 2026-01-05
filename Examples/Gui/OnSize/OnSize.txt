@@ -1,0 +1,14 @@
+    static OnSize(GuiObj, *) {
+        GuiObj.OnEvent('Size', 'OnSize', 0)
+        GuiObj.GetPos(, , &W, &H)
+        diff_w := W - GuiObj.initial_w
+        diff_h := H - GuiObj.initial_h
+        for ctrl in GuiObj {
+            if ctrl.Name = 'EdtInput' {
+                ctrl.Move(, , ctrl.initial_w + diff_w, ctrl.initial_h + diff_h)
+            } else {
+                ctrl.Move(, ctrl.initial_y + diff_h)
+            }
+        }
+        GuiObj.OnEvent('Size', 'OnSize', 1)
+    }

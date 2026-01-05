@@ -1,0 +1,77 @@
+
+
+E:\>icacls LOCK /deny everyone:f
+processed file: LOCK
+Successfully processed 1 files; Failed processing 0 files
+
+E:\>icacls LOCK /remove everyone
+processed file: LOCK
+Successfully processed 1 files; Failed processing 0 files
+
+Hide:		D:\>attrib +h +s +r  d:\HideMe
+UnHide: D:\>attrib -h -s -r  d:\HideMe
+
+hide first before lock?
+D:\>attrib +h +s +r  d:\archived-projects
+Access denied - D:\archived-projects
+
+TMP \lock0000.tmp
+	YYYYMMDD-HHMMSS LOCK: D:\archived-projects
+	YYYYMMDD-HHMMSS HIDE: D:\archived-projects
+	YYYYMMDD-HHMMSS UNLOCK: D:\archived-projects
+	YYYYMMDD-HHMMSS UNHIDE: D:\archived-projects
+	
+
+
+E:\>
+
+
+icacls "<Path>" /deny "<UserOrGroup>":F
+
+icacls "<Path>" /remove "<UserOrGroup>"
+
+cacls "SHORTS" /e /p everyone:n
+
+cacls "SHORTS" /e /p everyone:f
+
+BEFORE:
+
+E:\>cacls lock
+E:\LOCK BUILTIN\Administrators:F
+        BUILTIN\Administrators:(OI)(CI)(IO)F
+        NT AUTHORITY\SYSTEM:F
+        NT AUTHORITY\SYSTEM:(OI)(CI)(IO)F
+        NT AUTHORITY\Authenticated Users:C
+        NT AUTHORITY\Authenticated Users:(OI)(CI)(IO)C
+        BUILTIN\Users:R
+        BUILTIN\Users:(OI)(CI)(IO)(special access:)
+                                  GENERIC_READ
+                                  GENERIC_EXECUTE
+								  
+Locked:
+E:\LOCK Everyone:(OI)(CI)N
+        BUILTIN\Administrators:F
+        BUILTIN\Administrators:(OI)(CI)(IO)F
+        NT AUTHORITY\SYSTEM:F
+        NT AUTHORITY\SYSTEM:(OI)(CI)(IO)F
+        NT AUTHORITY\Authenticated Users:C
+        NT AUTHORITY\Authenticated Users:(OI)(CI)(IO)C
+        BUILTIN\Users:R
+        BUILTIN\Users:(OI)(CI)(IO)(special access:)
+                                  GENERIC_READ
+                                  GENERIC_EXECUTE
+								
+Unlocked
+E:\>cacls lock
+E:\LOCK JIM-PC\Jim:(OI)(CI)F
+        Everyone:(OI)(CI)F
+        BUILTIN\Administrators:(ID)F
+        BUILTIN\Administrators:(OI)(CI)(IO)(ID)F
+        NT AUTHORITY\SYSTEM:(ID)F
+        NT AUTHORITY\SYSTEM:(OI)(CI)(IO)(ID)F
+        NT AUTHORITY\Authenticated Users:(ID)C
+        NT AUTHORITY\Authenticated Users:(OI)(CI)(IO)(ID)C
+        BUILTIN\Users:(ID)R
+        BUILTIN\Users:(OI)(CI)(IO)(ID)(special access:)
+                                      GENERIC_READ
+                                      GENERIC_EXECUTE

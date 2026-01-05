@@ -1,0 +1,71 @@
+; SharedMemoryServer.ahk - AHK v2 Producer/Writer with Synchronization
+
+; --- Configuration ---
+SHARED_MEM_NAME := 'AHK_SharedData'
+DATA_READY_EVENT := 'AHK_DataReadyEvent'
+DATA_CONSUMED_EVENT := 'AHK_DataConsumedEvent'
+MAX_MEM_SIZE := 4096 ; 4KB Buffer Size
+
+MsgBox('SERVER: Starting up. Creating shared memory and events. Waiting for client to signal readiness...', 'Server Status', 'T3')
+
+; --- 1. Create Shared Memory Map ---
+; Creating the map handles the pointer (pMapView) and map handle (hMapFile)
+hMapFile := DllCall('CreateFileMappingW', 'Ptr', 0xFFFFFFFF, 'Ptr', 0, 'UInt', 0x04, 'UInt', 0, 'UInt', MAX_MEM_SIZE, 'WStr', SHARED_MEM_NAME, 'Ptr')
+if (hMapFile == 0) {
+    MsgBox('Error creating file map: ' A_LastError, 'Fatal Error', 0x10)
+    ExitApp
+}
+pMapView := DllCall('MapViewOfFile', 'Ptr', hMapFile, 'UInt', 0xF001F, 'UInt', 0, 'UInt', 0, 'Ptr', MAX_MEM_SIZE, 'Ptr')
+if (pMapView == 0) {
+    MsgBox('Error mapping view: ' A_LastError, 'Fatal Error', 0x10)
+    DllCall('CloseHandle', 'Ptr', hMapFile)
+    ExitApp
+}
+
+; --- 2. Create Named Synchronization Events ---
+; CreateEventW(lpEventAttributes, bManualReset, bInitialState, lpName)
+hDataReady := DllCall('CreateEventW', 'Ptr', 0, 'Int', True, 'Int', False, 'WStr', DATA_READY_EVENT, 'Ptr')
+hDataConsumed := DllCall('CreateEventW', 'Ptr', 0, 'Int', True, 'Int', True, 'WStr', DATA_CONSUMED_EVENT, 'Ptr') ; Initial state is TRUE (ready to consume)
+
+; --- 3. Main Production Loop ---
+currentDataIndex := 0
+Loop 10 ; Run 10 times for demonstration
+{
+    currentDataIndex += 1
+    
+    ; a. Wait for Client to signal buffer is CONSUMED (Event is set to signal)
+    ; WaitForSingleObject(hHandle, dwMilliseconds)
+    MsgBox('SERVER: Waiting for client signal (Data Consumed)...', 'Server Status', 'T1')
+    DllCall('WaitForSingleObject', 'Ptr', hDataConsumed, 'UInt', 0xFFFFFFFF) ; 0xFFFFFFFF means infinite wait
+    
+    ; b. Reset the Client's signal immediately
+    DllCall('ResetEvent', 'Ptr', hDataConsumed)
+
+    ; c. Generate and Serialize Data
+    data := { Message: 'Update from Server', Index: currentDataIndex, Timestamp: A_Now }
+    jsonString := Json.Stringify(data)
+    
+    ; d. Write Data to Shared Memory (UTF-16)
+    ; Add a simple header for string length (4 bytes) to help the reader know the size
+    dataLen := StrLen(jsonString) * 2 + 2 ; Length in bytes (UTF-16)
+    
+    ; Write length first (4 bytes)
+    NumPut(dataLen, pMapView, 0, 'UInt')
+    
+    ; Write the string starting at offset 4
+    StrPut(jsonString, pMapView + 4, 'UTF-16')
+    
+    MsgBox('SERVER: Data #' currentDataIndex ' written. Signaling client (Data Ready).', 'Server Status', 'T1')
+
+    ; e. Signal to Client that Data is READY
+    DllCall('SetEvent', 'Ptr', hDataReady)
+}
+
+; --- Cleanup ---
+DllCall('UnmapViewOfFile', 'Ptr', pMapView)
+DllCall('CloseHandle', 'Ptr', hMapFile)
+DllCall('CloseHandle', 'Ptr', hDataReady)
+DllCall('CloseHandle', 'Ptr', hDataConsumed)
+
+MsgBox('SERVER: Finished 10 cycles and cleaned up.', 'Server Status', 0x40)
+ExitApp

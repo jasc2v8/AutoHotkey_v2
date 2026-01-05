@@ -1,0 +1,33 @@
+SharedFile Client Logic
+
+Client--Server:
+
+; The Server runs continuously, typically a Windows Service
+; The Server creates and destroys the SharedFile
+
+SF := SharedFile('Client', NewSharedFilePath:=default)
+
+Text:= A command to send to the server e.g. (SyncBackPath, Params, Profile)
+
+; success=true, timeout=false, don't wait=0Ms, wait forever=-1Ms
+WaitWrite(Text, Timeout, ResetReady:=true)
+	Wait(Timeout)
+	ClearReady
+	Write Text
+	if ResetReady then SetReady
+	return 
+
+; success=true, timeout=false, don't wait=0Ms, wait forever=-1Ms
+WaitRead(Timeout, ResetReady:=true)
+	Wait(Timeout)
+	ClearReady
+	Read Text
+	if ResetReady then SetReady
+	return Text
+
+MsgBox "Return Value: " r
+
+
+IsReady()
+SetReady()
+ClearReady()

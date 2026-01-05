@@ -1,0 +1,16 @@
+
+GUI                    : 466x389
+Client                 : 434x342
+--------------------------------
+Top Border             : 8
+Title Bar              : 23
+Client Top Border      : 8
+Client                 : 342
+Client Bottom Border   : 8
+--------------------------------
+Gui Height Total       : 389
+
+clientLeftX            : 8
+clientRightX           : 458
+clientTopY             : 0
+clientBottom           : 342

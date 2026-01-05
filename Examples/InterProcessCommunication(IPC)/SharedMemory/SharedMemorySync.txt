@@ -1,0 +1,205 @@
+
+Shared Memory Bi-Directional Synchronization Flow  (Event Manual reset)
+======================================================
+Client Generates a new command for Server to Execute
+Client writes data
+Client SetEvent BUFFER_FULL
+	Server WaitEvent BUFFER_FULL
+	Server reads Client data.
+	Server processes client data (Do Work e.g. RunCMD)
+	Server writes response data.
+	Server SetEvent BUFFER_FULL
+	Server Loop
+Client WaitEvent BUFFER_FULL
+Client reads Server response data.
+Client processes Server data (Success/Fail)
+Client Loop
+
+
+==============================================================
+DELETE BELOW
+==============================================================
+
+
+Shared Memory Synchronization Flow - Option 1 (Event auto reset)
+======================================================
+Client Generates a new command for Server to Execute
+Client waits for Server READY_TO_RECIEVE				BUFFER_EMPTY						
+Client writes data
+Client SetEvent DATA_SENT										BUFFER_FULL
+
+Client waits for Server DATA_SENT								BUFFER_FULL					
+Client reads data
+Client processes Server data (Success/Fail)
+Client Loops Above
+
+Server SetEvent READY_TO_RECIEVE							BUFFER_EMPTY
+Server waits for Client DATA_SENT									BUFFER_FULL	
+Server reads Client data.
+Server processes client data (Do Work e.g. RunCMD)
+Server writes response data.
+Server Loops Above
+-------------------------------------------------------------------------------------------
+
+
+Shared Memory Synchronization Flow - Option 2 (Event auto reset)
+======================================================
+Client Generates a new command for Server to Execute
+Client writes data
+Client signals DATA_READY
+	Server waits for DATA_READY
+	Server reads Client data.
+	Server processes client data (Do Work e.g. RunCMD)
+	Server writes response data.
+	Server signals DATA_READY
+	?Server waits for DATA_CONSUMED
+Client waits for DATA_READY
+Client reads Server response data.
+Client signals DATA_CONSUMED
+Client processes Server data (Success/Fail)
+Loop Above
+	
+Shared Memory Synchronization Flow - Option 3 (Event manual reset)
+======================================================
+Server signals Client that Server is ready to receive data.			SERVER_READY_TO_RECEIVE
+	Client resets signal immediately
+	Client writes data
+	Client signals data is ready.														CLIENT_DATA_SENT
+Server waits for signal that Client has written data.						CLIENT_DATA_SENT
+Server resets signal immediately
+Server reads Client data.
+Server processes client data (Do Work e.g. RunCMD)
+Server waits for signal that Client is ready to receive data.	 		CLIENT_READY_TO_RECEIVE	
+Server resets signal immediately
+Server writes response data.
+Server signals that data is ready to be read.								SERVER_DATA_SENT
+Server Loops
+	Client waits for signal that Server data is ready to be read.		SERVER_DATA_SENT
+Server resets signal immediately
+	Client reads Server response data.
+	Client processes Server data (Success/Fail)
+	Client waits for signal that Server is ready to receive data.		SERVER_READY_TO_RECEIVE
+	Client Loops
+
+=============================================================
+DATA_CONSUMED		BUFFER_EMPTY
+DATA_READY				BUFFER_FULL
+DATA_READ
+
+?Client waits for DATA_CONSUMED
+	
+Server waits for signal that Client is ready to receive data.	 		CLIENT_READY_TO_RECEIVE	
+Server writes response data.
+Server signals that data is ready to be read.								SERVER_DATA_SENT
+Server Loops
+	Client waits for signal that Server data is ready to be read.		SERVER_DATA_SENT
+	Client reads Server response data.
+	Client processes Server data (Success/Fail)
+	Client waits for signal that Server is ready to receive data.		SERVER_READY_TO_RECEIVE
+	Client Loops
+
+Server signals Client that Server is ready to receive data.			SERVER_READY_TO_RECEIVE
+
+	
+	
+Server waits for signal that Client data is ready.
+Server reads Client data.
+Server signals Client data was read?
+Server Loops?
+
+	Client waits for Server signal data is ready, resets the signal
+	Client reads data
+	Client signals data has been read
+
+Server signals Client that Server is ready to receive data.
+
+
+hDataReady DATA_READY_EVENT
+hDataConsumed DATA_CONSUMED_EVENT
+
+Client
+Wait for Server DATA_READY_EVENT
+Reset the Server's DATA_READY_EVENT signal immediately
+Read
+set DATA_CONSUMED_EVENT
+
+Server
+Wait for Client DATA_CONSUMED_EVENT
+Reset the Client's DATA_CONSUMED_EVENT signal immediately
+Write
+ set DATA_READY_EVENT
+ 
+Server
+Wait for Client DATA_READY_EVENT
+Reset the Client's DATA_READY_EVENT signal immediately
+Read
+set DATA_CONSUMED_EVENT
+Wait for Client DATA_READY_EVENT
+Reset the Client's DATA_READY_EVENT signal immediately
+Write
+set Server DATA_READY_EVENT
+
+
+Client
+Wait for Server DATA_CONSUMED_EVENT
+Reset the Server's DATA_CONSUMED_EVENT signal immediately
+Write
+set Client DATA_READY_EVENT
+Wait for Server DATA_CONSUMED_EVENT
+Reset the Server's DATA_CONSUMED_EVENT signal immediately
+Read
+set Client DATA_CONSUMED_EVENT
+
+Shared Memory Synchronization Flow
+======================================================
+Server waits for Client data is ready signal, resets signal
+Server reads Client data.
+Server signals Client data is read.
+
+Client waits for Server signal data was read, resets the signal
+Client writes data
+Client signals data is ready.
+
+Client waits for Server signal data is ready, resets the signal
+Client reads data
+Client signals data has been read
+
+
+--------------------------------------------------------------------------------------------
+Server
+Wait for Client DATA_READY_EVENT
+Reset the Client's DATA_READY_EVENT signal immediately
+Read
+set Server DATA_CONSUMED_EVENT
+
+	Client
+	Wait for Server DATA_CONSUMED_EVENT
+	Reset the Server's DATA_CONSUMED_EVENT signal immediately
+	Write
+	set Client DATA_READY_EVENT
+
+Server
+Wait for Client DATA_READY_EVENT
+Reset the Client's DATA_READY_EVENT signal immediately
+	Read
+	set Client DATA_CONSUMED_EVEN
+
+	Client
+	Wait for Server DATA_READY_EVENT
+	Reset the Server's DATA_READY_EVENT signal immediately
+	Read
+	set Client DATA_CONSUMED_EVENT
+
+Server
+Wait for Client DATA_CONSUMED_EVENT
+Reset the Client's DATA_CONSUMED_EVENT signal immediately
+Read
+set Client DATA_CONSUMED_EVENT
+
+Client
+Wait for Server DATA_CONSUMED_EVENT
+Reset the Server's DATA_CONSUMED_EVENT signal immediately
+Write
+set Client DATA_READY_EVENT
+
+

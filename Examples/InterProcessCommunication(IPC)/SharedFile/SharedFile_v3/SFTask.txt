@@ -1,0 +1,28 @@
+
+SharedFile Task Logic
+
+Client--Task:
+
+; The Task is an on-demand Task in the Task Scheduler
+; The Task set set at runLevel='highest' to run commands with Admin privleges
+; The Client creates and destroys the SharedFile
+
+SF := SharedFile('Task', NewSharedFilePath:=default) ; NewSharedFilePath ignored, Client manages this
+
+Client creates the SharedFile, forms command, Writes command to SharedFile, SetReady
+
+Task is started by Client
+
+command:= WaitRead(Timeout, ResetReady:=true)	; from Client
+
+output:= _Run(command)
+
+WaitWrite(output, Timeout, ResetReady:=true)	; to Client
+
+WaitNotReady(Timeout, ResetReady:=false)		; wait for Client to read response
+
+ExitApp()
+
+Task is stopped by Task Scheduler
+The SharedFile is destroyed by the Client calling DeleteSharedFile()
+

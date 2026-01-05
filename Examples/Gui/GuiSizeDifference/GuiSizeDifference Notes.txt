@@ -1,0 +1,22 @@
+---------------------------
+GuiSizeDifference.ahk
+---------------------------
+Gui     : x802 y346 w316 h339
+Client : x810 y377 w300 h300
+
+Text1: x10 y6 w280 h260
+Text2: x40 y6 w80 h266
+Text3: x110 y6 w80 h289
+Text4: x190 y6 w80 h294
+
+MarginBottomTextToButtomGui: 34
+MarginBottomTextToTopButton: 6
+MarginBottomButtonToButtomGui: 5
+
+MarginGuiLeft: 10
+MarginGuiRight: 36
+
+Button Height: 23
+---------------------------
+OK   
+---------------------------

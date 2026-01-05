@@ -1,0 +1,37 @@
+
+WinGetClientPos 800x400
+WinGetPos 439x8
+
+gui 242x95
+client 226x56
+
+242-226=39 (xM10 + 32 title bar + border 6)
+95-56=16 (yM6 + border 10)
+
+m20
+H
+m20
+
+m8 W m8
+
+
+---------------------------
+GuiControlMove.ahk
+---------------------------
+W: 242, H: 95
+
+ClientW: 226, ClientH: 56
+
+xM: 10, yM: 6
+---------------------------
+OK   
+---------------------------
+
+In Windows 11
+
+The window size refers to the total dimensions of the entire application window,
+	including the title bar, borders, and scrollbars.
+	
+The client size refers to the size of the "client area," which is the internal space where the actual application content is displayed, excluding the frame
+
+The standard height for a Windows 11 title bar is 32 pixels

@@ -1,0 +1,53 @@
+If you have a choice, use a port in the Dynamic/Private range (49152–65535) instead of 5800.
+
+49152
+49200
+65530
+
+http://localhost:1337
+
+
+turn off firewall
+
+Open port in Frontier Router
+	Firewall, Port Forwarding
+	open VNC ports 5900, 5800, 5500
+
+run SimplePortListener port 5800
+
+https://www.portchecktool.com/ port 5800 success!
+
+add firewall rule "VNC" port 5800
+
+http://47.152.48.248:5800/
+	Data Received GET/HTTP/1.1
+	Host: 47.152.48.248:5800
+
+no-ip.com
+	DNS Records
+	Update WAN IP  47.152.48.248
+
+
+http://jim-server.ddns.net:5800/
+	Data Received GET/HTTP/1.1
+	jim-server.ddns.net:5800
+	
+http://jim-server.ddns.net:5800/exit
+
+http://localhost:8080
+
+http://localhost:8080/exit
+
+http://localhost:5800
+
+http://localhost:5800/exit
+
+
+
+http://localhost:65530
+
+http://localhost:65530/exit
+
+http://jim-server.ddns.net:65530/
+
+http://jim-server.ddns.net:65530/exit

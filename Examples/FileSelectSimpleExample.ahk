@@ -6,7 +6,7 @@
  * @version 0.0.1
  ***********************************************************************/
 
-#Requires AutoHotkey v2.0
+#Requires AutoHotkey v2.0+
 
 #SingleInstance force
 
@@ -24,18 +24,24 @@ TrayMenu.ClickCount := 1
 ; Create a new Gui object
 myGui := Gui()
 myGui.Title := "File Selector"
+MyGui.BackColor := "4682B4" ; Steel Blue
+
+MyGui.SetFont("S11 CBlack w480", "Segouie UI")
 
 ; Add a text control for instructions
-myGui.Add("Text", "xm ym", "Select a file:")
+myGui.AddText("xm ym", "Select a file:")
 
+MyGui.SetFont("S11", "Consolas")
 ; Add an Edit control for displaying the selected file path
-filePathEdit := myGui.Add("Edit", "xm y+5 w300", "")
+filePathEdit := myGui.AddEdit("xm y+5 w600", "")
 
-; Add a Button to open the file selection dialog
-myGui.Add("Button", "x+5 yp w80", "Browse").OnEvent("Click", SelectFile)
+MyGui.SetFont()
+myGui.AddButton("x+m yp w75", "Browse").OnEvent("Click", SelectFile)
 
-; Add an OK button
-myGui.Add("Button", "xm y+10 w80", "OK").OnEvent("Click", SubmitFile)
+myGui.AddText("xm w522 h0 Hidden")
+myGui.AddButton("yp w75", "OK").OnEvent("Click", SubmitFile)
+myGui.AddButton("yp w75", "Cancel").OnEvent("Click", (*) => ExitApp())
+
 
 ; Show the GUI
 myGui.Show()

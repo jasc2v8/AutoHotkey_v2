@@ -1,0 +1,50 @@
+SOURCE: Copilot
+
+AutoHotkey v2 supports several meta-functions that allow you to customize class behavior, including object construction, property access, method calls, and enumeration. These are defined as special methods inside your class and are automatically invoked by the interpreter.
+
+ Meta-Functions in AHK v2 Classes
+Here’s a complete list of built-in meta-functions you can define in your classes:
+ Construction & Destruction
+ __New() – Called when a new instance is created.
+ __Delete() – Called when an object is being released (rarely needed).
+ Property Access
+ __Get(key, params*) – Called when accessing a property that doesn't exist.
+ __Set(key, value, params*) – Called when assigning to a property that doesn't exist.
+ __Call(methodName, args*) – Called when invoking a method that doesn't exist.
+ Enumeration
+- __Enum(n) – Enables custom iteration with for loops. n is the enumeration mode (1 for key-value, 2 for values only).
+ Cloning
+- Clone() – You can define this to support deep or shallow copying of your object.
+
+Example: Custom Property Access
+class MyClass {
+    __New(name) {
+        this.name := name
+    }
+
+    __Get(key) {
+        MsgBox "Attempted to get: " key
+        return "default"
+    }
+
+    __Set(key, value) {
+        MsgBox "Attempted to set: " key " to " value
+    }
+
+    __Call(method, args*) {
+        MsgBox "Unknown method: " method
+    }
+}
+
+obj := MyClass("Jim")
+value := obj.undefinedProp        ; triggers __Get
+obj.newProp := "Hello"            ; triggers __Set
+obj.unknownMethod(1, 2)           ; triggers __Call
+
+
+
+Resources
+- AutoHotkey v2 Object Reference
+- AHK Wiki: Classes and Meta-Functions
+- Community Thread: Object Types and Methods
+Would you like a template for a class that uses all these meta-functions for debugging or logging?

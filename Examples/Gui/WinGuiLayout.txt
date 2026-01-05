@@ -1,0 +1,12 @@
+
+	The Window Border Top
+	The Title Bar (Caption Area).
+		The System Menu (usually hidden or the icon in the top-left).
+		The Minimize, Maximize/Restore, and Close Buttons.
+		The Menu Bar (if one is present).
+	The Control Border
+	The Client Area
+	The Window Border Bottom
+	
+	
+	

@@ -1,0 +1,24 @@
+
+Client												Task
+Write(text, Reset:=True)			WaitRead( ResetReady:=True)
+	WaitGo()									WaitReady
+														SetBusy
+	Write(text)									Read
+														if (ResetReady) SetReady
+	SetStop()
+	WaitGo()								WaitWrite(text, ResetReady:=True)
+	Read()										WaitReady
+	WaitGo()									SetBusy
+														Write
+														if (ResetReady) SetReady
+
+CreateSharedFile
+SetBusy
+Run Worker								SF := SharedFile
+Loop
+Gui get command						Loop
+WaitWrite(command)				command := WaitRead(WaitReady, Read, ResetReady:=true (Busy))
+Output:=WaitRead						Output:= Run(command)
+													Write(Output), ResetReady (Ready)
+													
+													

@@ -1,0 +1,79 @@
+; SharedMemoryClient.ahk - AHK v2 Consumer/Reader with Synchronization
+
+; --- Configuration ---
+SHARED_MEM_NAME := 'AHK_SharedData'
+DATA_READY_EVENT := 'AHK_DataReadyEvent'
+DATA_CONSUMED_EVENT := 'AHK_DataConsumedEvent'
+MAX_MEM_SIZE := 4096 ; Must match server size
+
+MsgBox('CLIENT: Starting up. Opening shared memory and events. Waiting for server...', 'Client Status', 'T3')
+
+; --- 1. Open Shared Memory Map ---
+; OpenFileMappingW(dwDesiredAccess, bInheritHandle, lpName)
+hMapFile := DllCall('OpenFileMappingW', 'UInt', 0x4, 'Int', False, 'WStr', SHARED_MEM_NAME, 'Ptr')
+if (hMapFile == 0) {
+    MsgBox('Error opening file map: ' A_LastError '. Did you start the Server script first?', 'Fatal Error', 0x10)
+    ExitApp
+}
+; MapViewOfFile(hMapFile, dwDesiredAccess, dwOffsetHigh, dwOffsetLow, dwBytesToMap)
+pMapView := DllCall('MapViewOfFile', 'Ptr', hMapFile, 'UInt', 0x4, 'UInt', 0, 'UInt', 0, 'Ptr', MAX_MEM_SIZE, 'Ptr')
+if (pMapView == 0) {
+    MsgBox('Error mapping view: ' A_LastError, 'Fatal Error', 0x10)
+    DllCall('CloseHandle', 'Ptr', hMapFile)
+    ExitApp
+}
+
+; --- 2. Open Named Synchronization Events ---
+; OpenEventW(dwDesiredAccess, bInheritHandle, lpName)
+hDataReady := DllCall('OpenEventW', 'UInt', 0x1F0003, 'Int', False, 'WStr', DATA_READY_EVENT, 'Ptr')
+hDataConsumed := DllCall('OpenEventW', 'UInt', 0x1F0003, 'Int', False, 'WStr', DATA_CONSUMED_EVENT, 'Ptr') 
+
+if (hDataReady == 0 || hDataConsumed == 0) {
+    MsgBox('Error opening events. Ensure the Server is running first.', 'Fatal Error', 0x10)
+    ExitApp
+}
+
+; --- 3. Main Consumption Loop ---
+Loop 10 ; Run 10 times to match the server
+{
+    ; a. Wait for Server to signal Data is READY
+    ; WaitForSingleObject(hHandle, dwMilliseconds)
+    MsgBox('CLIENT: Waiting for server signal (Data Ready)...', 'Client Status', 'T1')
+    DllCall('WaitForSingleObject', 'Ptr', hDataReady, 'UInt', 0xFFFFFFFF)
+    
+    ; b. Reset the Server's signal immediately
+    DllCall('ResetEvent', 'Ptr', hDataReady)
+
+    ; c. Read Data from Shared Memory (UTF-16)
+    ; Read the length (4 bytes) at offset 0
+    dataLen := NumGet(pMapView, 0, 'UInt')
+    
+    ; Read the string starting at offset 4
+    jsonString := StrGet(pMapView + 4, dataLen, 'UTF-16')
+    
+    ; d. Process and Deserialize Data
+    try
+    {
+        data := Json.Parse(jsonString)
+        output := "CLIENT: Received Data #" data.Index "`n"
+        output .= "Message: " data.Message "`n"
+        output .= "Time: " data.Timestamp
+        MsgBox(output, 'Data Received', 'T2')
+    }
+    catch as e
+    {
+        MsgBox('CLIENT: Error parsing JSON: ' e.Message, 'Error', 0x10)
+    }
+
+    ; e. Signal to Server that Data is CONSUMED and buffer is free
+    DllCall('SetEvent', 'Ptr', hDataConsumed)
+}
+
+; --- Cleanup ---
+DllCall('UnmapViewOfFile', 'Ptr', pMapView)
+DllCall('CloseHandle', 'Ptr', hMapFile)
+DllCall('CloseHandle', 'Ptr', hDataReady)
+DllCall('CloseHandle', 'Ptr', hDataConsumed)
+
+MsgBox('CLIENT: Finished 10 cycles and cleaned up.', 'Client Status', 0x40)
+ExitApp

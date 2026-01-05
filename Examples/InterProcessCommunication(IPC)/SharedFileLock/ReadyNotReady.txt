@@ -1,0 +1,30 @@
+Ready / NotReady
+
+Server
+
+Create SharedFile, initial state Ready
+
+WaitNotReady		; wait for client to lock
+WaitReady 			; client writing command
+SetNotReady			f.open lock file
+command:=Read
+output:=Run(command)
+Write("ACK")
+SetReady				f.close unlock
+WaitNotReady		; client read response
+WaitReady 	; client processed respone
+Loop
+
+Client
+
+WaitReady
+SetNotReady			f.open lock
+form command:(exe, p1, p2)
+write (command)
+SetReady
+WaitNotReady	; wait for server to write respone
+WaitReady
+SetNotReady
+response:=Read
+SetReady
+

@@ -1,0 +1,6 @@
+
+SharedFile Sync Logic
+
+Use the Archive attribute in the SharedFile.txt
+" A" Archive Set	= "Ready"		('Available')
+"-A" Clear Archive	= "NotReady"	('Not Available')

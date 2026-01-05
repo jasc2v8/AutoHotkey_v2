@@ -1,0 +1,58 @@
+﻿; ABOUT:    MySCript v1.0
+; From:     https://www.autohotkey.com/boards/viewtopic.php?t=73588
+; License:
+/*
+    TODO: 
+*/
+#Requires AutoHotkey v2.0+
+#SingleInstance Force
+#NoTrayIcon
+esc::exitapp
+
+class MyClassName {
+	__New() {
+		this.property["test"] := "new-init" ; "this" works in __New()
+	}
+
+	property[name] {
+		set => this.my%name% := value
+		get => this.my%name%
+	}
+
+	method(x,y) {
+		return x+y
+	}
+
+    apple {
+    	set => this.myApple := value 
+	    get => this.myApple
+    }
+
+    banana[length := 0] {
+	    set => length < 10 ? "error()" : this.myBanana := value
+	    get => this.myBanana
+    }
+}
+
+myclass := MyClassName()
+;msgbox "test: " myclass.property, "Property"
+;msgbox "test: " myclass.test, "Property"
+
+myclass.banana :=  "A banana a day a day..."
+msgbox myclass.banana
+
+myclass.text := "change" ; comment this out to get init value
+msgbox "test: " myclass.text, "Property"
+
+msgbox myclass.method(3,2), "Method"
+
+myclass.anyproperty := "my property"
+msgbox "anyproperty: " myclass.anyproperty
+
+;myclass.property["test"] := "property.test"
+;msgbox "anyproperty: " myclass.property["a"]
+
+myclass.apple := "An apple a day..."
+msgbox myclass.apple
+
+

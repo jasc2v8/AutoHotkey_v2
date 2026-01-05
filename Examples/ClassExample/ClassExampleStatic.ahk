@@ -1,4 +1,4 @@
-﻿#Requires AutoHotkey v2.0
+﻿#Requires AutoHotkey v2.0+
 
 ; Directives, keywords
 #SingleInstance Force
@@ -32,6 +32,8 @@ class PathMap
 ;----------------------------------------------------------------
 ; --- Usage Example ---
 ;----------------------------------------------------------------
+Escape::ExitApp()
+
 ;fileInfo := Object()
 fileInfo := PathMap.Split("C:\Users\JohnDoe\Documents\MyProject\MyFile.txt")
 

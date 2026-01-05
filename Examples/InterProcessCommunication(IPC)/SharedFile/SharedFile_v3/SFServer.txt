@@ -1,0 +1,20 @@
+
+SharedFile Server Logic
+
+Client--Server:
+
+; The Server runs continuously, typically a Windows Service
+; The Server creates and destroys the SharedFile
+
+SF := SharedFile('Server', NewSharedFilePath:=default)
+
+Loop
+	command:= WaitRead(Timeout, ResetReady:=true)	; from Client
+
+	output:= _Run(command)
+
+	WaitWrite(output, Timeout, ResetReady:=true)	; to Client
+
+	WaitNotReady(Timeout, ResetReady:=false)		; wait for Client to read response
+
+The SharedFile is destroyed by the Server class destructor

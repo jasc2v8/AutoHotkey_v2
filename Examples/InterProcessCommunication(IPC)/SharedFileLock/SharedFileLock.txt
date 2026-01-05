@@ -1,0 +1,27 @@
+Server
+
+Create SharedFile, initial state unlocked
+
+WaitLocked		; wait for client to lock
+WaitUnLocked 	; client writing command
+f.open lock file
+command:=Read
+output:=Run(command)
+Write("ACK")
+f.close unlock
+WaitLocked		; client read response
+WaitUnLocked 	; client processed respone
+Loop
+
+Client
+
+WaitUnLocked
+f.open lock
+command:(exe, p1, p2)
+write (command)
+f.close unlock
+WaitLocked	; wait for server to read command
+WaitUlocked	; wait for server to write respone
+f.open lock
+response:=Read
+f.close unlock
