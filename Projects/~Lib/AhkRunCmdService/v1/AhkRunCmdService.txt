@@ -1,0 +1,26 @@
+
+Controller
+
+Named Pipe to Service
+	ParamCSV:="PipeName, ExePath, Params*
+		Params:= BackupExePath, ActionAfterBackup, BackupProfile
+
+	PIPE_NAME="BackupControlTool"
+	
+		PipeName
+AhkRunCmdService
+
+Service
+	create Named Pipe: "\\.\pipe\AhkRunCmdService"
+	receive Named Pipe from Controller: "PipeName=\\.\pipe\BackupControlTool"
+	close Named Pipe: "\\.\pipe\AhkRunCmdService"
+	
+	receive messageCSV
+	split
+	switch Command
+	case "run":
+		returnValue := RunCMD(SBackupExePath, ActionAfterBackup, BackupProfile)
+		if returnValue!="" status=success else status=error
+		Named Pipe to Service: returnValue "success" or "error"
+	case "SYN"
+		Name Pipe Send "ACK"

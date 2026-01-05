@@ -1,0 +1,38 @@
+
+"D:\Software\DEV\Work\AHK2\Examples\Gui\GuiMetrics\GuiPosDemo.ahk"
+
+Screen:	x: 727	y: 321	w: 466	h: 389
+Client  :	x: 735	y: 352	w: 450	h: 350
+
+global bw:= 30
+global bh:= 25
+
+/*
+    Client x,y = 450, 350
+
+    Width           		434		450 width - 9 margin left + 1pix - 9 margin right + 1pix
+    Height          		334		350 height - 9 margin left + 1pix - 9 margin right + 1pix
+    WindowBorder       5=>10        14 CL x - 9 margin = 5
+    Margin           		    9       52 CL width - 38 TL with = 14 - 5 window border = 9
+    Left            			 14      WindowBorder + Margin
+    Right					441     (450 client width - 9 margin=441) - 38 button width=403 button Y
+    Top             			   9      client top - margin
+    Bottom          		341     (350 client height - 9 margin=341) - 34 button height=307 button Y
+
+*/
+
+---------------------------
+GuiLayoutClass.ahk
+---------------------------
+Width  	: 440
+Height 	: 340
+Border 	: 10
+Margin 	: 9
+Left   		: 10
+Right  		: 440
+Top    		: 10
+Bottom	: 340
+CenterX	: 220
+CenterY	: 170
+--------------------------
+

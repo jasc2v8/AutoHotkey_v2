@@ -1,0 +1,23 @@
+runner:=RunSkipUAC
+	StartTask(AHK_RunSkipUAC)
+	Task AHK_RunSkipUAC runs RunSkipUAC
+
+runner.Start("WorkerPath.ahk")
+
+	
+class RunSkipUAC
+	_New()
+	StartTask(AHK_RunSkipUAC)
+	CreatePipe()
+	path:= pipe.Receive()
+	Run(path)
+	pipe.Close
+	ExitApp
+
+Run(WorkerPath)
+	pipe.Send(WorkerPath)
+
+Receive()
+class }
+
+RunSkipUAC()

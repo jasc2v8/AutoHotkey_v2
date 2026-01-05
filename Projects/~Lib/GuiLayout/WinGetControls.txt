@@ -1,0 +1,24 @@
+---------------------------
+IsArray: TRUE
+---------------------------
+Name, Type, ClassNN, Text
+-----------------------------
+
+Edit, Edit, Edit1, Selected File
+
+Text, Text, Static1, Repeatedly Press ENTER...
+
+Divider, Text, Static2, 
+
+Yes, Button, Button1, Yes
+
+No, Button, Button2, No
+
+All, Button, Button3, All
+
+Cancel, Button, Button4, Cancel
+
+
+---------------------------
+OK   
+---------------------------

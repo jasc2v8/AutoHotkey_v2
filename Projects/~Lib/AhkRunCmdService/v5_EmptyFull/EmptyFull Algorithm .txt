@@ -1,0 +1,72 @@
+
+SharedBuffer.txt
+ R = Read-Only		Ready			(Full) 	
+-R = Read-Write	Not Ready	(Empty)
+
+init:=SetEmpty()
+
+Service - Client
+-----------------------------------------
+	WaitEmpty()
+	Form cmd
+	Write(cmd) and SetFull()	
+WaitFull()													Wait for Client to send command
+cmd:=Read() and SetEmpty()
+	WaitEmpty()
+Output:=RunCMD(cmd)
+Write Output and SetFull()
+	WaitFull()
+	Read() and SetEmpty()
+WaitEmpty()												Wait for Client to read output
+Loop
+
+Client
+-----------------------------------------
+Form cmd
+Write(cmd) and SetFull()						Service Read, Write Output, SetFull
+	WaitFull()													Wait for Client to send command
+	cmd:=Read() and SetEmpty()
+WaitEmpty()											Wait for Service to Read(cmd) 
+	Output:=RunCMD(cmd)
+	Write Output and SetFull()
+WaitFull()												Wait for Output
+Read() and SetEmpty()
+	WaitEmpty()
+Loop: Client WaitEmpty() Immediately and forms the next cmd
+
+
+
+
+==============================
+
+
+BufferState.dat
+ R = Ready 
+-R = Not Ready
+
+SharedMemory.dat
+
+;ClientBuffer.dat
+;ServiceBuffer.dat
+
+init:=BufferEmpty
+
+Client
+-----------------------------------------
+Wait until BufferEmpty
+Form cmd
+Write and set BufferFull
+Wait until BufferEmpty
+Wait until BufferFull
+Read Output and set BufferEmpty
+Loop
+
+Service
+-----------------------------------------
+Wait until BufferFull
+Output:=RunCMD
+Write Output and set BufferFull
+Wait until BufferEmpty
+Loop
+
+

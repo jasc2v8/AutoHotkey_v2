@@ -1,0 +1,11 @@
+
+Given this command:
+	cmd := '"C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe" "TEST WITH SPACES"'
+	
+This works:
+	Run cmd ; syncback raises UAC
+
+Also this works:
+	shell := ComObject("WScript.Shell")
+	exec := shell.Exec(cmd) ; Error requires elevation (UAC before Exec)
+

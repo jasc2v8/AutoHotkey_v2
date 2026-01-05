@@ -1,0 +1,24 @@
+Admin privs
+
+
+sc create MyAHKService binPath= "C:\Path\To\MyScript.exe" start= auto
+sc start MyAHKService
+sc stop MyAHKService
+sc delete MyAHKService
+
+nssm install MyAHKService "C:\Path\To\MyScript.exe"
+nssm start MyAHKService
+
+nssm start MyAHKService
+nssm remove MyAHKService confirm
+
+✅ Advantages of NSSM:
+- Handles logging and restart on crash.
+- Easier to configure than raw sc.exe.
+- Gracefully manages lifecycle for executables that aren’t true services.
+
+⚡ Which to choose?
+- Quick and dirty: sc.exe if you just need the script to run at boot and don’t care about graceful stop.
+- Robust and maintainable: NSSM if you want logging, restart, and clean lifecycle management.
+
+

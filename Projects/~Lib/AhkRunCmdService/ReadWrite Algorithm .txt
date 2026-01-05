@@ -1,0 +1,21 @@
+
+SharedFile.txt
+ R =  Read-Only		=	Read
+-R = !Read-Only	=	Write
+
+init:=SetWrite to signal Service wait to read
+
+Service								Client				Description
+----------------------------		----------------	---------------------------------------------------------------------
+WaitRead()						Form cmd		Service waits to read, Client forms a cmd
+											Write(cmd)		Client writes cmd to Service
+											SetRead()		Client signals Service to read cmd
+cmd:=Read()						WaitWrite		Client waits to write, Service reads cmd
+SetWrite								WaitRead		Service signals Client to write, Client waits to read output
+Output:=RunCMD(cmd)								Service runs cmd, gets output
+Write Output												Service writes output
+SetRead()							Read()			Service signals Client to read, Client reads output											
+WaitWrite()						SetWrite()		Service waits to write, Client signals Service to write
+Loop									Loop				Loop to: Service Waits to Read, Client forms next cmd
+
+

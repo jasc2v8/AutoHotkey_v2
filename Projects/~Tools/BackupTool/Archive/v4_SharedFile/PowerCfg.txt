@@ -1,0 +1,22 @@
+JIM-PC
+
+
+C:\>powercfg /a
+
+The following sleep states are available on this system:
+    Standby (S3)
+    Hibernate
+    Fast Startup
+
+The following sleep states are not available on this system:
+    Standby (S1)
+        The system firmware does not support this standby state.
+
+    Standby (S2)
+        The system firmware does not support this standby state.
+
+    Standby (S0 Low Power Idle)
+        The system firmware does not support this standby state.
+
+    Hybrid Sleep
+        The hypervisor does not support this standby state.
