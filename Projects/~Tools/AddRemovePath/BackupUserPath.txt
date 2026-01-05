@@ -1,2 +1,0 @@
-
-C:\Users\Jim\AppData\Local\Programs\Python\Python313\Scripts\;C:\Users\Jim\AppData\Local\Programs\Python\Python313\;%USERPROFILE%\AppData\Local\Microsoft\WindowsApps;C:\Users\Jim\AppData\Local\GitHubDesktop\bin;%USERPROFILE%\.dotnet\tools;C:\Users\Jim\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\NSSM;

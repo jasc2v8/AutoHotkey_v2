@@ -1,6 +1,0 @@
-﻿Gui Show, w620 h420, Window
-Return
-
-GuiEscape:
-GuiClose:
-    ExitApp

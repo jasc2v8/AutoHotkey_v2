@@ -1,5 +1,0 @@
-A.I.
-
-Trying to share ObjRegisterActive directly across elevated → non-elevated is extremely painful and error-prone because 
-COM was not designed to cross integrity boundaries without DCOM configuration.
-

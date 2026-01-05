@@ -1,5 +1,0 @@
-C:\Users\Jim>C:\Windows\System32\schtasks.exe /run /tn AdminAppLauncher
-SUCCESS: Attempted to run the scheduled task "AdminAppLauncher".
-
-C:\Users\Jim>C:\Windows\System32\schtasks.exe /end /tn AdminAppLauncher
-SUCCESS: The scheduled task "AdminAppLauncher" has been terminated successfully.
