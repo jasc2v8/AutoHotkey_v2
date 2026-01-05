@@ -3,7 +3,7 @@
 
 #Requires AutoHotkey v2.0+
 
-#Include <MsgBox> ; for debugging
+#Include <CustomMsgBox> ; for debugging
 
 ;-------------------------------------------------------------------------------
 ; TODO   :  See GuiResizerLite.ahk: controls[btn1, btn2, btn3]
@@ -84,7 +84,7 @@ If (A_LineFile == A_ScriptFullPath)  ; if run directly, not included
 
 __DoTests_GuiControlMove() {
 
-    Run_Tests := false
+    Run_Tests := true ; false
 
     if !Run_Tests
         SoundBeep(), ExitApp()

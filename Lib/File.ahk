@@ -1,7 +1,7 @@
-﻿;ABOUT: Scante <Lib>, classes > Include_classes.ahk, functions > Include_functions.ahk
+﻿;ABOUT: File.ahk
 
-#Requires AutoHotkey v2.0
-#SingleInstance Force
+#Requires AutoHotkey v2.0+
+;#SingleInstance Force
 ;#NoTrayIcon
 
 ; #region Functions

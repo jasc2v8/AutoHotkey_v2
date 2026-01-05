@@ -1,12 +1,172 @@
 ﻿/*
+	11/7/2025 TODO: Add:
+		.IsEmpty() (DONE)
+		.SplitShortcut() (DONE)
+		.ExtractBetween(StartChar, EndChar) (DONE)
 
-	TODO: fix others
+		StrJoinPath(words*)
+		changed LPad and RPad to LPad(pad, count) to LPad(count, pad:=A_Space)
 
-	DONE:
-		Contains()
+	Name: String.ahk
+	From: String.ahk (https://github.com/Descolada/AHK-v2-libraries)
+	Version 0.15 (05.09.23)
+	Created: 27.08.22
+	Author: Descolada
+	License: MIT License, Copyright (c) 2023 Descolada
+	
+	Description:
+	A compilation of useful string methods. Also lets strings be treated as objects.
 
+	These methods cannot be used as stand-alone. To do that, you must add another argument
+	'string' to the function and replace all occurrences of 'this' with 'string'.
+	.-==========================================================================-.
+	| Properties                                                                 |
+	|============================================================================|
+	| String.Length                                                              |
+	|       .IsDigit                                                             |
+	|       .IsXDigit                                                            |
+	|       .IsAlpha                                                             |
+	|       .IsUpper                                                             |
+	|       .IsLower                                                             |
+	|       .IsAlnum                                                             |
+	|       .IsSpace                                                             |
+	|       .IsTime                                                              |
+	|============================================================================|
+	| Methods                                                                    |
+	|============================================================================|
+	| Native functions as methods:                                               |
+	| String.ToUpper()                                                           |
+	|       .ToLower()                                                           |
+	|       .ToTitle()                                                           |
+	|       .Split([Delimiters, OmitChars, MaxParts])                            |
+	|       .Replace(Needle [, ReplaceText, CaseSense, &OutputVarCount, Limit])  |
+	|       .Trim([OmitChars])                                                   |
+	|       .LTrim([OmitChars])                                                  |
+	|       .RTrim([OmitChars])                                                  |
+	|       .Compare(comparison [, CaseSense])                                   |
+	|       .Sort([, Options, Function])                                         |
+	|       .Format([Values...])                                                 |
+	|       .Find(Needle [, CaseSense, StartingPos, Occurrence])                 |
+	|       .SplitPath() => returns object {FileName, Dir, Ext, NameNoExt, Drive}|                                                       |
+	|		.RegExMatch(needleRegex, &match?, startingPos?)                      |
+	|       .RegExMatchAll(needleRegex, startingPos?)                            |
+	|		.RegExReplace(needle, replacement?, &count?, limit?, startingPos?)   |
+	|                                                                            |
+	| String[n] => gets nth character                                            |
+	| String[i,j] => substring from i to j                                       |
+	| for [index,] char in String => loops over the characters in String         |
+	| String.Length                                                              |
+	| String.Count(searchFor)                                                    |
+	| String.Insert(insert, into [, pos])                                        |
+	| String.Delete(string [, start, length])                                    |
+	| String.Overwrite(overwrite, into [, pos])                                  |
+	| String.Repeat(count)                                                       |
+	| Delimeter.Concat(words*)                                                   |
+	|                                                                            |
+	| String.LineWrap([column:=56, indentChar:=""])                              |
+	| String.WordWrap([column:=56, indentChar:=""])                              |
+	| String.ReadLine(line [, delim:="`n", exclude:="`r"])                       |
+	| String.DeleteLine(line [, delim:="`n", exclude:="`r"])                     |
+	| String.InsertLine(insert, into, line [, delim:="`n", exclude:="`r"])       |
+	|                                                                            |
+	| String.Reverse()                                                           |
+	| String.Contains(needle1 [, needle2, needle3...])                           |
+	| String.RemoveDuplicates([delim:="`n"])                                     |
+	| String.LPad(count)                                                         |
+	| String.RPad(count)                                                         |
+	|                                                                            |
+	| String.Center([fill:=" ", symFill:=0, delim:="`n", exclude:="`r", width])  |
+	| String.Right([fill:=" ", delim:="`n", exclude:="`r"])                      |
+	'-==========================================================================-'
+
+	Added 11/7/2025:
+	----------------
+	.EndClose(ends)
+	.EndsWith(Haystack, Needle, CaseSense := false)
+	.ExtractBetween(StartChar, EndChar)
+	.IsEmpty()
+	.LastIndexOf(Haystack, Needle, CaseSense:=false)
+	.LPad and RPad from (pad, count) to (count, pad:=A_Space
+	.Match(Haystack, Needle)
+	.SplitShortcut()
+	.StartsWith(Haystack, Needle, CaseSense := false)
+	.StrJoinPath(words*)
+
+	|============================================================================|
 */
-	Class StrFunctions {
+	Class String2 {
+
+	static __New() {
+		; Add String2 methods and properties into String object
+		__ObjDefineProp := Object.Prototype.DefineProp
+		for __String2_Prop in String2.OwnProps()
+			if SubStr(__String2_Prop, 1, 2) != "__"
+				__ObjDefineProp(String.Prototype, __String2_Prop, String2.GetOwnPropDesc(__String2_Prop))
+		__ObjDefineProp(String.Prototype, "__Item", {get:(args*)=>String2.__Item[args*]})
+		__ObjDefineProp(String.Prototype, "__Enum", {call:String2.__Enum})
+	}
+
+	static __Item[args*] {
+		get {
+			if args.length = 2
+				return SubStr(args[1], args[2], 1)
+			else {
+				len := StrLen(args[1])
+				if args[2] < 0
+					args[2] := len+args[2]+1
+				if args[3] < 0
+					args[3] := len+args[3]+1
+				if args[3] >= args[2]
+					return SubStr(args[1], args[2], args[3]-args[2]+1)
+				else
+					return SubStr(args[1], args[3], args[2]-args[3]+1).Reverse()
+			}
+		}
+	}
+
+	static __Enum(varCount) {
+		pos := 0, len := StrLen(this)
+		EnumElements(&char) {
+			char := StrGet(StrPtr(this) + 2*pos, 1)
+			return ++pos <= len
+		}
+		
+		EnumIndexAndElements(&index, &char) {
+			char := StrGet(StrPtr(this) + 2*pos, 1), index := ++pos
+			return pos <= len
+		}
+
+		return varCount = 1 ? EnumElements : EnumIndexAndElements
+	}
+	; Native functions implemented as methods for the String object
+	static Length    	  => StrLen(this)
+	static WLength        => (RegExReplace(this, "s).", "", &i), i)
+	static ULength        => StrLen(RegExReplace(this, "s)((?>\P{M}(\p{M}|\x{200D}))+\P{M})|\X", "_"))
+	static IsDigit		  => IsDigit(this)
+	static IsXDigit		  => IsXDigit(this)
+	static IsAlpha		  => IsAlpha(this)
+	static IsUpper		  => IsUpper(this)
+	static IsLower		  => IsLower(this)
+	static IsAlnum		  => IsAlnum(this)
+	static IsSpace		  => IsSpace(this)
+	static IsTime		  => IsTime(this)
+	static ToUpper()      => StrUpper(this)
+	static ToLower()      => StrLower(this)
+	static ToTitle()      => StrTitle(this)
+	static Split(args*)   => StrSplit(this, args*)
+	static Replace(args*) => StrReplace(this, args*)
+	static Trim(args*)    => Trim(this, args*)
+	static LTrim(args*)   => LTrim(this, args*)
+	static RTrim(args*)   => RTrim(this, args*)
+	static Compare(args*) => StrCompare(this, args*)
+	static Sort(args*)    => Sort(this, args*)
+	static Format(args*)  => Format(this, args*)
+	static Find(args*)    => InStr(this, args*)
+	static SplitPath() 	  => (SplitPath(this, &a1, &a2, &a3, &a4, &a5), {FileName: a1, Dir: a2, Ext: a3, NameNoExt: a4, Drive: a5})
+
+	static IndexOf(args*) => InStr(this, args*)
+	static SplitShortcut() => (FileGetShortcut(this, &a1, &a2, &a3, &a4, &a5, &a6, &a7), {Target: a1, Dir: a2, Args: a3, Description: a4, Icon: a5, IconNum: a6, RunState: a7})
+	static IsEmpty()      => StrLen(this) == 0
 
 	/**
 	 * Returns the match object
@@ -400,9 +560,9 @@
 	 * @param needles
 	 * @returns {Boolean}
 	 */
-	static Contains(Str, needles*) {
+	static Contains(needles*) {
 		for needle in needles
-			if InStr(Str, needle)
+			if InStr(this, needle)
 				return 1
 		return 0
 	}
@@ -570,10 +730,101 @@
 	}
 }
 
-; _Str := StrFunctions
-; text := "GET"
-; if _Str.Contains(text, "GET")
-; 	MsgBox "true"
-; else
-; 	MsgBox "false"
+If (A_LineFile == A_ScriptFullPath)  ; if run directly, not included
+    String_Tests()
 
+;----------------------------------------------------------------
+; --- Usage Example ---
+;----------------------------------------------------------------
+
+String_Tests() {
+
+    ; comment out to run tests
+    SoundBeep(), ExitApp()
+
+    ; comment out tests to skip:
+    Test_Match()
+    ;Test_Enclose()
+    ;Test_ToString()
+    ;Test2()
+    ;Test3()
+	Test_Match() {
+		MsgBox "#Include <MyLib>".Match("#Include\s*<([^>]+)>")
+	}
+	Test_Enclose() {
+		param := "something"
+		MsgBox param.Enclose("") "`n`n" .
+		param.Enclose('"') "`n`n" .
+		param.Enclose("'") "`n`n" .
+		param.Enclose("[]") "`n`n" .
+		param.Enclose("{}") "`n`n" .
+		param.Enclose("%")
+
+	}
+
+	Test_ToString() {
+
+		; can't think of why I would need to turn anything into a string
+		; see D:\Software\DEV\Work\AHK2\AHK2 Software\AutoGUI-v2-main\AutoGUI v2\AutoGUI v2\changes_of_note\_ConvertFuncs.ahk
+
+		param := 3*64
+		param := "something"
+
+		r := ToString(param)
+		MsgBox r, "ToString"
+
+	ToString(param) {
+
+		return '"' param '"'
+
+	}
+
+	}
+; RunTests()
+
+; RunTests() {
+; 	return
+
+        ;Filename := (Filename) ? Filename : StrJoinPath(A_ScriptDir, "Debug.txt")
+        ;Filename := (Filename) ? Filename : "\".ConCat(A_ScriptDir, "Debug.txt")
+        ;Filename := (Filename) ? Filename : A_ScriptDir.Join("\", "Debug.txt")
+        ;Filename := (Filename) ? Filename : A_ScriptDir.JoinPath("Debug.txt")
+
+; 	text := "something"
+; 	MsgBox text.StartsWith("som"), "StartsWith=1 (True)"
+; 	MsgBox text.EndsWith("ing"), "EndsWith=1 (True)"
+
+; 	TODO:
+; 	MsgBox text.LastIndexOf("me"), "LastIndexOf=1 (True)"
+
+; 	MsgBox text.Contains("th"), "Contains=1 (True)"
+
+; 	MsgBox StrJoinPath("C:\", "\Windows", "\Dir", "\filename.ext")
+
+; 	newtext := "\".Join("C:\", "\Windows", "\Dir", "\filename.ext")
+; 	MsgBox newtext, "Join"
+
+; 	newtext := ",".Concat("111", "222", "333", "abc")
+; 	MsgBox newtext, "Concat"
+
+; 	text := "something"
+; 	MsgBox text.ExtractBetween("e", "i"), "Result: th"
+
+; 	;{Target: a1, Dir: a2, Args: a3, Description: a4, Icon: a5, IconNum: a6, RunState: a7})
+; 	link := "c:\windows\WinSxS\amd64_microsoft-windows-commandprompt-shortcut_31bf3856ad364e35_10.0.26100.1_none_36b1fe01579c5883\Command Prompt.lnk"
+
+; 	msg := ""
+; 	msg .= link.SplitShortcut().Target 		"`n"
+; 	msg .= link.SplitShortcut().Dir 		"`n"
+; 	msg .= link.SplitShortcut().Args		"`n"
+; 	msg .= link.SplitShortcut().Description "`n"
+; 	msg .= link.SplitShortcut().Icon 		"`n"
+; 	msg .= link.SplitShortcut().IconNum 	"`n"
+; 	msg .= link.SplitShortcut().RunState 	"`n"
+; 	MsgBox msg, "SplitShortcut"
+
+; 	text := ""
+; 	MsgBox text.IsEmpty()
+; 	text := "something"
+; 	MsgBox text.IsEmpty()
+ }

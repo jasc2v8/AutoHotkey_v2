@@ -1,85 +1,131 @@
-﻿;ABOUT: Runs a command line program then returns the output
-;SOURCE: https://www.autohotkey.com/boards/viewtopic.php?f=83&t=133668
+﻿; ABOUT: RunCMD v1.0
 
-#Requires AutoHotkey v2.0
-RunCMD(P_CmdLine, P_WorkingDir := "", P_Codepage := "cp0", P_Func := 0, P_Slow := 1)
-{  ;  RunCMD v1.00.2 for ah2 By SKAN on D67D/D7AF @ autohotkey.com/r/?t=133668
-   ;  Based on StdOutToVar.ahk by Sean @ www.autohotkey.com/board/topic/15455-stdouttovar
+#Requires AutoHotkey 2.0+
 
-    Local  hPipeR                :=  0
-        ,  hPipeW                :=  0
-        ,  PIPE_NOWAIT           :=  1
-        ,  HANDLE_FLAG_INHERIT   :=  1
-        ,  dwMask                :=  HANDLE_FLAG_INHERIT
-        ,  dwFlags               :=  HANDLE_FLAG_INHERIT
+; SUMMARY : Runs a command (handles spaces in the arguments) and returns the Output.
+; RETURNS : StdOut and StdErr: success=Instr(output, "Error")=0, error=Instr(output, "Error")>0
+; EXAMPLES:
+;   RunCMD(Command)                         ; Determines if Array, CSV, String, and Executable,or CMD.
+;   RunCMD([My App.exe, p1, p2])            ; Array (RunCMD will add quotes as needed).
+;   RunCMD("My App.exe, p1, p2")            ; CSV   (RunCMD will add quotes as needed).
+;   RunCMD("dir /b D:\My Dir")              ; String, CMD
+;   RunCMD("MyApp.exe D:\MyDir")            ; String, EXE (User must add quotes as needed.)
+;   RunCMD(Format('"{}" {}', exe, params))  ; String, EXE (User must add quotes as needed.)
+;------------------------------------------------------------------------------------------------
+class RunCMD{
 
-    DllCall("Kernel32\CreatePipe", "ptrp",&hPipeR, "ptrp",&hPipeW, "ptr",0, "int",0)
-  , DllCall("Kernel32\SetHandleInformation", "ptr",hPipeW, "int",dwMask, "int",dwFlags)
+    static Call(CommandLine) {
 
-    Local  B_OK                  :=  0
-        ,  P8                    :=  A_PtrSize = 8
-        ,  STARTF_USESTDHANDLES  :=  0x100
-        ,  STARTUPINFO           :=  Buffer(P8 ? 104 : 68, 0)                  ;  STARTUPINFO
+        if this.IsType(CommandLine, "CSV") {
+            
+            ;MsgBox CommandLine, "CSV"
 
-    NumPut("uint", P8 ? 104 : 68, STARTUPINFO)                                 ;  STARTUPINFO.cb
-  , NumPut("uint", STARTF_USESTDHANDLES, STARTUPINFO, P8 ? 60 : 44)            ;  STARTUPINFO.dwFlags
-  , NumPut("ptr",  hPipeW, STARTUPINFO, P8 ? 88 : 60)                          ;  STARTUPINFO.hStdOutput
-  , NumPut("ptr",  hPipeW, STARTUPINFO, P8 ? 96 : 64)                          ;  STARTUPINFO.hStdError
+            splitCSV := StrSplit(CommandLine, ",")
 
-    Local  CREATE_NO_WINDOW      :=  0x08000000
-        ,  PRIORITY_CLASS        :=  DllCall("Kernel32\GetPriorityClass", "ptr",-1, "uint")
-        ,  PROCESS_INFORMATION   :=  Buffer(P8 ?  24 : 16, 0)                  ;  PROCESS_INFORMATION
+            return this.RunArray(splitCSV)
 
-    RunCMD.PID        :=  0
-  , RunCMD.ExitCode   :=  0
-  , RunCMD.Iterations :=  0
-    
-  , B_OK :=  DllCall( "Kernel32\CreateProcessW"
-                    , "ptr", 0                                                 ;  lpApplicationName
-                    , "ptr", StrPtr(P_CmdLine)                                 ;  lpCommandLine
-                    , "ptr", 0                                                 ;  lpProcessAttributes
-                    , "ptr", 0                                                 ;  lpThreadAttributes
-                    , "int", True                                              ;  bInheritHandles
-                    , "int", CREATE_NO_WINDOW | PRIORITY_CLASS                 ;  dwCreationFlags
-                    , "int", 0                                                 ;  lpEnvironment
-                    , "ptr", DirExist(P_WorkingDir) ? StrPtr(P_WorkingDir) : 0 ;  lpCurrentDirectory
-                    , "ptr", STARTUPINFO                                       ;  lpStartupInfo
-                    , "ptr", PROCESS_INFORMATION                               ;  lpProcessInformation
-                    , "uint" )
+        } else if this.IsType(CommandLine, "Array") {
 
-    DllCall("Kernel32\CloseHandle", "ptr",hPipeW)
+            ;MsgBox CommandLine[1], "Array"
 
-    If (  B_OK = False  
-    and   DllCall("Kernel32\CloseHandle", "ptr",hPipeR)  )
-          Return 
+            return this.RunArray(CommandLine)
 
-    RunCMD.PID := NumGet(PROCESS_INFORMATION, P8 ? 16 : 8, "uint")
+        } else if this.IsType(CommandLine, "String") {
 
-    Local  FileObj               :=  FileOpen(hPipeR, "h", P_Codepage)
-        ,  Line                  :=  ""
-        ,  LineNum               :=  1
-        ,  sOutput               :=  ""
-        ,  CRLF                  :=  "`r`n"
-    
-    Delay() =>  ( Sleep(P_Slow), RunCMD.Iterations += 1 )
+            ;MsgBox CommandLine, Type(CommandLine)
 
-    While   DllCall("Kernel32\PeekNamedPipe", "ptr",hPipeR, "ptr",0, "int",0, "ptr",0, "ptr",0, "ptr",0)
-      and   RunCMD.PID and Delay()
-            While  (  RunCMD.PID != 0 and FileObj.AtEOF != 1  )
-                      Line       :=  FileObj.ReadLine()
-                   ,  sOutput    .=  P_Func  ?  P_Func.Call(Line CRLF, LineNum++) 
-                                             :  Line CRLF
+            split := StrSplit(CommandLine, " ")
 
-    Local  hProcess              :=  NumGet(PROCESS_INFORMATION, 0, "ptr")
-        ,  hThread               :=  NumGet(PROCESS_INFORMATION, A_PtrSize, "ptr")
-        ,  ExitCode              :=  0
+            thisType := (InStr(split[1], "\") > 0) ? "EXE" : "CMD"
 
-    DllCall("Kernel32\GetExitCodeProcess", "ptr",hProcess, "ptrp",&ExitCode)
-  , DllCall("Kernel32\CloseHandle", "ptr",hProcess)
-  , DllCall("Kernel32\CloseHandle", "ptr",hThread)
-  , DllCall("Kernel32\CloseHandle", "ptr",hPipeR)
-  , RunCMD.PID                   :=  0
-  , RunCMD.ExitCode              :=  ExitCode
-  
-    Return RTrim(sOutput, CRLF)
+            return this.RunWait(CommandLine, thisType)
+
+        } else {
+            return "Error: Invalid command line: " Type(CommandLine) "`n`nMust be Array, CSV, or String."
+        }
+    }
+
+    static RunArray(CommandArray) {
+
+        DQ:= '"'
+        CommandLine := ""
+        Type := (InStr(CommandArray[1], "\") > 0) ? "EXE" : "CMD"
+        for part in CommandArray {
+            part := Trim(part)
+            if (Type = "CMD")
+                ;if InStr(value, "\") > 0
+                ; Add quotes if the part contains a space and isn't already quoted
+                if InStr(part, " ") && !RegExMatch(part, '^".*"$')                  
+                    CommandLine .= DQ part DQ A_Space
+                else
+                    CommandLine .= part A_Space
+            else
+                CommandLine .= DQ part DQ A_Space
+        }
+        CommandLine :=  RTrim(CommandLine, A_Space)
+        return this.RunWait(CommandLine, Type)
+    }
+
+    static RunWait(Command, Type:="CMD") {
+
+        ;MsgBox "Cmd:`n`n" Command, Type
+
+        DetectHiddenWindows(true)
+        Run(A_ComSpec, , 'Hide', &pid)
+        WinWait('ahk_pid ' pid) 
+        if (DllCall("AttachConsole", "UInt", pid)) {
+            try {
+                shell := ComObject("WScript.Shell")
+                if (Type = "CMD")
+                    exec := shell.Exec(A_ComSpec ' /Q /C ' Command)
+                else
+                    exec := shell.Exec(Command)
+                result := exec.StdOut.ReadAll() . "`n" . exec.StdErr.ReadAll()
+                DllCall("FreeConsole")
+                ProcessClose(pid)                
+                return result
+            } catch any as e {
+                DllCall("FreeConsole")
+                ProcessClose(pid)
+                return "Error: " e.Message
+            }
+        }
+        return 'Error: Could not attach console.'
+    }
+
+    static ToArray(Params*) {
+        myArray:=Array()
+        for item in Params {
+            ;if IsSet(item)
+                myArray.Push(item)
+        }
+        return MyArray
+    }
+
+    static ToCSV(Params*) {
+        myString:= ""
+        for item in Params {
+            if IsSet(item)
+                myString .= item . ","
+        }
+        return RTrim(myString, ",")
+    }
+
+    ; Returns String: Array, Class, CSV, Float, Func, Integer, Map, String
+    static IsType(val, guess:="") {      
+    if (guess="") {
+        if Type(val) = "String" && InStr(val, ",")
+            return "CSV"
+        else
+            return Type(val)        
+    }
+    valType  := Type(val)
+    valGuess := Type(guess)
+    if (valType = guess)
+        return true
+    else if (valType = "String" && InStr(val, ",") && guess = "CSV")
+        return true
+    else
+        return false
+    }
 }

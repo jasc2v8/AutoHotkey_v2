@@ -1,0 +1,128 @@
+TEST: ShellVars: START: 20250929173147
+k: 3D Objects, v: shell:3D Objects
+k: Account Pictures, v: shell:AccountPictures
+k: AddNewProgramsFolder, v: shell:AddNewProgramsFolder
+k: AppData, v: shell:AppData
+ShellVars: SUCCESS: AppData
+k: AppDataDesktop, v: shell:AppDataDesktop
+ShellVars: SUCCESS: AppDataDesktop
+k: AppDataDocuments, v: shell:AppDataDocuments
+ShellVars: SUCCESS: AppDataDocuments
+k: AppDataFavorites, v: shell:AppDataFavorites
+ShellVars: SUCCESS: AppDataFavorites
+k: AppDataProgramData, v: shell:AppDataProgramData
+ShellVars: SUCCESS: AppDataProgramData
+k: AppUpdatesFolder, v: shell:AppUpdatesFolder
+k: Application Mods, v: shell:AppMods
+k: Application Shortcuts, v: shell:Application Shortcuts
+k: AppsFolder, v: shell:AppsFolder
+k: CSCFolder, v: shell:CSCFolder
+k: Cache, v: shell:Cache
+k: Camera Roll, v: shell:CameraRollLibrary
+k: Captures, v: shell:Captures
+k: ChangeRemoveProgramsFolder, v: shell:ChangeRemoveProgramsFolder
+k: Common AppData, v: shell:Common AppData
+ShellVars: SUCCESS: Common AppData
+k: Common Templates, v: shell:Common Templates
+k: CommonRingtones, v: shell:CommonRingtones
+k: ConflictFolder, v: shell:ConflictFolder
+k: ConnectionsFolder, v: shell:ConnectionsFolder
+k: Contacts, v: shell:Contacts
+k: ControlPanelFolder, v: shell:ControlPanelFolder
+k: Cookies, v: shell:Cookies
+k: CredentialManager, v: shell:CredentialManager
+k: CryptoKeys, v: shell:CryptoKeys
+k: Desktop, v: shell:ThisPCDesktopFolder
+k: Development Files, v: shell:Development Files
+k: Device Metadata Store, v: shell:Device Metadata Store
+k: Documents, v: shell:Personal
+k: Downloads, v: shell:Local Downloads
+k: DpapiKeys, v: shell:DpapiKeys
+k: Favorites, v: shell:Favorites
+k: Fonts, v: shell:Fonts
+k: GameTasks, v: shell:GameTasks
+k: History, v: shell:History
+k: ImplicitAppShortcuts, v: shell:ImplicitAppShortcuts
+k: InternetFolder, v: shell:InternetFolder
+k: Libraries, v: shell:Libraries
+k: Links, v: shell:Links
+k: Local AppData, v: shell:Local AppData
+ShellVars: SUCCESS: Local AppData
+k: LocalAppDataLow, v: shell:LocalAppDataLow
+ShellVars: SUCCESS: LocalAppDataLow
+k: LocalizedResourcesDir, v: shell:LocalizedResourcesDir
+k: MAPIFolder, v: shell:MAPIFolder
+k: Music, v: shell:My Music
+k: MyComputerFolder, v: shell:MyComputerFolder
+k: NetHood, v: shell:NetHood
+k: NetworkPlacesFolder, v: shell:NetworkPlacesFolder
+k: OEM Links, v: shell:OEM Links
+k: OneDrive, v: shell:OneDrive
+k: OneDriveCameraRoll, v: shell:OneDriveCameraRoll
+k: OneDriveDocuments, v: shell:OneDriveDocuments
+k: OneDriveMusic, v: shell:OneDriveMusic
+k: OneDrivePictures, v: shell:OneDrivePictures
+k: Original Images, v: shell:Original Images
+k: Pictures, v: shell:PicturesLibrary
+k: Playlists, v: shell:Playlists
+k: PrintHood, v: shell:PrintHood
+k: PrintersFolder, v: shell:PrintersFolder
+k: Profile, v: shell:Profile
+k: Program Files, v: shell:ProgramFiles
+k: Program Files (x86), v: shell:ProgramFilesX86
+k: ProgramFilesCommon, v: shell:ProgramFilesCommon
+k: ProgramFilesCommonX64, v: shell:ProgramFilesCommonX64
+k: ProgramFilesCommonX86, v: shell:ProgramFilesCommonX86
+k: ProgramFilesX64, v: shell:ProgramFilesX64
+k: Programs, v: shell:Programs
+k: Public, v: shell:Public
+k: Public Account Pictures, v: shell:PublicAccountPictures
+k: Public Desktop, v: shell:Common Desktop
+k: Public Documents, v: shell:Common Documents
+k: Public Downloads, v: shell:CommonDownloads
+k: Public Music, v: shell:CommonMusic
+k: Public Pictures, v: shell:CommonPictures
+k: Public Videos, v: shell:CommonVideo
+k: PublicGameTasks, v: shell:PublicGameTasks
+k: PublicLibraries, v: shell:PublicLibraries
+k: Quick Launch, v: shell:Quick Launch
+k: Recent Items, v: shell:Recent
+k: Recorded Calls, v: shell:Recorded Calls
+k: Recorded TV, v: shell:RecordedTVLibrary
+k: RecycleBinFolder, v: shell:RecycleBinFolder
+k: ResourceDir, v: shell:ResourceDir
+k: Retail Demo, v: shell:Retail Demo
+k: Ringtones, v: shell:Ringtones
+k: Roamed Tile Images, v: shell:Roamed Tile Images
+k: Roaming Tiles, v: shell:Roaming Tiles
+k: Saved Games, v: shell:SavedGames
+k: Saved Pictures, v: shell:SavedPicturesLibrary
+k: Screenshots, v: shell:Screenshots
+k: SearchHistoryFolder, v: shell:SearchHistoryFolder
+k: SearchHomeFolder, v: shell:SearchHomeFolder
+k: SearchTemplatesFolder, v: shell:SearchTemplatesFolder
+k: Searches, v: shell:Searches
+k: SendTo, v: shell:SendTo
+k: Slide Shows, v: shell:PhotoAlbums
+k: Start Menu, v: shell:Start Menu
+k: Startup, v: shell:Startup
+k: SyncCenterFolder, v: shell:SyncCenterFolder
+k: SyncResultsFolder, v: shell:SyncResultsFolder
+k: SyncSetupFolder, v: shell:SyncSetupFolder
+k: System, v: shell:System
+k: SystemCertificates, v: shell:SystemCertificates
+k: SystemX86, v: shell:SystemX86
+k: Templates, v: shell:Templates
+k: Temporary Burn Folder, v: shell:CD Burning
+k: ThisDeviceFolder, v: shell:ThisDeviceFolder
+k: User Pinned, v: shell:User Pinned
+k: UserProgramFiles, v: shell:UserProgramFiles
+k: UserProgramFilesCommon, v: shell:UserProgramFilesCommon
+k: Users, v: shell:UserProfiles
+k: UsersFilesFolder, v: shell:UsersFilesFolder
+k: UsersLibrariesFolder, v: shell:UsersLibrariesFolder
+k: Videos, v: shell:VideosLibrary
+k: Windows, v: shell:Windows
+k: Windows Tools, v: shell:Common Administrative Tools
+TEST: ShellVars: END: 20250929173329
+

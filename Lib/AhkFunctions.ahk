@@ -5,10 +5,10 @@
 #Requires AutoHotkey v2.0
 
 ;-------------------------------------------------------------------------------
-; FUNCTION: GetEnvironmentVariables
-; Purpose: Retrieves all environment variables as an AHK Map object.
-; Returns: A Map object where keys are variable names and values are their strings.
-; PathsOnly: Only returns the variables with a path versus just a string value.
+; FUNCTION  :GetEnvironmentVariables
+; Purpose   : Retrieves all environment variables as an AHK Map object.
+; Returns   : A Map object where keys are variable names and values are their strings.
+; PathsOnly : Only returns the variables with a path versus just a string value.
 ;-------------------------------------------------------------------------------
 GetEnvironmentVariables(PathsOnly := true)
 {
@@ -23,8 +23,7 @@ GetEnvironmentVariables(PathsOnly := true)
     
     ; Loop through the block of memory until a double null-terminator is found
     CurrentPtr := pEnv
-    while (DllCall("lstrlen", "ptr", CurrentPtr, "uint") != 0)
-    {
+    while (DllCall("lstrlen", "ptr", CurrentPtr, "uint") != 0) {
         ; Read the null-terminated string at the current pointer location
         ; Max 32KB is safe for a single environment variable.
         EnvString := StrGet(CurrentPtr, 'CP0')
@@ -33,8 +32,7 @@ GetEnvironmentVariables(PathsOnly := true)
         ; Find the position of the first "="
         EqPos := InStr(EnvString, "=")
         
-        if (EqPos > 0)
-        {
+        if (EqPos > 0) {
             ; Extract the Name (Key) and the Value
             Key   := SubStr(EnvString, 1, EqPos - 1)
             Value := SubStr(EnvString, EqPos + 1)
@@ -76,41 +74,6 @@ GetEnvironmentVariables(PathsOnly := true)
 ;     return {FullPath: path, ParentDir: ParentDir, FileName: FileName, Dir: Dir, Ext: Ext, NameNoExt: NameNoExt, Drive: Drive}
 ; }
 
-;-------------------------------------------------------------------------------
-; FUNCTION: ListObj([Map or Array], EncloseInBrackets)
-; Purpose: Lists the values of an AHK Map object in a message box.
-; Returns: The keys and/or values as a string.
-; Parameters: The Object or Array, EnclosedInBrackets := true or false.
-ListObj(MyObject, EncloseInBrackets := false) {
-
-    if (EncloseInBrackets) {
-        OB := '['
-        CB := ']'
-    } else {
-        OB := ''
-        CB := ''
-    }
-
-    Output := ''
-
-    objName := Type(MyObject)
-
-    if (objName = "Array") {
-        for value in MyObject {
-            Output .= OB value CB "`n`n"
-        }
-    } else {
-        if (objName = "Map") {
-            for index, value in MyObject {
-                Output .= OB index CB ": " OB value CB "`n"
-            }
-        }
-    }
-
-    MsgBox(Output, "Object is : " objName)
-
-    return Output
-}
 
 If (A_LineFile == A_ScriptFullPath)  ; when run directly, not included
     _Test_AhkFunctions()
