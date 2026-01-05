@@ -1,0 +1,25 @@
+# --- AutoHotkey Specific ---
+# Ignore compiled executables (if you don't want to distribute them via Git)
+*.exe
+*.bin
+
+# --- Editor & Versioning ---
+# VS Code .history folder (Requested)
+.history/
+# VS Code project settings
+.vscode/
+
+# --- Windows System Files ---
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --- Scripts & Temporary Files ---
+# Logs and temp files your script might generate
+*.log
+*.tmp
+*.bak
+
+# --- Compiled Assets ---
+# If you use Ahk2Exe or similar tools
+AutoHotkey*.exe

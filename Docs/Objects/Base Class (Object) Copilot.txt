@@ -1,0 +1,56 @@
+In AutoHotkey v2, the "base class" typically refers to the Object class, which inherits from the abstract Any class. These two together define the core properties and methods available to all objects and classes.
+Here’s a breakdown of what’s available in the base class hierarchy:
+
+🧱 Any Class (Abstract Root of All Types)
+The Any class provides meta-methods that can be overridden in custom classes:
+|  |  | 
+| __Get(key, params*) |  | 
+| __Set(key, value, params*) |  | 
+| __Call(methodName, params*) |  | 
+| __Item[key]__Item[key] := value |  | 
+| __Enum(n) |  | 
+| __Delete() |  | 
+| __New(params*) |  | 
+
+
+These methods define how objects behave in dynamic contexts and are inherited by all classes.
+
+🧩 Object Class (Concrete Base for Most Classes)
+The Object class extends Any and adds general-purpose methods for key-value storage and array-like behavior:
+|  |  | 
+| Clone() |  | 
+| Count() |  | 
+| Delete(Key) |  | 
+| Has(Key) |  | 
+| Get(Key, Default?) |  | 
+| Set(Key, Value) |  | 
+| InsertAt(Index, Value...) |  | 
+| RemoveAt(Index, Length?) |  | 
+| Push(Value...)Pop() |  | 
+| MinIndex()MaxIndex() |  | 
+| Length |  | 
+
+
+These methods make Object suitable for both dictionary-style and array-style usage.
+
+🧠 Inheritance and Prototypes
+- Every class inherits from Object unless specified otherwise.
+- You can inspect or modify inheritance using the base property.
+- Static methods and properties belong to the class object; instance methods belong to the class's Prototype.
+Example:
+class MyClass {
+    static StaticProp := "I'm static"
+    InstanceProp := "I'm instance"
+    Method() => MsgBox "Hello from Method"
+}
+obj := MyClass()
+MsgBox obj.InstanceProp  ; Access instance property
+MsgBox MyClass.StaticProp  ; Access static property
+
+
+
+📚 Sources
+- AutoHotkey v2 Class Object Reference
+- AutoHotkey Wiki: Classes
+- DeepWiki: Objects and Classes
+Would you like a sample class that overrides some of these base methods to demonstrate custom behavior?

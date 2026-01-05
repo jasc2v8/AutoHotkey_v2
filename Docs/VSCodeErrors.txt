@@ -1,0 +1,11 @@
+Copilot prompt:
+
+AHK++ VSCode Extension
+Request textDocument/signatureHelp fails
+  Message: Request textDocument/signatureHelp failed with message: Cannot read properties of undefined (reading 'document')
+  Code: -32603 
+
+What to do until the bug is patched:
+Reload VSCode Window: Use Ctrl+Shift+P → Reload Window.
+This forces the extension to reinitialize the document context.
+

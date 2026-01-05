@@ -1,0 +1,40 @@
+In AutoHotkey v2, the Any class is the ultimate base type from which all other types—including Object, Array, String, Number, and custom classes—are derived. It defines the most fundamental behaviors shared across all values and objects.
+
+🧩 Key Properties and Methods of the Any Class
+The Any class itself is abstract and not typically used directly, but it provides the following core features:
+🔹 Meta-methods (overridable in custom classes)
+These are special methods that define how an object behaves in specific contexts:
+|  |  | 
+| __Get(key, params*) |  | 
+| __Set(key, value, params*) |  | 
+| __Call(methodName, params*) |  | 
+| __Item[key]__Item[key] := value | obj[key] | 
+| __Enum(n) | for | 
+| __Delete() |  | 
+| __New(params*) |  | 
+
+
+These methods are inherited by all objects and can be overridden to customize behavior.
+
+🧠 Inheritance and Prototypes
+- Every class in AHK v2 inherits from Any, either directly or indirectly.
+- The Object class extends Any, and most user-defined classes extend Object.
+- You can inspect or modify inheritance using the base property:
+class MyClass {
+    __Get(key) {
+        MsgBox "Tried to access: " key
+    }
+}
+obj := MyClass()
+value := obj.NonExistentProperty  ; Triggers __Get
+
+
+
+📌 Usage Notes
+- You don’t instantiate Any directly.
+- It’s useful when designing flexible APIs or base classes that need to handle unknown properties or dynamic behavior.
+- If you're building a class that should behave like a dictionary, array, or function, you’ll often override __Item, __Call, or __Enum.
+
+📚 Reference
+You can explore the official documentation for Any and its meta-methods on the AutoHotkey v2 Class Referenceand the AutoHotkey Wiki on Classes.
+Would you like a sample class that demonstrates how to override these methods for custom behavior?

@@ -1,15 +1,20 @@
-;ABOUT: Added cue text for Edit
+;ABOUT: Version 1.0.2.0
 
 /**
  * TODO:
+ * 
+ *  On startup, get Files list and env vars, not every time its launched
+ * 
+ *  Add [Refresh] button
+ * 
  *  Checkbox save state to INI?
  *  Context menu in Gui to access Tray Menu items?
  *
  */
-#Requires AutoHotkey v2.0
+#Requires AutoHotkey v2.0+
 #SingleInstance Force
 ;#NoTrayIcon
-TraySetIcon('imageres.dll', 250)
+TraySetIcon('imageres.dll', 250) ; light blue windows start button
 
 Persistent
 
@@ -18,14 +23,14 @@ Persistent
 ; Language codes (en-US=1033): https://www.autoitscript.com/autoit3/docs/appendix/OSLangCodes.htm
 ;@Ahk2Exe-Set CompanyName, jasc2v8
 ;@Ahk2Exe-Set FileDescription, AutoHotkey Launcher
-;@Ahk2Exe-Set FileVersion, 0.0.0.1746
+;@Ahk2Exe-Set FileVersion, 1.0.2.0
 ;@Ahk2Exe-Set InternalName, AhkLauncher
 ;@Ahk2Exe-Set Language, 1033
 ;@Ahk2Exe-Set LegalCopyright, ©2025 jasc2v8
 ;@Ahk2Exe-Set LegalTrademarks, NONE™
 ;@Ahk2Exe-Set OriginalFilename, AhkLauncher.exe
 ;@Ahk2Exe-Set ProductName, AhkLauncher
-;@Ahk2Exe-Set ProductVersion, 0.0.0.1
+;@Ahk2Exe-Set ProductVersion, 1.0.2.0
 ;;;@Ahk2Exe-SetMainIcon AhkLauncher.ico
 
 ;@Inno-Set AppId, {{D28D9A2A-ED03-443E-B8C1-EDB4F54B293E}}
@@ -33,10 +38,9 @@ Persistent
 
 ; #region Includes
 
-;#Include <AhkFunctions>
 #Include <Class_IniLite>
-;#Include <File>
 #Include <String>
+#Include <CredMgr>
 
 ; #region Globals
 
@@ -51,10 +55,11 @@ global refreshing := false
 
 ; #region Hotkeys
 
-^!B::Launch_Backup()
+^!C::Run(AhkAppsDir '\CloseAllWindows.ahk')  
+^!B::Run(AhkAppsDir '\BackupControlTool.ahk')
 ^!L::ToggleGui()
 ^!P::SendPassword()
-^!S::Launch_SleepShutdownRestart()
+^!S::Run(AhkAppsDir '\PowerControlTool.ahk')
 ^!U::SendUsername()
 ^!LButton::ToggleGui()
 
@@ -64,12 +69,13 @@ Initialize()
 
 CreateGui()
 
-;DEBUG
-;EditCredentials()
-
-;_Debug()
-
 ; #region Handlers
+
+OnButtonRefresh_Click(GuiCtrl,*) {
+    DDL.Text := 'Files'
+    buttonExplore.Enabled := true
+    ListViewLoad(FindFiles())
+}
 
 OnButtonClearEdit_Click(GuiCtrl,*) {
     MyEdit.Text := ''
@@ -82,43 +88,31 @@ OnButtonExplore_Click(GuiCtrl,*) {
 
 OnButtonMode_Click(GuiCtrl,*) {
 
-    OutputDebug("OnButtonMode_Click")
+    ; Select the next item in the DDL
 
-    ; get DDL count
     ; Get the items from the DropDownList into an array
     DDLItems := ControlGetItems(DDL)
 
-    ; Get the count of items using the .Length property of the array
+    ; Get the count of items
     ItemCount := DDLItems.Length
 
-    ; Display the count
-    ; OK OutputDebug("Number of items in the DropDownList: " ItemCount)    ; get DDL selected index
-
+    ; Get DDL selected index
     selectedIndex := DDL.Value
 
-    ; ok OutputDebug("selectedIndex: " selectedIndex)    ; get DDL selected index
-
-    ; index += 1
+    ; Increment the index
     selectedIndex += 1
 
-    OutputDebug("OnButtonMode_Click selectedIndex: " selectedIndex ", ItemCount: " ItemCount)
-
-    ; if index < cont then index := 1
+    ; if index < count then index := 1
     if selectedIndex > ItemCount
         selectedIndex := 1
 
     ; make the new index in the DDL
     DDL.Choose(selectedIndex)
-
     OnDDL_Change(DDL,'')
-
     DDL.Focus()
-
 }
 
 OnButtonRun_Click(GuiCtrl,*) {
-
-    OutputDebug('RunClick: ' GuiCtrl.Text)
 
     switch GuiCtrl.Text {
 
@@ -127,8 +121,6 @@ OnButtonRun_Click(GuiCtrl,*) {
 
         case "Open":
             OpenEnvVar()
-
-        default:
 
     }
 }
@@ -147,17 +139,16 @@ OnTrayMenu_Click(ItemName, ItemPos, MyMenu) {
         case "Exit":
             OnGui_Exit(MyGui)
         default:
-            MyGui.Show()  ; Display the window.
+            MyGui.Show()
     }
-    ;MsgBox "You selected " ItemName " (position " ItemPos ")"
+
 }
+
 OnLV_Click(*) {
     OnButtonRun_Click(buttonRun)
 }
 
 OnDDL_Change(Ctrl, Info) {
-
-    OutputDebug('OnDDL_Change: ' DDL.Text ", Info: " Info)
 
     if (Ctrl.Text = "Files") {
         buttonRun.Text := "Run"
@@ -167,8 +158,6 @@ OnDDL_Change(Ctrl, Info) {
         buttonRun.Text := "Open"
         buttonExplore.Enabled := false
     }
-
-    OutputDebug('OnDDL_Change: Refresh ' Ctrl.Text)
 
     Refresh(Ctrl.Text)
 
@@ -188,7 +177,7 @@ OnGui_Close(*)
 
     MyGui.Hide()
 
-    ; Shift + Close or Cancl exits the script
+    ; Shift + Close or Cancel exits the script
     if GetKeyState('Shift')
         OnGui_Exit(MyGui)
 }
@@ -200,50 +189,25 @@ OnGui_Exit(MyGui)
     Hotkey("^!P", "Off") ;^!P::SendPassword()
     Hotkey("^!U", "Off") ;^!U::SendUsername()
     Hotkey("^!L", "Off") ;^LButton::ToggleGui()
-
     ExitApp()
 }
 
-;OnGui_Size(MyGui, MyCtrl, xGuiRight:=0, xGuiTop:=0) {
 OnGui_Size(*) {
 
+    ; Move the Cancel Button to the right side of the Gui
+
     ; Gui position
-    WinGetPos &OutX, &OutY, &OutWidth, &OutHeight, MyGui
+    WinGetPos &GuiX, &GuiY, &GuiWidth, &GuiHeight, MyGui
 
-    xGui := OutX
-    yGui := OutY
+    ; Button position
+    buttonCancel.GetPos(&X, &Y, &ButtonWidth, &ButtonHeight)
 
-    wGui := OutWidth
-    hGui := OutHeight
-
-    X_Margin := MyGui.MarginX
-    Y_Margin := MyGui.MarginY
-
-    xmGui := MyGui.MarginX
-    ymGui := MyGui.MarginY
-
-    ; Control position
-    buttonCancel.GetPos(&X, &Y, &bWidth, &bHeight)
-
-    ; Move control to the right side of the Gui
-    buttonCancel.Move(wGui-bWidth-xmGui*2.5,,,)
-
-    ;DEBUG-----------------------------------------------------
-    ;MsgBoxList(,"wGui", wGui, "bWidth", bWidth, "xmGui", xmGui)
-    ; OutputDebug("wGui: " wGui ", bWidth: " bWidth ", xmGui: " xmGui ", MATH: " wGui-bWidth-xmGui)
-    ; OutputDebug("OutWidth: " OutWidth ", bWidth: " bWidth ", xmGui: " xmGui ", MATH: " wGui-bWidth-xmGui)
-
-    ; if buttons different width, need to compensate
-    ;MyButtonCancel.GetPos(&X, &Y, &bWidth, &bHeight)
-    ;MyButtonMove.Move(wGui-(bWidth*2)-xmGui,,,)
+    ; Move the Button to the right side of the Gui
+    buttonCancel.Move(GuiWidth-ButtonWidth-MyGui.MarginX*2.5,,,)
 
 }
+
 ; #region Functions
-
-_Debug() {
-
-
-}
 
 FindFiles() {
     global FilesMap
@@ -324,36 +288,23 @@ FindFiles() {
         ;ListLines
     }
 
-    OutputDebug("FindFiles FilePattern: " FilePattern)
-    OutputDebug("FindFiles count: " FilesMap.Count)
-
     if FilesMap.Count = 0
         return
 
     return FilesMap
 }
-Launch_Backup() {
-    app := AhkAppsDir '\BackupControlTool.ahk'
-    Run(app)  
-}
-Launch_SleepShutdownRestart() {
-    app := AhkAppsDir '\PowerControlTool.ahk'
-    Run(app)    
-}
+
 ListViewFilter() {
     global refreshing
 
     if refreshing
         return
 
-    OutputDebug('ListViewFilter ENTER: ' DDL.Text)
-
     if MyEdit.Text = "" {
         refreshing := true
         mode := DDL.Text
         Refresh(mode)
         refreshing := false
-        OutputDebug('mode: ' mode)
     }
 
     ; get the search key
@@ -364,8 +315,6 @@ ListViewFilter() {
     ; search the array for the text in the Edit
     try {
         ; clear the previous map
-
-        ;DEBUG MAKE THIS newMap
         FilesMap := Map()
 
         ; get count of items in the LV
@@ -377,34 +326,22 @@ ListViewFilter() {
             Col1Text := LV.GetText(rowNumber, 1)
             Col2Text := LV.GetText(rowNumber, 2)
 
-            OutputDebug("searchKey: " searchKey "`n, Col1Text: [" Col1Text "]" "`n, Col12ext: [" Col2Text "]")
-
             if InStr(Col1Text, searchKey)
                 ;Items.Set(Col1Text, Col2Text)
                 FilesMap.Set(Col1Text, Col2Text)
         }
 
-        OutputDebug('ListViewFilter DURING: ' DDL.Text)
-
         ; load the Items found into the LV
         ListViewLoad(FilesMap)
-
-        OutputDebug('ListViewFilter END: ' DDL.Text)
 
     } catch TargetError as e {
         MsgBox("Error: Target window or control not found. " e.Message)
     }
 }
+
 Initialize() {
 
     global INI, IniPath, AhkAppsDir
-
-    ;defaultAhkAppsDir := "%USERPROFILE%\.AhkApps\"
-    ;defaultAhkAppsDir := "D:\Software\DEV\Work\AHK2\.AhkApps\"
-    ;defaultIniPath := StrJoin('\', defaultAhkAppsDir, "AhkLauncher.ini")
-
-    OutputDebug("Initialize: AhkAppsDir:" AhkAppsDir)
-    OutputDebug("Initialize: IniPath   :" IniPath)
 
     if FileExist(IniPath) {
 
@@ -430,18 +367,13 @@ Initialize() {
         FileAppend("IniPath=" IniPath "`r`n", IniPath)
     }
 
-    OutputDebug("Initialize END: AhkAppsDir:" AhkAppsDir)
-    OutputDebug("Initialize END: IniPath   :" IniPath)
-
-    ;Refresh("Files")
+    FilesMap := FindFiles()
 }
 
 ListViewLoad(FilesMap) {
 
-    if (FilesMap = '') {
-        OutputDebug("FilesMap Empty")
+    if (FilesMap = '')
         return
-    }
 
     LV.Delete
 
@@ -451,12 +383,10 @@ ListViewLoad(FilesMap) {
 
     LV.Modify(1, "+Select +Focus")
 
-    ; LV.ModifyCol(1, "AutoHdr")
-    ; LV.ModifyCol(2, "AutoHdr")
-
     Loop LV.GetCount("Column")
         LV.ModifyCol(A_Index, "AutoHdr")
 }
+
 OpenEnvVar() {
     global DDL, LV
 
@@ -473,8 +403,6 @@ OpenEnvVar() {
             filePath := LaunchList.ShellVars[var]
         case "CLSID":
             filePath := LaunchList.CLSIDVars[var]
-        default:
-
     }
 
     Run(filePath)
@@ -484,55 +412,46 @@ OpenEnvVar() {
 }
 
 FindInFile(textFilePath, findKey) {
-    if !FileExist(textFilePath) {
+    if !FileExist(textFilePath)
         return
-    }
     foundLine := ""
     try {
         fileObj := FileOpen(textFilePath, "r")
         while !fileObj.AtEOF {
             foundLine := fileObj.ReadLine()
-            if InStr(foundLine, findKey, true) {
+            if InStr(foundLine, findKey, true)
                 return foundLine
-            }
         }
         fileObj.Close()
     } catch Error {
-        Throw "Error reading file: DoFindInFile"
+        Throw "FindInFile Error: " textFilePath
     }
     return
 }
 
 ReadSetting(textFilePath, findKey) {
     foundLine := FindInFile(textFilePath, findKey)
-    if (!foundLine) {
+    if (!foundLine)
         return
-    }
     lineParts := StrSplit(foundLine, ",")
     return Trim(lineParts[2])
 }
 
 Refresh(Mode) {
 
-    ;OutputDebug('Refresh: ' Mode)
-
     switch Mode {
         case "EnvVars":
             ListViewLoad(LaunchList.EnvVars)
 
         case "Files":
-            ListViewLoad(FindFiles())
+            ListViewLoad(FilesMap)
 
         case "shell":
             ListViewLoad(LaunchList.ShellVars)
 
         case "CLSID":
             ListViewLoad(LaunchList.CLSIDVars)
-
-        default:
     }
-
-    ;MyEdit.Text := 'Filter...'
 }
 
 RunSelectedFile(Explore := false) {
@@ -554,7 +473,7 @@ RunSelectedFile(Explore := false) {
         Run(AhkAppsDir)
     else
         if (StrSplitPath(filepath).Ext = 'ahk') {
-            Run( A_ComSpec ' /c ' '"' AutoHotKey64 '"' ' ' filePath,,'Hide')
+            Run( A_ComSpec ' /c ' '"' AutoHotKey64 '"' A_Space filePath,,'Hide')
         } else
             Run(filePath)
 
@@ -563,25 +482,6 @@ RunSelectedFile(Explore := false) {
 
 }
 
-CapsLockOff()
-{
-    SetCapsLockState(false)
-
-    ; if GetKeyState("CapsLock", "T")
-    ; {
-    ;     MsgBox("CapsLock is ON (Toggled).")
-    ; }
-    ; else
-    ; {
-    ;     MsgBox("CapsLock is OFF (Untoggled).")
-    ; }
-
-
-    ; if (Control.IsKeyLocked(Keys.CapsLock))
-    ; {
-    ;     Win.Send(Keys.CapsLock);
-    ; }
-}
 SelectAhkAppsDir() {
     global AhkAppsDir, INI
 
@@ -590,57 +490,43 @@ SelectAhkAppsDir() {
     if (path = '')
         return
 
-
-OutputDebug("AhkAppsDir OLD`t`t`t: " AhkAppsDir)
     AhkAppsDir := path
-OutputDebug("AhkAppsDir NEW`t`t`t: " AhkAppsDir)
-
-path := INI.ReadSettings("AhkAppsDir")
-OutputDebug("AhkAppsDir INI: " path)
 
     INI.WriteSettings("AhkAppsDir", AhkAppsDir)
 
     Refresh("Files")
-
-    OutputDebug("IniPath:`t`t`t" IniPath)
-    OutputDebug("SelectAhkAppsDir:`t`t`t" AhkAppsDir)
-    OutputDebug("INI AhkAppsDir:`t`t`t" INI.ReadSettings("AhkAppsDir"))
-
 }
+
 SendPassword() {
 
     if (!cred := CredMgr.CredRead("AhkLauncher")) {
-        MsgBox "`Cred not found", "ERROR Credential not found", "Icon!"
+        MsgBox "Credentials not found", "ERROR", "IconX"
+        return
     }
     Sleep(250)
     SetKeyDelay(25)
     SendEvent(cred.password)
     SendEvent("{Enter}")
+    SetKeyDelay(10)
 }
 
 SendUsername() {
 
     if (!cred := CredMgr.CredRead("AhkLauncher")) {
-        MsgBox "`Cred not found", "ERROR Credential not found", "Icon!"
+        MsgBox "Credentials not found", "ERROR", "IconX"
+        return
     }
-
     Sleep(250)
     SetKeyDelay(25)
     SendEvent(cred.username)
     SendEvent("{Enter}")
-
+    SetKeyDelay(10)
 }
 
 
 ShowGui() {
-
-    OutputDebug("ShowGui BEFORE: " DDL.Text)
-
     FilesMap := FindFiles()
     ListViewLoad(FilesMap)
-
-    OutputDebug("ShowGui: AFTER " DDL.Text)
-
 }
 
 ShowHelp() {
@@ -652,46 +538,36 @@ AutoHotkey Launcher Help
 SUMMARY:
 1. Ctrl+LButton or Ctrl+Alt+L opens the Launcher window.
 2. Choose Files, EnvVars, shell, or CLSID variables.
-3. Click on the Item to Run Exe or to Explore a Var path.
+3. Click on the item to Run or to Explore a Var path.
 4. Edit box at Top will filter the list as you type.
 5. Right Click Tray Icon to Edit Credentials.
 
-c:\programFiles\AhkApps\AhkLauncher
-    AhkLauncher.exe
-    AhkSetupBuilder.exe
-    GetFileProerties.exe
-    DownloadControl.exe
+AhkAppsDir := %USERPROFILE%\Documents\AutoHotkey\AhkLauncher\AhkApps
 
 1. Features:
+    - Lists files available to Launch, based on file extension.
+    - Lists System Environment Variables to Open.
     - Starts at User Login and remains in the system tray.
-    - Hotkeys for Launching AutoHotkey scripts and general use.
-    - Hotkey to send username and password to active window.
-    - List of files in the AhkApp Directory. Click to open
+    - Hotkeys for Launching designated AutoHotkey scripts.
+    - Hotkeys to send username and password to active window.
 
-?. Tray Menu
-    - Help: Shows this help text.
-    - Cred: entials: Opens a window to edit Username and Password.
+2. Tray Menu
     - Open: Opens the GUI window.
-    - Path: Select the Path for AhkApps folder.
+    - Help: Shows this help text.
+    - Credentials: Opens a window to edit Username and Password.
     - Exit: Closes the script
 )"
-    MsgBox(helpText, "Help")
+    MsgBox(helpText, "AhkLauncherHelp")
 }
 
 ToggleGui() {
-
-    if WinActive(MyGui)
-    {
+    if WinActive(MyGui) {
         MyGui.Hide()
         MyEdit.Text := ''
-    }
-    else
-    {
+    } else {
         Refresh(DDL.Text)
-        ;MyGui.Show("NoActivate")
         MyGui.Show()
     }
-
 }
 
  ; #region Create Gui
@@ -700,10 +576,15 @@ CreateGui() {
 
     global
 
-    MyGui := Gui(, "AhkLauncher v0.0.0.1746") ; Use WinDirStat to get file count
+    MyGui := Gui(, "AhkLauncher v0.0.1.1") ; Use WinDirStat to get file count
     MyGui.BackColor := "4682B4" ; Steel Blue
-    MyGui.SetFont("S10", "Segouie UI") ;w532
-    ;MyGui.SetFont('s12', 'Consolas')
+
+    ;MyGui.SetFont("S10", "Segouie UI") ;w532
+    ;MyGui.SetFont('s11', 'Lucida Console')
+    ;MyGui.SetFont('s11', 'Lucida Sans')
+    MyGui.SetFont('s10', 'Cascadia Code')
+    ;MyGui.SetFont('s10', 'Cascadia Mono')
+    ;MyGui.SetFont('s11', 'Consolas')
 
     MyEdit := MyGui.Add("Edit", "W350")
     MyEdit.OnEvent("Change", OnEdit_Change)
@@ -748,8 +629,13 @@ CreateGui() {
 
     LV.OnEvent("Click", OnLV_Click)
 
+    MyGui.SetFont()
+
     buttonExplore := MyGui.Add("Button", "xp w64", "Explore")
     buttonExplore.OnEvent("Click", OnButtonExplore_Click)
+
+    buttonRefresh := MyGui.Add("Button", "yp w64", "Refresh")
+    buttonRefresh.OnEvent("Click", OnButtonRefresh_Click)
 
     buttonRun := MyGui.Add("Button", "yp w64 Default", "Run")
     buttonRun.OnEvent("Click", OnButtonRun_Click)
@@ -759,8 +645,6 @@ CreateGui() {
     buttonCancel := MyGui.Add("Button", "yp w64", "Cancel") ;x600
     buttonCancel.OnEvent("Click", (*) => OnGui_Close(MyGui,))
 
-    ; Open from Tray Menu - MyGui.Show()
-
 }
 
 EditCredentials() {
@@ -768,35 +652,33 @@ EditCredentials() {
 
     MyGui := Gui("", "AhkLauncher Edit Credentials") ; Use WinDirStat to get file count
     MyGui.BackColor := "4682B4" ; Steel Blue
-    MyGui.SetFont("S12", "Segouie UI") ;w532
-    ;MyGui.SetFont('s12', 'Consolas')
+    MyGui.SetFont("s12", "Lucida Sans")
 
     MyTextU := MyGui.Add("Text", "", "Username")
     MyEditU := MyGui.Add("Edit", "vMyEditU ym w350")
 
     MyTextP := MyGui.Add("Text", "xm", "Password")
-    MyEditP := MyGui.Add("Edit", "vMyEditP x+20 yp w350 +Password")
-
-    ;MyEdit.OnEvent("Change", OnEdit_Change)
+    MyEditP := MyGui.Add("Edit", "vMyEditP x+18 yp w350 +Password")
 
     MyHorzLine := MyGui.Add("Text", "xm w440 h1 0x10") ;SS_ETCHEDHORZ
-    buttonSubmit := MyGui.Add("Button", "xm Default", "Submit")
+
+    MyGui.SetFont("s10", "Segoe UI")
+
+    buttonSubmit := MyGui.Add("Button", "xm+87 w65 Default", "Submit")
     buttonSubmit.OnEvent('Click', OnButtonSubmit_Click)
 
-    buttonClear := MyGui.Add("Button", "yp", "Clear")
+    buttonClear := MyGui.Add("Button", "yp w65", "Clear")
     buttonClear .OnEvent('Click', OnButtonClear_Click)
 
-    buttonReveal := MyGui.Add("Button", "yp", "Reveal")
+    buttonReveal := MyGui.Add("Button", "yp w65", "Reveal")
     buttonReveal.OnEvent('Click', TogglePassword)
 
-    buttonCancel := MyGui.Add("Button", "yp", "Cancel")
+    buttonCancel := MyGui.Add("Button", "yp w65", "Cancel")
     buttonCancel.OnEvent('Click', OnButtonCancel_Click)
 
-    ; MyEditU.Text := "DEBUG Username"
-    ; MyEditP.Text := "DEBUG Password"
-
     if (!cred := CredMgr.CredRead("AhkLauncher")) {
-        MsgBox "`Cred not found", "ERROR Credential not found", "Icon!"
+        MsgBox "Credentials not found", "ERROR", "IconX"
+        return
     }
 
     MyEditU.Text := cred.Username
@@ -804,7 +686,9 @@ EditCredentials() {
 
     MyGui.Show()
 
-    MyGui.Flash(true)
+    ControlFocus("Submit", MyGui)
+
+    ; #Region Functions
 
     OnButtonSubmit_Click(GuiCtrl,*) {
 
@@ -816,15 +700,8 @@ EditCredentials() {
         Saved := MyGui.Submit()
 
         if !CredMgr.CredWrite("AhkLauncher", Saved.MyEditU, Saved.MyEditP)
-            MsgBox "failed to write `cred", "CredWrite"
-
-        ; if (cred := CredMgr.CredRead("AhkLauncher"))
-        ;     MsgBox cred.name "," cred.username "," cred.password
-        ; else
-        ;     MsgBox "`Cred not found", "Validate CredDelete Worked"
-
-        ;MsgBox("TEST:" "`cred")
-    }
+            MsgBox "Failed to write credentials", "CredWrite Error"
+   }
 
     OnButtonClear_Click(GuiCtrl,*) {
         MyEditU.Text := ""
@@ -834,24 +711,19 @@ EditCredentials() {
 
     OnButtonCancel_Click(GuiCtrl,*) {
         MyGui.Submit()
-        ;MyGui.Destroy()
     }
 
-    TogglePassword(*)
-        {
-            IsPasswordMasked(){
-                return ControlGetStyle(MyEditP, "A") & 0x20 ? true : false
-            }
+    TogglePassword(*) {
 
-            ; static pset := 1
-        	; MyEditP.opt((pset := !pset) ? "+Password" : "-Password")
-            ; buttonReveal.Text := (!pset) ? "Mask": "Reveal"
-
-            MyEditP.Opt(IsPasswordMasked() ? "-Password" : "+Password")
-
-            buttonReveal.Text := (!IsPasswordMasked()) ? "Mask" : "Reveal"
-
+        IsPasswordMasked() {
+            return ControlGetStyle(MyEditP, "A") & 0x20 ? true : false
         }
+
+        MyEditP.Opt(IsPasswordMasked() ? "-Password" : "+Password")
+
+        buttonReveal.Text := (!IsPasswordMasked()) ? "Mask" : "Reveal"
+
+    }
 }
 
 ; #region Classes
@@ -1091,11 +963,9 @@ Class LaunchList {
         "Windows Tools","shell:::{D20EA4E1-3957-11d2-A40B-0C5020524153}",
    )
 }
-#Include <CredMgr>
+
 FileGetProperty(filePath, property) {
-    try
-    {
-;OutputDebug("create shellApp")
+    try {
         ; Create a Shell.Application COM object
         shellApp := ComObject('Shell.Application')
 
@@ -1104,16 +974,10 @@ FileGetProperty(filePath, property) {
         folder := shellApp.Namespace(directory)
         fileItem := folder.ParseName(filename)
 
-;OutputDebug("get ext prop: " filename)
         ; Get the file version using the ExtendedProperty method
-        prop := fileItem.ExtendedProperty(property)
-
-;OutputDebug("return prop: " filename)
-
-        return prop
+        return fileItem.ExtendedProperty(property)
     }
-    catch as e
-    {
+    catch as e {
         MsgBox 'Error: ' e.Message
     }
 }

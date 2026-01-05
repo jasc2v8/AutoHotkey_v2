@@ -1,0 +1,47 @@
+Ahk:
+	IconX - higher pitch chime - warning (Stop/Error)
+	Icon? - no sound
+	Icon! - lower pitch chime - info (Asterisk/Exclamation/Info)
+	IconI - same as Icon!
+
+CustomMsgBox:
+	Info
+	Warning
+	Error
+	Question
+
+"C:\Windows\Media\chimes.wav" - Success
+
+"C:\Windows\Media\chord.wav" - Oops
+
+"C:\Windows\Media\notify.wav" - Result
+
+"C:\Windows\Media\tada.wav"
+
+"C:\Windows\Media\Speech On.wav" - Low-High
+"C:\Windows\Media\Speech Sleep.wav" - High-Low-High
+
+"C:\Windows\Media\Windows Background.wav" - chime - attention
+Cord - quiet error
+"C:\Windows\Media\Windows Critical Stop.wav" - Boing
+"C:\Windows\Media\Windows Default.wav" - very short blip - Not the right choice
+"C:\Windows\Media\Windows Ding.wav" - very short and quiet success or info
+"C:\Windows\Media\Windows Error.wav" - short chime
+"C:\Windows\Media\Windows Exclamation.wav" - short tada
+Notify - quiet
+
+
+Notify:
+chimes
+Ring01
+Windows Background
+Windows Exclamation
+Windows Foreground (Same as Windows User Account Control)
+Windows Notify Calendar
+Windows Print Complete
+Windows User Account Control (Same as windows foreground)
+
+
+
+
+

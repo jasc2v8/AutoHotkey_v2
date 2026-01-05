@@ -1,9 +1,7 @@
-﻿;ABOUT: Updated to read ALL version info from exe and write ALL %Defines% to the .ISS file
+﻿;ABOUT: Remove DoCheckFileProperties, DoGetFileVersionInfo. Fix other cleanup
 /*
-    From: AhkSetupBuilder-v0.0.0.26-usethisone.ahk
-
-    TODO: 
-    DoReadProductVersion [Inno Template] _setup_v1.0.0.0.exe
+    TODO:
+        after compile Ahk, load _setup_vX.X.X.X in ISS Exe
 */
 /**
  * AhkBuilder -- Autohotkey and Inno Setup script    compiler.
@@ -41,6 +39,7 @@ TraySetIcon('shell32.dll', 81)
 #Include <Class_IniLite>
 #Include <File>
 #Include <String>
+#Include <AhkFunctions>
 
 ; #region Version Info Block
 ; Language codes (en-US=1033): https://www.autoitscript.com/autoit3/docs/appendix/OSLangCodes.htm
@@ -213,86 +212,6 @@ OnGui_Close(*) {
 }
 
 ; #region Functions
-DoCheckFileProperties(filePath) {
-
-    static propertiesArray := [
-            "Path",
-            "Icon_Path",
-            "Filename",
-            "FilenameNoExt",
-            "App_Publisher",
-            "Company", 
-            "File description",
-            "File version",
-            "FileName_NameNoExt",
-            "Language",
-            "Copyright", 
-            "Legal trademarks",
-            "Inno_Id",
-            "Output_Dir",
-            "Product name", 
-            "Product version", 
-        ]
-
-    try
-    {
-        ; Create a Shell.Application COM object
-        shellApp := ComObject('Shell.Application')
-
-        ; Get the parent folder and filename
-        splitPath(filePath, &filename, &directory)
-        folder := shellApp.Namespace(directory)
-        fileItem := folder.ParseName(filename)
-
-        ; Get the file version using the ExtendedProperty method
-        fileVersion := fileItem.ExtendedProperty('System.Size')
-
-        buff := ''
-        buffMissing := ''
-        ItemCount := 0
-
-        missing := ''
-
-        for key, value in propertiesArray {
-
-            ItemCount++
-
-            props := ''
-            props := fileItem.ExtendedProperty(value)
-
-            if (props = '') {
-                buffMissing .= value . "`n"
-            } else {
-                buff .= props . "`n"
-            }
-
-            ;MsgBox('[' props ']')
-
-            ;buff .= props . "`n`n"
-
-
-            ; if IsSet(props) && props != '' {
-            ;     buff .= props
-            ;     ;MsgBox(filepath . " is missing required property: `n`n" value)
-            ;     return ''
-            ; }
-        }
-
-        ;MsgBox("buffMissing: " buffMissing ", len: " StrLen(buffMissing))
-
-        return buffMissing
-
-        ; if buffMissing != '' {
-        ;     return buffMissing
-        ; } else {
-        ;     return buff
-        ; }
-    }
-    catch as e
-    {
-        MsgBox 'Error: ' e.Message
-    }
-}
 
 DoCompileAhk() {
 
@@ -366,7 +285,7 @@ DoCompileIss() {
     issPath := editBoxIss.Text
     iconPath := StrReplace(ahkPath, ".ahk", ".ico")
     outDir := StrSplitPath(ahkPath).Dir
-    innoExePath := StrSplitPath(ahkPath).NameNoExt "_setup_vX.X.X.X.exe"
+    innoExePath := StrSplitPath(ahkPath).NameNoExt "_setup_vX.X.X.X"
 
     if !FileExist(ahkExePath) {
         MsgBox("AHK EXE file not found:`n`n" ahkExePath, "DoCompileIss ERROR", "OKCancel Icon!")
@@ -374,6 +293,9 @@ DoCompileIss() {
     }
 
     propsMap := FileGetExtendedProperties(ahkExePath)
+
+    ;debug
+    ;ListObj(propsMap)
 
     if (propsMap = '') {
         MsgBox("Error getting Extended File Properties:`n`n" .
@@ -548,32 +470,7 @@ DoConfigSave() {
         WriteStatus("Config Saved: " selectedFolder)
     }
 }
-DoConfigInitialize() {
-    if FileExist(configPath)
-        return
 
-    DirCreate(configPath)
-
-    FileDelete(configPath)
-
-    FileAppend("[Configuration]", configPath)
-    FileAppend("AHK=OPEN YOUR AHK SCRIPT", configPath)
-
-    FileAppend("AHK_EXE=OPEN YOUR AHK EXE ", configPath)
-
-    configText := "OPEN YOUR AHK SCRIPT"
-    FileAppend(configText, configPath)
-
-; (
-; [Configuration]
-; AHK=D:\Software\DEV\Work\AHK2\Projects\AhkSetupBuilder\AhkSetupBuilder_v0.0.0.26.ahk
-; AHK_EXE=D:\Software\DEV\Work\AHK2\Projects\AhkSetupBuilder\AhkSetupBuilder_v0.0.0.26.exe
-; ISS=C:\Users\Jim\Documents\AutoHotkey\AhkSetupBuilder\Templates\Template_OneFile.iss
-; ISS_EXE=D:\Software\DEV\Work\AHK2\Projects\AhkSetupBuilder\AhkSetupBuilder_setup_vX.X.X.X.exe
-; )"
-;         FileDelete(iniPath)
-; AhkSetupBuilder.config    
-}
 DoConfigLoad() {
 
     global configPath
@@ -703,16 +600,6 @@ DoFindInFile(textFilePath, findKey) {
     return ""
 }
 
-DoReadProductVersion(textFilePath) {
-    findKey := ";@Ahk2Exe-Set ProductVersion,"
-    foundLine := DoFindInFile(textFilePath, findKey)
-
-    MsgBox "DEBUG foundLine: [" foundLine " ]"
-
-    lineParts := StrSplit(foundLine, ",")
-    return Trim(lineParts[2])
-}
-
 DoReadSetting(textFilePath, findKey) {
     foundLine := DoFindInFile(textFilePath, findKey)
     if (!foundLine) {
@@ -723,67 +610,6 @@ DoReadSetting(textFilePath, findKey) {
     }
     lineParts := StrSplit(foundLine, ",")
     return Trim(lineParts[2])
-}
-DoGetFileVersionInfo(FilePath, VersionKey) {
-    ; Check if the file exists to prevent errors.
-    if (!FileExist(FilePath)) {
-        return ""
-    }
-
-    ; Step 1: Get the size of the version information buffer required.
-    ; VerQueryValueA: A - ANSI version (no W for Wide/Unicode)
-    ; This call returns the number of bytes required for the buffer.
-    bufferSize := DllCall("Version\GetFileVersionInfoSizeA", "Str", FilePath, "UInt", 0)
-
-    ; If the size is 0, no version info is available.
-    if (bufferSize = 0) {
-        return ""
-    }
-
-    ; Step 2: Allocate memory and retrieve the version information.
-    ; VarSetCapacity: Allocates a buffer of the required size.
-    ; This call fills the buffer with the version information data.
-    ObjSetCapacity(versionBuffer, bufferSize)
-    DllCall("Version\GetFileVersionInfoA", "Str", FilePath, "UInt", 0, "UInt", bufferSize, "Ptr", &versionBuffer)
-
-    ; Step 3: Query the buffer for the specific string value.
-    ; VerQueryValueA: Queries the version information buffer.
-    ; The first parameter is the pointer to our versionBuffer.
-    ; The second parameter is the sub-block to query. We're using the standard
-    ; English (US) block "StringFileInfo\040904B0\".
-    queryBlock := "\StringFileInfo\040904B0\" . VersionKey
-    
-    ; The 'InfoPtr' will receive a pointer to the start of the desired string.
-    ; The 'InfoLen' will receive the length of the string in characters.
-    InfoPtr := 0
-    InfoLen := 0
-    
-    ; The DllCall returns a non-zero value on success.
-    success := DllCall("Version\VerQueryValueA", "Ptr", &versionBuffer, "Str", queryBlock, "PtrP", InfoPtr, "UIntP", InfoLen)
-    
-    if (success && InfoPtr != 0) {
-        ; Step 4: Extract the string from the pointer.
-        ; StrGet() is used to read a string from memory given a pointer.
-        ; The second parameter specifies the encoding (UTF-8 for AHK v2).
-        return StrGet(InfoPtr, "UTF-8")
-    }
-
-    ; Return an empty string if the query was not successful.
-    return ""
-}
-
-DoGetProductVersion() {
-
-    ; arrayPathVer := DoGetFilePathAndVersion(A_ScriptFullPath)
- 
-    ; ;if version not in filename
-    ; if (arrayPathVer[2] =="") {
-        ;Read from script
-        return DoReadSetting(A_ScriptFullPath,
-            ";@AHK2EXE_PATH-Set ProductVersion,")
-    ; } else {
-    ;     return arrayPathVer[2]
-    ; }
 }
 
 DoSelectFile(Item) {
@@ -835,7 +661,8 @@ DoSelectFile(Item) {
 
     if (Item == "AHK") {
         editBoxAhkExe.Text := StrReplace(SelectedFolder, ".ahk", ".exe")
-        editBoxIssExe.Text := StrReplace(SelectedFolder, ".ahk", "_setup_vX.X.X.X.exe")
+        fileVersion := DoReadSetting(SelectedFolder, ";@Ahk2Exe-Set ProductVersion,")
+        editBoxIssExe.Text := StrReplace(SelectedFolder, ".ahk", "_setup_v" fileVersion)
     }
 }
 
@@ -896,25 +723,6 @@ DoSelectFolder(Item) {
 
     DoIniWrite("Settings", Item, SelectedFolder) 
 }
-/**
- * Reads the product version from the script's Ahk2Exe directives.
- * @returns {String} The product version (e.g., "1.0.0.0") or a placeholder if not found.
- */
-GetProductVersion() {
-    try {
-        scriptContent := FileRead(A_ScriptFullPath)
-        if RegExMatch(scriptContent, "im)^\s*;@Ahk2Exe-Set\s+ProductVersion,\s*([\d\.]+)", &match)
-            return match[1]
-    }
-    return "?.?.?.?"
-}
-IsFileExist(path) {
-    if FileExist(path)
-        return True
-    else
-        return False
-    }
-
 IsShiftKeyPressed() {
 
     if GetKeyState('Shift', 'P')
@@ -980,10 +788,6 @@ Select AHK ➤ Verify EXE ➤ Select ISS ➤ Verify _SEUP.EXE ➤ Build
     MsgBox(helpText, "Help")
 }
 
-StrRepeat(text, times) {
-    return StrReplace(Format("{:" times "}", ""), " ", text)
-}
-
 DoIniRead() {
 
     INI := IniLite(iniPath)
@@ -1013,6 +817,7 @@ DoIniRead() {
         editBoxIssExe.Text := value
     INI := ""
 }
+
 DoIniWrite(section, key, value) {
     INI := IniLite(iniPath)
     INI.Write(section, key, value)

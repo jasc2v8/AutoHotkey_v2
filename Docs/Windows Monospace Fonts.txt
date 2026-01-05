@@ -1,7 +1,10 @@
 Font Name		Category	Notes
 Cascadia Code	Modern/Coding	The default font for Windows Terminal. It supports programming ligatures (when enabled).
 Cascadia Mono	Modern/Coding	The non-ligature version of Cascadia Code.
-Consolas			Modern/Coding	Microsoft's popular and clear typeface designed for code; it supports ClearType.
-Courier 			New	Classic/Serif	A traditional monospaced font that has been included with Windows for decades.
+Consolas		Modern/Coding	Microsoft's popular and clear typeface designed for code; it supports ClearType.
+Courier 		New	Classic/Serif	A traditional monospaced font that has been included with Windows for decades.
+Courier New
 Lucida Console	Classic	A widely available monospace font often used in older Windows command interfaces.
 Lucida Sans		Typewriter
+
+MonoSpaceFonts := ["Cascadia Code","Cascadia Mono","Consolas","Courier","Courier New","Lucida Console","Lucida Sans"]

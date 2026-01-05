@@ -1,0 +1,38 @@
+
+In AutoHotkey v2, the Object class provides the foundational properties and methods for all objects. These include general-purpose tools for key-value access, iteration, cloning, and meta-functionality.
+Here’s a breakdown of the most important built-in methods and properties of the Object class in AHK v2:
+
+🔧 Core Methods of the Object Class
+|  |  | 
+| Obj.Clone() |  | 
+| Obj.Count() |  | 
+| Obj.Delete(Key) |  | 
+| Obj.Has(Key) | true | 
+| Obj.Get(Key, Default?) |  | 
+| Obj.Set(Key, Value) |  | 
+| Obj.InsertAt(Index, Value...) |  | 
+| Obj.RemoveAt(Index, Length?) |  | 
+| Obj.Push(Value...) |  | 
+| Obj.Pop() |  | 
+| Obj.MinIndex()Obj.MaxIndex() |  | 
+| Obj.Length |  | 
+
+
+
+🧠 Meta-Functionality and Inheritance
+- Prototype-based inheritance: Every object can have a base object (Obj.Prototype) from which it inherits properties and methods.
+- Custom behavior: You can override methods like __Get, __Set, __Call, __New, and __Delete to customize object behavior.
+
+🧪 Iteration Support
+Objects support for-loops using:
+for key, value in obj
+
+
+This iterates over all key-value pairs.
+
+📚 Additional Notes
+- All classes in AHK v2 ultimately derive from the Object class.
+- Arrays are just objects with numeric keys and extra methods like Push, Pop, etc.
+- You can define your own classes using class MyClass { ... }, and they inherit from Object unless otherwise specified.
+For the full official reference, check out the AutoHotkey v2 Object class documentation.
+Would you like a quick demo script showing how to use some of these methods in practice?

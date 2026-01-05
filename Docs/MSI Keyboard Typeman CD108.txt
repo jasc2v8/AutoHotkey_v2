@@ -1,0 +1,24 @@
+Google Gemini:
+
+The typical Scan Code Set 2 key code for the Calculator key (often labeled "Cal" or a calculator icon) on PC keyboards is:
+
+E0 21
+This is the "make code" sent when the key is pressed. The "break code" (when the key is released) is typically:
+
+E0 A1
+The MSI Typeman CK108, like most keyboards with dedicated media or application keys, likely uses this standard code for the Calculator function.
+
+
+
+The MSI Typeman CK108 keyboard likely uses the standard PC key codes for the Escape key, which can vary depending on the context (e.g., ASCII, Windows Virtual-Key, or Scan Code).
+
+Here are the most common standard key codes for the Escape key:
+
+ASCII Code (Decimal): 27
+
+Windows Virtual-Key Code (Hexadecimal): 0x1B (Constant is VK_ESCAPE)
+
+Scan Code Set 1 (Hexadecimal): 01 (Make code) or 81 (Break code)
+
+If you are trying to program or remap a key on the MSI Typeman CK108, the Scan Code (usually 01) is often what is needed for low-level keyboard utilities, or the Virtual-Key Code (often 0x1B) for Windows-based software.
+

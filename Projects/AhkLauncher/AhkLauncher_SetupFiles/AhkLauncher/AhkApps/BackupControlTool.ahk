@@ -1,22 +1,24 @@
-﻿; ABOUT: BackupControlTool v1.0
+﻿; ABOUT: BackupControlTool v2.0
 ; 
 #Requires AutoHotkey >=2.0
 #SingleInstance Force
 #NoTrayIcon
-TraySetIcon('shell32.dll', 294) ;46
+TraySetIcon('shell32.dll', 294) ; Backup/Restore Icon
+
+#Include <RunCMD>
 
 ; #region Version Block
 ; Language codes (en-US=1033): https://www.autoitscript.com/autoit3/docs/appendix/OSLangCodes.htm
 ;@Ahk2Exe-Set CompanyName, jasc2v8
 ;@Ahk2Exe-Set FileDescription, Backup Control Tool
-;@Ahk2Exe-Set FileVersion, 1.0.0.0
+;@Ahk2Exe-Set FileVersion, 2.0.0.0
 ;@Ahk2Exe-Set InternalName, BackupControlTool
 ;@Ahk2Exe-Set Language, 1033
 ;@Ahk2Exe-Set LegalCopyright, ©2025 jasc2v8
 ;@Ahk2Exe-Set LegalTrademarks, NONE™
 ;@Ahk2Exe-Set OriginalFilename, BackupControlTool.exe
 ;@Ahk2Exe-Set ProductName, BackupControlTool
-;@Ahk2Exe-Set ProductVersion, 1.0.0.0
+;@Ahk2Exe-Set ProductVersion, 2.0.0.0
 ;@Ahk2Exe-SetMainIcon BackupControlTool.ico
 
 ;@Inno-Set AppId, {{10D9F70C-88D1-428B-811D-5264CA644A87}}
@@ -44,31 +46,35 @@ if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\\ S)"))
 global SyncBackPath := "C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe"
 global SyncBackProfiles := EnvGet("LOCALAPPDATA") "\2BrightSparks\SyncBack\Profiles Backup"
 global logDir := EnvGet("LOCALAPPDATA") "\2BrightSparks\SyncBack\Logs"
+global DefaultProfile := "~Backup JIM-PC folders to JIM-SERVER"
+
+global SoundSuccess := "C:\Windows\Media\Windows Notify Calendar.wav"
+global SoundError := "C:\Windows\Media\Windows Critical Stop.wav"
 
 ; #region Create Gui
 
 MyGui := Gui(, "Backup Control Tool v1.0") ; "ToolWindow" does not have tray icon
 MyGui.BackColor := "4682B4" ; Steel Blue
-MyGui.SetFont("S12 CBlack w480", "Segouie UI")
 
 ; #region Create Controls
 
-TextProfile := MyGui.AddText('xm w400 BackgroundDefault','~Backup JIM-PC folders to JIM-SERVER')
+MyGui.SetFont("S11 CBlack w400", "Segouie UI")
+TextProfile := MyGui.AddEdit('xm w400 h20 Center Backgrounda1e3a5', DefaultProfile)
 ButtonProfile := MyGui.AddButton("yp w60 h20", "Profile")
 
 MyGui.AddGroupBox("xm w472 h100", "Action after Backup:")
 
+MyGui.SetFont("S11 CBlack w400", "Segouie UI")
 TextFiller      := MyGui.AddText("xm yp+40 w50 +Hidden")
 ButtonNothing   := MyGui.AddButton("yp w100", "Nothing")
 ButtonSleep     := MyGui.AddButton("yp w100", "Sleep")
 ButtonShutdown  := MyGui.AddButton("yp w100", "Shutdown")
 
-;MyLine := MyGui.Add("Text", "xm w440 h1 0x10") ;SS_ETCHEDHORZ)
-
-TextFiller    := MyGui.AddText("xm yp+75 w50 +Hidden")
-ButtonLogs    := MyGui.AddButton("yp w100", "Logs")
-ButtonClear   := MyGui.AddButton("yp w100", "Clear")
-ButtonCancel  := MyGui.AddButton("yp w100", "Cancel")
+MyGui.SetFont()
+TextFiller    := MyGui.AddText("xm yp+75 w85 +Hidden")
+ButtonLogs    := MyGui.AddButton("yp w75", "Logs")
+ButtonClear   := MyGui.AddButton("yp w75", "Clear")
+ButtonCancel  := MyGui.AddButton("yp w75 Default", "Cancel")
 
 SB := MyGui.AddStatusBar()
 
@@ -79,14 +85,16 @@ WriteStatus('Ready.')
 ButtonProfile.OnEvent("Click", ButtonProfile_Click)
 ButtonLogs.OnEvent("Click", ButtonLogs_Click)
 ButtonClear.OnEvent("Click", ButtonClear_Click)
-ButtonNothing.OnEvent("Click", ButtonNothing_Click)
-ButtonSleep.OnEvent("Click", ButtonSleep_Click)
-ButtonShutdown.OnEvent("Click", ButtonShutdown_Click)
+ButtonNothing.OnEvent("Click", ButtonCommon_Click)
+ButtonSleep.OnEvent("Click", ButtonCommon_Click)
+ButtonShutdown.OnEvent("Click", ButtonCommon_Click)
 ButtonCancel.OnEvent("Click", ButtonCancel_Click)
 MyGui.OnEvent("Close", (*) => ExitApp())
 
 ; Show the GUI
 MyGui.Show()
+
+ControlFocus("Cancel", MyGui)
 
 ; #region Functions
 
@@ -94,49 +102,43 @@ ButtonCancel_Click(Ctrl, Info) {
  ExitApp()
 }
 
-ButtonNothing_Click(Ctrl, Info) {
-  timeout := CountdownAndBlock(ButtonNothing.Text, 5)
+ButtonCommon_Click(Ctrl, Info){
+
+ WriteStatus("Ready.")
+
+  timeout := CountdownAndBlock(Ctrl.Text, 5)
+
   if (timeout) {
 
-    WriteStatus('Running: ' TextProfile.Text)
+    MyGui.Opt("+Disabled")
 
-    r := RunWait(SyncBackPath ' "' TextProfile.Text '"')
+    WinSetTransparent(150, MyGui.Hwnd)
 
-    if (r = 0)
+    WriteStatus('Running Profile...')
+
+    switch Ctrl.Text {
+      case "Nothing":
+        BackupParameter := ""
+      case "Sleep":
+        BackupParameter := "-standby"
+      case "Shutdown":
+        BackupParameter := "-shutdown"
+        
+    }
+
+    r := RunCMD(SyncBackPath, BackupParameter, Trim(TextProfile.Text))
+
+    if (r = 0) {
+      SoundPlay SoundSuccess
       WriteStatus('Success.')
-    else
-      WriteStatus('Error, Code: ' r)
+    } else {
+      SoundPlay SoundError
+      WriteStatus('Error Code: ' r)  
+    }
 
-  }
-}
-
-ButtonShutdown_Click(Ctrl, Info) {  
-  timeout := CountdownAndBlock(ButtonShutdown.Text, 5)
-  if (timeout) {
-
-    WriteStatus('Running: ' TextProfile.Text)
-
-    r := RunWait(SyncBackPath ' -shutdown "' TextProfile.Text '"')
-
-    if (r = 0)
-      WriteStatus('Success.')
-    else
-      WriteStatus('Error, Code: ' r)
-  }
-}
-
-ButtonSleep_Click(Ctrl, Info) {
-  timeout := CountdownAndBlock(ButtonSleep.Text, 5)
-  if (timeout) {
-
-    WriteStatus('Running: ' TextProfile.Text)
-
-    r := RunWait(SyncBackPath ' -standby "' TextProfile.Text '"')
-
-    if (r = 0)
-      WriteStatus('Success.')
-    else
-      WriteStatus('Error, Code: ' r)
+    MyGui.Opt("-Disabled")
+    WinSetTransparent("Off", MyGui.Hwnd)
+    WinActivate(MyGui.Hwnd)
   }
 }
 
@@ -170,7 +172,7 @@ CountdownAndBlock(Title, Seconds)
 
   ; Add a text control for the title
   TimerGui.SetFont("s18 bold", "Consolas")
-  TimerText := TimerGui.AddText(, 'Backup then`n' Title ' in:')
+  TimerText := TimerGui.AddText("Center", 'Backup then`n' Title ' in:')
 
   ; Add a text control to display the countdown
   TimerGui.SetFont("s48 bold cRed", "Consolas")
@@ -178,7 +180,7 @@ CountdownAndBlock(Title, Seconds)
 
   ; add buttons
   TimerGui.SetFont("s12 Norm", "Consolas")
-  TimerGui.AddButton("xm w100","OK").OnEvent("Click", ButtonOK_Click)
+  TimerGui.AddButton("xm w100 Default","OK").OnEvent("Click", ButtonOK_Click)
   TimerGui.AddButton("yp w100","Cancel").OnEvent("Click", ButtonCancel_Click)
 
   ; Display the GUI and center it.

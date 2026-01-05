@@ -1,4 +1,4 @@
-﻿; ABOUT: DownloadControlTool, changed icon for standalone version
+﻿; ABOUT: PowerControlTool v1.0
 ; 
 #Requires AutoHotkey >=2.0
 
@@ -9,24 +9,24 @@ TraySetIcon('shell32.dll', 28)
 ; #region Version Block
 ; Language codes (en-US=1033): https://www.autoitscript.com/autoit3/docs/appendix/OSLangCodes.htm
 ;@Ahk2Exe-Set CompanyName, jasc2v8
-;@Ahk2Exe-Set FileDescription, Download Control Tool
-;@Ahk2Exe-Set FileVersion, 1.0.1.2
-;@Ahk2Exe-Set InternalName, DownloadControlTool
+;@Ahk2Exe-Set FileDescription, Power Control Tool
+;@Ahk2Exe-Set FileVersion, 1.0.0.0
+;@Ahk2Exe-Set InternalName, PowerControlTool
 ;@Ahk2Exe-Set Language, 1033
 ;@Ahk2Exe-Set LegalCopyright, ©2025 jasc2v8
 ;@Ahk2Exe-Set LegalTrademarks, NONE™
-;@Ahk2Exe-Set OriginalFilename, DownloadControlTool.exe
-;@Ahk2Exe-Set ProductName, DownloadControlTool
-;@Ahk2Exe-Set ProductVersion, 1.0.1.1
-;@Ahk2Exe-SetMainIcon DownloadControlTool.ico
+;@Ahk2Exe-Set OriginalFilename, PowerControlTool.exe
+;@Ahk2Exe-Set ProductName, PowerControlTool
+;@Ahk2Exe-Set ProductVersion, 1.0.0.0
+;@Ahk2Exe-SetMainIcon PowerControlTool.ico
 
 ;@Inno-Set AppId, {{09F686C0-6F29-43BC-88D4-0C51BEFEEB4B}}
 ;@Inno-Set AppPublisher, jasc2v8
 
 ; #region Admin Check
 
+; in this appliation, the only need for admin is RestartUEFI
 full_command_line := DllCall("GetCommandLine", "str")
-
 if (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)")) {
   DoRestartUEFI()
   ExitApp
@@ -41,7 +41,7 @@ MyGui.SetFont("S12 CBlack w480", "Segouie UI")
 ; #region Create Buttons
 
 ButtonSleep := MyGui.AddButton("w150", "Sleep")
-ButtonSignOut := MyGui.AddButton("yp w150", "Sign-Out")
+ButtonSignOut := MyGui.AddButton("yp w150", "Sign out")
 ButtonShutdown := MyGui.AddButton("yp w150", "Shutdown")
 ButtonRestart := MyGui.AddButton("xm y+10 w150", "Restart")
 ButtonRestartUEFI := MyGui.AddButton("yp w150", "Restart to UEFI")
@@ -76,8 +76,6 @@ ButtonDisplayOff_Click(Ctrl, Info) {
   MyGui.Hide()
   timeout := CountdownAndBlock(ButtonDisplayOff.Text, 5)
   if (timeout) {
-    ; MyGui.Show()
-    ; msgbox "display off"
     SendMessage(0x112,0xF170,2,,"Program Manager")
     ExitApp()
   } else {
@@ -156,7 +154,6 @@ ButtonSleep_Click(Ctrl, Info) {
   MyGui.Hide()
   timeout := CountdownAndBlock(ButtonSleep.Text, 5)
   if (timeout) {
-
     ; DllCall('PowrProf\SetSuspendState', 'Int', bHibernate, 'Int', bForce, 'Int', bWakeupEventsDisabled)
     ; Parameter 1 (0): Sets bHibernate to FALSE (i.e., perform Suspend/Sleep)
     ; Parameter 2 (0): Sets bForce to FALSE (allow applications to prompt for permission to close, though this parameter is often ignored now)
@@ -168,29 +165,10 @@ ButtonSleep_Click(Ctrl, Info) {
   }
 }
 
-
-RunGetOutput(command) {
- ; cmd window briefly shown
- shell := ComObject("WScript.Shell")
- exec := shell.Exec(A_ComSpec . " /C " . command)
- output := exec.StdOut.ReadAll()
- return output
-}
-
-RunSaveOutput(command) {
- ; no cmd window shown, tempFile must not have spaces (fix TBD)
- tempFile := A_Temp . "\MyOutput.txt"
- RunWait(A_ComSpec . " /C " . command . " > " . tempFile, , 'Hide')
- output := FileRead(tempFile)
- FileDelete(tempFile)
- FileDelete(A_Temp . "\xml_file*.xml") ; cleanup from RunWait function
- return output
-}
-
 CountdownAndBlock(Title, Seconds)
 {
   ; Define initial variables
-  ;global TimerGui := ''
+  global TimerGui := ''
   global TimerRunning := true
   global RemainingTime := Seconds
   returnValue := true ; true=timedout, false=canceled
@@ -212,22 +190,19 @@ CountdownAndBlock(Title, Seconds)
   TimerGui.AddButton("xm w100","OK").OnEvent("Click", ButtonOK_Click)
   TimerGui.AddButton("yp w100","Cancel").OnEvent("Click", ButtonCancel_Click)
 
-  ; 3. Display the GUI and center it.
+  ; Display the GUI and center it.
   TimerGui.Show("Center")
 
-  ; 4. Set up the Timer function (runs every 1000ms / 1 second)
-  ; We bind the TimerGui and TimerText controls to the UpdateTimer function
+  ; Set up the Timer function (runs every 1000ms / 1 second)
   SetTimer UpdateTimer, 1000
 
-  ; 5. THE WAIT LOOP: This is how you "wait until finished" in AHK v2.
-  ; It continually checks the TimerRunning flag in a tight loop.
   ; While the GUI is open and the timer is running, the main script thread pauses here.
   While (TimerRunning)
   {
       Sleep(100) ; Wait 100ms before checking the flag again
   }
 
-  ; 6. Cleanup after the loop finishes
+  ; Cleanup after the loop finishes
   TimerGui.Destroy()
 
   return returnValue
@@ -244,29 +219,20 @@ CountdownAndBlock(Title, Seconds)
     TimerRunning := false
     returnValue := false
   }
-  ; This function is called every second by SetTimer
+
   UpdateTimer(*)
   {
-    ;global TimerGui
+    global TimerGui
     global TimerRunning
     global RemainingTime
       
-    ; Check if time has run out
     if (RemainingTime <= 1)
     {
-        ; Stop the timer from calling this function again
         SetTimer UpdateTimer, 0
-        
-        ; Update the global flag to break the 'While' loop in the main function
-        TimerRunning := false
-        
+        TimerRunning := false    
         return
     }
-    
-    ; 3. Decrement the time and update the GUI control (using its control variable)
     RemainingTime--
-    
-    ; GuiControl(GuiID, ControlID, NewText) - Here we use the Control object directly
     TimerGui["CountdownText"].Text := RemainingTime
   }
 }

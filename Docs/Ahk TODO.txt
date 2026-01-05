@@ -1,0 +1,106 @@
+
+Reset Graphics driver: Ctrl + Shift + Win + B
+
+
+*****************************	
+time to update GitHub!!!
+*****************************	
+
+search for RunTask and fix error return (RunSkipUAC)
+AdminAppLauncher?
+AdminLauncher?
+AdminLaunch
+
+
+AhkTaskManager
+	Ahk Script, get title from PID?, listview
+
+BackupToolSetup.ahk
+
+nssmGuiManager
+see windowservice at bottom
+
+CopyAhkProject?
+
+CreateNewProjectFolder?
+	.vscode\launch.json
+	ScriptTemplate
+	LibTemplate
+
+Reinstall  Annke viewer
+
+Added to D:\Software\DEV\Work\AHK2 (Workspace)
+	.vscode\launch.json (has new debugger)
+Add to all project folders?
+
+D:\Software\DEV\Work\AHK2\Examples\Fonts\FontCompare\
+		Cleanup
+		
+D:\Software\DEV\Work\AHK2\Libraries\Nich-Cebolla\
+	?ConfigLibrary
+	
+?FileDelete(A_Temp . "\xml_file*.xml") ; cleanup from RunWait function?
+
+AHK2 TODO
+=======================================================================
+
+FileCopyWin32 in a timer loop for long copy to not freeze gui and callback to update progress?
+	Check CopyVS?
+
+.ahk does not flag virus: Win10 install Avast, check if AHK script is flagged or not?
+
+AhkLauncher
+	Make AhkLauncherSetup portable to other pC
+		Ahk Lib files!?!?!?!???
+	
+AhkMerge
+	Cleanup
+		
+AhkSetupBuilder
+	Fix this, did String break it - compile ahk fails
+
+BackupControlTool
+	No changes
+
+CloseAllWindows
+	No changes
+	
+CopyVS
+	Move ini to TEMP \AhkApps\CopyVS\CopyVS.ini
+
+Debug
+	May abandon, use VSCode Debugger
+	<ListObj> very nice
+	did I incorporate NameOf.ahk?
+	
+Download Control
+	[Cancel] do STOP then ExitApp ?
+	delete torrent from QbitTorrent?
+	On close, exit QbitTorrent if running
+	copy S01E01 to Recorded TV else copy to Movies?
+	Auto open folders after opening url?
+	Clear Recent files?
+
+Examples / Lib
+	Class MsgBoxGui (allows more chars to be displayed than builtin MsgBox
+	DebugGui (show debug messages)
+	
+GuiLayout
+	GuiSize()
+		L.GetPos() ; get all gui and client pos
+		now all .Pos calls use these new pos values
+		this avoids recalculating at every L.Pos call and smooths the resize.
+		L.Pos(MyControl).CenterX, LeftCenterX, RightCenterX , CY, LCY, RCY
+
+Research
+	AHK2 Libraries
+	AHK v2.1 whats new?
+	
+Rewrite in AHK2:
+	WGT
+	
+WindowsService
+	create GuiServiceManager.ahk => GuiNssmManager.ahk
+		
+ZipInstaller by nirsoft
+	c:\windows\zipinst.exe

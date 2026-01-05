@@ -1,7 +1,9 @@
+;ABOUT: Lock Folder added ClearRecentFiles
 
 #Requires AutoHotkey v2.0
 #SingleInstance force
 #NoTrayIcon
+
 TraySetIcon('ieframe.dll', 65) ; 65 gold padlock, 86 yellow unlocked, 89 green locked
 
 ; optional #Include <RunCMD>
@@ -85,7 +87,13 @@ LockFolder(Ctrl, Info) {
     ;cmd := A_ComSpec " /c icacls.exe " '"' MyEdit.Text '"' " /deny everyone:f"
     ;r := RunWait(cmd,,'Hide')
 
+    ;hide folder
+    r := RunCMD("attrib.exe", MyEdit.Text, "+h +s +r")
+
+    ;lock folder
     r := RunCMD("icacls.exe", MyEdit.Text, "/deny everyone:f")
+
+    ClearRecentFiles()
 
     ShowLockStatus()
 
@@ -96,7 +104,11 @@ UnLockFolder(Ctrl, Info) {
     ; cmd := A_ComSpec " /c icacls.exe " '"' MyEdit.Text '"' " /remove everyone"
     ; r := RunWait(cmd,,'Hide')
 
+    ;Unlock folder
     r := RunCMD("icacls.exe", MyEdit.Text, "/remove everyone")
+
+    ;Unhide folder
+    r := RunCMD("attrib.exe", MyEdit.Text, "-h -s -r")
 
     ShowLockStatus()
 }
@@ -120,6 +132,30 @@ ExploreFolder(Ctrl, Info) {
         SoundBeep
     else
         Run("explorer " MyEdit.Text)
+}
+
+ClearRecentFiles() {
+   ; Define the path to the Recent Items folder.
+    RecentPath := A_AppData "\Microsoft\Windows\Recent\*"
+
+    ; Delete all shortcuts (*.lnk) in the folder.
+    ; The '0' indicates to not recurse into subdirectories.
+    FileDelete RecentPath
+
+    ; Also clear the "AutomaticDestinations" and "CustomDestinations" folders
+    ; which manage the jump list items for applications.
+    DirDelete A_AppData "\Microsoft\Windows\Recent\AutomaticDestinations", 1
+    DirDelete A_AppData "\Microsoft\Windows\Recent\CustomDestinations", 1
+    
+    ; Restart the Explorer shell to refresh the Recent Files and jump lists.
+    ; This will kill and restart explorer.exe.
+    Run "cmd.exe /c taskkill /f /im explorer.exe && start explorer.exe"
+
+    ; Show a confirmation message.
+    ;MsgBox "Windows recent files and jump lists have been cleared.", "Success!", 0
+    SB.Text := LPAD "Windows recent files and jump lists have been cleared."
+    Sleep(2000)
+
 }
 
 ButtonCancel_Click(Ctrl, Info) {

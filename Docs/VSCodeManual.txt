@@ -25,9 +25,11 @@ True/False
 	true is the integer 1.
 	false is the integer 0.
 
-Settings: File, Preferences, Settings
+Settings: File, Preferences, Settings (Ctrl,)
 	Commonly Used, Files: Exclude, Add Pattern: .history
-
+	Text Editor.Suggestions.Quick Suggestions = on (turn off if distracting)
+	Default Language: ahk
+	
 Zoom
 	Action	Windows / Linux	macOS
 	Zoom In	Ctrl+= (or Ctrl+Numpad+)	Cmd+= (or Cmd+Numpad+)

@@ -1,0 +1,62 @@
+D:\Software\DEV\Work\AHK2\Libraries\Nich-Cebolla\
+	.Join?
+	CombineScripts ("Clean", CleanComments, CleanWhiteSpace, CamelCase, PascalCase, etc.
+	class ScriptLibraryFolders
+	
+	?ConfigLibrary
+	
+?FileDelete(A_Temp . "\xml_file*.xml") ; cleanup from RunWait function
+
+AHK2 TODO
+
+FileCopyWin32 in a tread for long copy to not freeze gui and callback to update progress?
+
+.ahk does not flag virus: Win10 install Avast, check if AHK script is flagged or not?
+
+AhkToCamelCase?
+	Change all
+		myVariable := 	to MyVariable :=
+		myvariable := 		to MyVariable := (detecte the leading 'my')
+		my_variable :=	to MyVariable :=
+		myFunction( 		to MyFunction(
+		
+AhkAppsLauncher
+	Probably no: filter on all lists, not just the one shown?
+	Another list for links e.g. JIM-SERVER\Movies?
+	
+AhkSetupBuilder
+
+BackupControlTool
+
+CopyVS
+	Move ini to TEMP \AhkApps\CopyVS\CopyVS.ini
+
+Download Control
+	[Cancel] do STOP then ExitApp
+	delete torrent from QbitTorrent?
+	On close, exit QbitTorrent if running
+	copy S01E01 to Recorded TV else copy to Movies?
+	[Movies] = open \\JIM-SERVER\Movies
+	[TV] = open \\JIM-SERVER\Recorded TV
+	Auto open folders after opening url?
+		Clear Recent files?
+
+Examples / Lib
+	Class MsgBoxGui (allows more chars to be displayed than builtin MsgBox
+	DebugGui (show debug messages)
+	
+Research
+	AHK2 Libraries
+	AHK v2.1 whats new?
+	
+Rewrite in AHK2:
+	WGT
+
+String.ahk
+	; review Pascal, C#, Java, etc.
+	v.Contains("string")
+	v.EndsWith("ending")
+	v.StartsWith("starting")
+	v.TrimEnd(n) ; n=number of chars to trim
+	UpperCase, Lower, Camel, Pascal
+	

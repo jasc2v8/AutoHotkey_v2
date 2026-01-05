@@ -1,0 +1,51 @@
+In AutoHotkey v2, the static keyword in a class is used to define class-level variables or methods — meaning they belong to the class itself, not to any instance of the class. Here's why and when you'd use static in a class:
+
+🔧 Why Use static in a Class
+1. Shared State Across All Instances
+- A static property or method is shared across all instances of the class.
+- Useful for things like counters, caches, or configuration values.
+class Counter {
+    static count := 0
+
+    __New() {
+        Counter.count++
+    }
+}
+
+
+Every time you create a new Counter object, Counter.count increases — shared across all instances.
+
+2. Utility Methods That Don’t Need an Instance
+- static methods can be called without creating an object.
+- Great for helper functions or factory methods.
+class MathUtils {
+    static Square(x) {
+        return x * x
+    }
+}
+
+MsgBox MathUtils.Square(5)  ; Outputs 25
+
+
+
+3. Persistent Data Within a Method
+- Inside a method, static variables retain their value between calls.
+class Logger {
+    static Log(msg) {
+        static logCount := 0
+        logCount++
+        MsgBox "Log #" logCount ": " msg
+    }
+}
+
+
+
+🧠 Summary
+|  | static | 
+|  |  | 
+|  |  | 
+|  |  | 
+
+
+
+If you're building reusable tools or managing state across multiple scripts or hotkeys, static can help you keep things clean and efficient. Want to see how it behaves in a real-world AHK v2 script you're working on?

@@ -1,27 +1,16 @@
 Auto Hotkey Version 2 Manual
 
-	Result is true: Non-zero e.g. 1 or -1
-	Result is false: 0
-	Result is true: string
-	Result is false: ''
-	
-	Windows Exit Code (ErrorLevel) (AHK A_LastError)
-	0=Success, Non-Zero=Fail
-	
 Array, Map
 
-    MyArray := Array() ; not brackets!
+    MyArray := [] 
 	or
 	MyArray := ["item1", "item2", "item3"]
     MyArray.Push("Item4") 
-	value := MyArray[1] ; not parenthesis!
-	
+
 	myMap := Map()
 	or
 	MyMap := Map("Key1", "Value1", "Key2", "Value2")
 	myMap.Set("Key1", "Value1")
-	value := MyMap["Key1"]
-	boolean := MyMap.Has("Key")
 	
 Button
 	MyButton.OnEvent("Click", Button_Click()
@@ -29,23 +18,9 @@ Button
 		Button_Click(Ctrl, Info){}
 	Button_Click(*){}
 
-Colors
-	Red: FF0000
-	Green: 008000
-	Blue: 0000FF
-	Yellow: FFFF00
-	Purple: 800080
-	Fuchsia: FF00FF
-	Cyan: 00FFFF
-	White: FFFFFF
-	Black: 000000 
-
-You can also use custom RGB values like "c0xFFDD99" or "Background0x333333".
-
 Compiler directives
 	#Warn Unreachable
 	#Warn Unreachable, Off
-	;@Ahk2Exe-ConsoleApp
 	
 DEBUG
 	OutputDebug "The value of a variable is: " . myVariable
@@ -53,16 +28,6 @@ DEBUG
 Edit Control
 	MyGui.Show()
 	PostMessage(EM_SETSEL:=0xB1, -1, 0, MyEdit.Hwnd) ; Deselect all text
-
-Fat Arrow Functions
-	; from TextControlCustom
-	
-	GetColor() => this.ctrl.FontColor
-
-    SetColor(color) => (
-        this.FontColor := color,
-        this.ctrl.SetFont("c" color)
-    )
 
 FileSelect
     file := FileSelect(, DefaultSoundFile, "Select Sound File", "Sound Files (*.wav;*.mp3;*.ogg;*.flac)")
@@ -81,21 +46,6 @@ FOCUS on a Button
 
 Format()
 	Format("{:02}", A_Index) 01, 02, 03...
-
-GetObjectName
-
-	MsgBox '[' GetObjectName(StrLen) ']'
-
-    objName := GetObjectName(StrLen)
-	MsgBox '[' objName ']' "StrLen"
-
-    objName := GetObjectName(MyFunction)
-	MsgBox '[' objName ']' ; "MyFunction"
-
-	GetObjectName(obj) {
-		return obj.Name
-	}
-
 	
 GUID
 	/**
@@ -115,50 +65,6 @@ GUID
 	 * the Ahk2exe compiler. This application reads this value and writes it to
 	 * the ISS Template you select.
 	 */
-	
-Gui Add
-	ButtonOK := g.Add("Button", "Default", "OK")	; ButtonOK is returned as a CtrlObj
-	ButtonOK := g.AddButton("Default", "OK")		;  ButtonOK is returned as a String!
-	
-Gui X,Y,W,H
-	SUMMARY:
-		BENEATH:	Xn or XM Beneath all previous controls (maximum Y extent plus margin). 
-		RIGHT:		YP or YP+0 To the right of the previous control (right edge plus margin). 
-			
-		Specified X, Default for Y
-		Xn or XM Beneath all previous controls (maximum Y extent plus margin). 
-		XS Beneath all previous controls since the most recent use of the Section option. 
-		X+n or XP+nonzero Same as the previous control's top edge (YP). 
-		XP or XP+0 Below the previous control (bottom edge plus margin). 
-
-		Specified Y, 	Default for X
-		Yn or YM To the right of all previous controls (maximum X extent plus margin). 
-		YS To the right of all previous controls since the most recent use of the Section option. 
-		Y+n or YP+nonzero Same as the previous control's left edge (XP). 
-		YP or YP+0 To the right of the previous control (right edge plus margin). 
-
-		Add Horizontal Line
-		MyDivider := MyGui.Add("Text", "xm w440 h1 0x10 Border vDivider") ; 0x10=SS_ETCHEDHORZ
-		Border = Thick line, -Border = Thin line
-	
-	Dimensions (Examples\GuiAndClientMetricsExample.ahk)
-		Gui("w400 h300") creates a Gui 416x339 and Client 400x300
-		Inside the Gui is the Client area for the Gui Controls 400x300
-		Top Border			=    8
-		Title Bar 				=  23
-		BorderY				=    8
-		Client Width 		=	292
-		Bottom Border	=   8
-		---------------------------
-		Gui Height			=  339 (match Gui above)
-		
-		Left Border=8 + Client width=400 + Right Border=8 = 416 (match Gui above)
-
-
-Hex
-	dec := 4095
-	hex := "0x" Format("{:X}", dec)
-	MsgBox hex   ; "0xFFF"
 
 Hotkeys
 	Symbol	Key	Full Key Name (in braces)	Example	Result
@@ -186,12 +92,6 @@ Iterate
         MyMap := Map("Key1", "Value1", "Key2", "Value2")
         MyObj := {KeyA: "ValueA", KeyB: "ValueB", KeyC: "ValueC"}
 
-        MsgBox Type(MyArray), "Array"
-        MsgBox Type(MyCSV), "CSV String"
-        MsgBox Type(MyLine), "String"
-        MsgBox Type(MyMap), "Map"
-        MsgBox Type(MyObj), "Object"
-		
         for key, value in myObj.OwnProps()
             MsgBox key ": " value, "Object"
 
@@ -232,12 +132,6 @@ Common A_ Variables
 	A_UserName: The name of the user who is logged on.
 	A_WorkingDir: The current working directory of the script.
 
-Notepad++
-	Find in files, Filters
-	*.ahk !+\.his* 			; search *.ahk, exclude .his* (.his, .history, etc.)
-	*.ahk !+\.history		; search *.ahk, exclude .history
-	*.ahk !\.history		; inop	
-
 Prototype
 	from: QuickerAccess.ahk
 	
@@ -275,26 +169,6 @@ Switch
             return "'" val "'"
         case "Integer", "Float": ; implied OR
             return val
-Time
-	currentTime := FormatTime(A_Now, "HH:mm:ss")
-
-TraySetIcon
-	To change the system tray icon in AHK v2, you use the TraySetIcon function.
-	This changes both the icon you see in the taskbar (bottom right) and the default icon used for any GUIs you create later in the script.
-	To set the icon immediately when the script starts, place this at the very top of your script:
-	#Requires AutoHotkey v2.0
-	; Syntax: TraySetIcon(FileName, IconNumber, Freeze)
-	TraySetIcon("shell32.dll", 44) ; Set tray icon to the Gold Star
-	
-TrayTip
-	TrayTip "Text", "Title"
-	
-	SetTimer(HideTrayTip, -1000) 
-
-	HideTrayTip() {
-		TrayTip() ; Calling with no arguments clears the current notification
-	}
-	
 Map
 		Requires AutoHotkey v2.0
 
@@ -334,13 +208,9 @@ Map
 
 MsgBox Defaults
 	Screen	w=300, h=159
-	Client		w=284, h=120
-	Font 		s9, Segoe UI (Gui Default)
-
-Font Defaults
-		Gui:	s9, Segoe UI
-		Edit	s8, Microsoft Sans Serif
-		
+	Client	w=284, h=120
+	Font 		s9, Segoe UI
+	
 MsgBox Defaults
 	MsgBox():
 		Window:		Screen 168x140, Client: 152x101
@@ -358,6 +228,26 @@ MsgBox Icons
 	⚠️ Exclamation	Icon!	48	0x30	A yellow triangle with an exclamation point (Warning).
 	ℹ️ Asterisk	Iconi	64	0x40	A circle with an 'i' (Information).
 
+Gui
+	SUMMARY:
+		BENEATH:	XP or XP+0 Below the previous control (bottom edge plus margin). 
+		RIGHT:		Yn or YM To the right of all previous controls (maximum X extent plus margin).
+		
+	Specified X, Default for Y
+	Xn or XM Beneath all previous controls (maximum Y extent plus margin). 
+	XS Beneath all previous controls since the most recent use of the Section option. 
+	X+n or XP+nonzero Same as the previous control's top edge (YP). 
+	XP or XP+0 Below the previous control (bottom edge plus margin). 
+
+	Specified Y, 	Default for X
+	Yn or YM To the right of all previous controls (maximum X extent plus margin). 
+	YS To the right of all previous controls since the most recent use of the Section option. 
+	Y+n or YP+nonzero Same as the previous control's left edge (XP). 
+	YP or YP+0 To the right of the previous control (right edge plus margin). 
+
+	Add Horizontal Line
+	MyLine := MyGui.Add("Text", "xm w440 h1 0x10") ;SS_ETCHEDHORZ
+  
  Include <script>
 	The primary locations AutoHotkey checks for files when using the angle bracket syntax are:
 	Local:		The Lib subfolder in the directory containing the main script file:	%A_ScriptDir%\Lib\

@@ -1,0 +1,9 @@
+Summary Table: GitHub Free Limits (2026)
+Category									Limit / Allowance
+Total Repositories					Unlimited
+Individual File (Git)					100 MB
+Repo Size (Recommended	< 1 GB
+Git LFS Storage						1 GB
+Git LFS Bandwidth					1 GB / month
+Packages Storage					500 MB
+

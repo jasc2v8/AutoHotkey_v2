@@ -1,0 +1,40 @@
+[/Codebox]
+[section]
+[url]https://github.com/jasc2v8/AutoHotkey_v2[/url]
+[/section]
+
+Imgbb.com/
+
+	harmony-32x32:
+
+		BBCode full linked:	
+		[url=https://imgbb.com/][img]https://i.ibb.co/vvf16Qvb/harmony-32x32.png[/img][/url]
+		
+		BBCode thumnail linked:		
+		[url=https://imgbb.com/][img]https://i.ibb.co/R4t2kB41/harmony-32x32.png[/img][/url]
+		
+		Viewer Links:
+		https://ibb.co/R4t2kB41
+		
+	harmony-16x16:
+	
+		BBCode full linked:	
+		[url=https://imgbb.com/][img]https://i.ibb.co/RTVpfx4K/harmony-16x16.png[/img][/url]
+		
+		BBCode thumnail linked:		
+		[url=https://imgbb.com/][img]https://i.ibb.co/Ld2zmLhy/harmony-16x16.png[/img][/url]
+		
+		Viewer Links:
+		https://ibb.co/Ld2zmLhy
+	
+	harmony-100x100:
+	
+		BBCode full linked:	
+		[url=https://imgbb.com/][img]https://i.ibb.co/fVw6F8y5/harmony-100x100.png[/img][/url]	
+
+		BBCode thumnail linked:		
+		[url=https://imgbb.com/][img]https://i.ibb.co/SDCYyQM8/harmony-100x100.png[/img][/url]
+		
+		Viewer Links:
+		https://ibb.co/SDCYyQM8
+		

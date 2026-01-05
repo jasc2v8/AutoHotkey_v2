@@ -1,7 +1,10 @@
  imageres.dll
+     64 two small offet cogs
 	 74 shield blue/yellow
+	105 blue Terminal (Terminal)
 	107 package builder (AhkSetupBuilder?)
-	115 earth pc neword (download?)
+ 110 cog with small green check mark
+	115 earth pc terminal (download?)
 	176 folder download (download!)
 	209 shield with start button colors
 	230 arrows backup/restore
@@ -15,6 +18,9 @@
 shell32.dll
 	10 NAS
 	14 earth
+	16 blue terminal (Terminal)
+	24 MsgBox Question
+	25 blue action button
 *	28 power button (216 small)
 	46 folder upload (BACKUP)
 	47 window with up/down arrows (backup?)
@@ -23,7 +29,7 @@ shell32.dll
 	147 Green up arrow (backup?)
 	274 backup?
 *	294 backup!
-	315 cog
+	315 large cog
 
 ddores.dll
 	41 Media Server
@@ -35,3 +41,5 @@ mstsc.exe
 dsuiext.dll
 	36 two cogs
 
+user32.dll
+	2=Exclamation, 3=question,4=Stop, 5=Information,7=Shield

@@ -1,0 +1,55 @@
+SOURCE: Gemini
+
+You use the static keyword in an AutoHotkey v2 class for methods and properties that belong to the class itself, rather than a specific instance of the class.
+
+💡 Key Differences
+The core distinction is in ownership and behavior:
+
+Static Members (Class Members):
+
+Ownership: They belong to the class object, not to individual objects created from the class (instances).
+
+Access: You access them directly using the class name (e.g., MyClass.StaticProperty).
+
+Sharing: A single copy of a static property is shared across all instances of the class and the class itself.
+
+Methods: Static methods cannot access instance properties or other non-static methods because they are called without a specific instance. They are used for utility functions related to the class concept.
+
+Non-Static Members (Instance Members):
+
+Ownership: They belong to the Prototype object of the class, meaning they are available to, and often specific to, each individual instance created from the class.
+
+Access: You access them through an instance of the class (e.g., myInstance.InstanceProperty).
+
+Sharing: Each instance has its own separate copy (for properties) or refers to the same method definition (for methods), but the data they operate on (this) is unique to the instance.
+
+🎯 Use Cases for Static
+You would use static for:
+
+Constants and Shared Configuration: Storing values that should be the same for all instances of the class and accessible without creating an object.
+
+AutoHotkey
+
+class MyClass {
+    static MAX_COUNT := 100  ; A constant shared by all
+}
+MsgBox MyClass.MAX_COUNT ; Access directly via the class name
+Factory Methods: Methods that create and return new instances of the class, or a related class, which don't need an existing instance to be called.
+
+AutoHotkey
+
+class Coord {
+    static FromString(s) {
+        ; Logic to parse a string like "10,20" and return a new Coord object
+    }
+}
+Utility Functions (Class-Related Helpers): Functions that logically relate to the class but don't operate on the unique data of a specific instance. For example, a method to validate input before creating an instance.
+
+AutoHotkey
+
+class Validator {
+    static IsValidEmail(email) {
+        ; return true or false based on validation
+    }
+}
+Static members provide a way to group related functions and data under a class's namespace without requiring object instantiation, keeping your code organized and preventing namespace pollution.
