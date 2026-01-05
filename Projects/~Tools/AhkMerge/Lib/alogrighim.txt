@@ -1,0 +1,14 @@
+
+Merge(ScriptFile)
+
+IncludeFiles := Get includes recursive(ScriptFile)
+	include1.ahk
+	include2.ahk
+
+MergedScript := ScriptFile
+
+for file in IncludeFiles
+	MergedScript .= Include(file) ; find file in library, read text
+
+return Clean(MergedScript)
+

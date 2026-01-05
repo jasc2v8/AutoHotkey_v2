@@ -1,0 +1,31 @@
+AhkRunSkipUAC
+
+AhkRunSkipUAC enables a normal user to run an elevated process and skip the UAC prompt.
+It's an on-demand task scheduled with the Windows Task Scheduler with runLevel of "-highest".
+The user app and the elevated process communicate through a SharedMemory.
+The user app can be run with RunHelper which returns the StdOut and/or StdErr.
+The user app communicates with the AhkRunSkipUAC via SharedMemory as follows;
+	User app sets the process to be run with elevated privileges
+	User app tells the Windows Task Scheduler to run the AhkRunSkipUAC Task.
+	AhkRunSkipUAC Task runs the selected process with  elevated privileges.
+	The elevated app runs and responds with its StdOut and/or StdErr output.
+	User app receives the output and processes it.
+	User app exits and AhkRunSkipUAC remains Ready in the Task Scheduler.
+
+
+AhkRunSkipUAC_Setup.ahk
+	%PROGRAMDATA%\AutoHotkey\AhkRunSkipUAC\AhkRunSkipUAC.exe
+	%PROGRAMDATA%\AutoHotkey\AhkRunSkipUAC\AhkRunSkipUAC.ini		; User process to run elevated.
+	%PROGRAMDATA%\AutoHotkey\AhkRunSkipUAC\AhkRunSkipUAC.log		; ?
+
+User can change what program AhkRunSkipUAC will run via the ini file:
+	AhkRunSkipUAC.ini	
+        [SETTINGS]
+        PROGRAM := "C:\ProgramData\AutoHotkey\BackupControlTool\BackupControlWorker.exe"
+		
+	
+SharedMemory.ahk
+RunHelper.ahk
+IniHelper.ahk
+
+

@@ -1,0 +1,67 @@
+05:57:04: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST]
+05:57:04: FROM SERVER: [ACK:
+
+]
+06:42:46: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST]
+06:42:46: FROM SERVER: [ACK:
+
+]
+06:58:53: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST]
+06:58:53: FROM SERVER: [ACK]
+07:02:09: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST]
+07:02:09: FROM SERVER: [ACK]
+07:04:02: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST]
+07:04:02: FROM SERVER: [ACK]
+07:06:45: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST]
+07:06:45: FROM SERVER: [ACK]
+07:28:33: Service start!
+07:33:26: Service start!
+07:33:33: Service Command: STATUS
+07:33:33: Service Status: OK
+07:33:33: Service Command: C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST
+07:33:37: Service Output Len: 54
+07:33:37: Service Output: [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST]
+07:33:37: Service Response: ACK
+07:33:41: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST]
+07:33:41: FROM SERVER: [ACK]
+07:33:52: Service Command: TERMINATE
+07:35:46: Service start!
+07:36:44: Service start!
+08:25:00: TO SERVICE : [test]
+08:25:00: FROM SERVER: [ACK]
+08:25:15: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST]
+08:25:15: FROM SERVER: [ACK]
+08:25:50: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST]
+08:25:50: FROM SERVER: [ACK]
+08:26:51: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST]
+08:26:51: FROM SERVER: [ACK]
+08:27:32: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST2]
+08:27:32: FROM SERVER: [ACK]
+08:27:53: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe, TEST]
+08:27:53: FROM SERVER: [ACK]
+08:46:21: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:46:21: FROM SERVER: [ACK]
+08:46:34: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:46:34: FROM SERVER: [ACK]
+08:47:35: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:47:35: FROM SERVER: [ACK]
+08:48:16: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:48:16: FROM SERVER: [ACK]
+08:49:33: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:49:33: FROM SERVER: [ACK]
+08:51:11: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:51:11: FROM SERVER: [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:52:20: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:52:20: FROM SERVER: [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:52:36: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:52:36: FROM SERVER: [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:53:15: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:53:15: FROM SERVER: [ACK]
+08:55:53: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:55:53: FROM SERVER: [ACK]
+08:56:13: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:56:13: FROM SERVER: [ACK]
+08:56:54: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:56:54: FROM SERVER: [ACK]
+08:59:09: TO SERVICE : [C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe,,TEST]
+08:59:09: FROM SERVER: [ACK]

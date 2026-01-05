@@ -1,0 +1,47 @@
+
+-hibernate: Place the computer into hibernate mode (S4) (if the computer supports it).
+
+-standby: Place the computer into a sleep state (if the computer supports it). What level of
+sleep state (S0 to S3) the device goes into is up to Windows and the level of hardware
+support.
+
+-shutdown: Logoff, shutdown, and switch off the computer (if the computer supports it).
+SyncBackSE cannot guarantee that the computer will be shutdown. Windows does a
+shutdown asynchronously, meaning SyncBackSE can be told the computer will shutdown
+even though something could stop that shutdown, e.g. Windows itself, another application, a
+driver, a user, etc. If you do not have the access rights in Windows (e.g. you are not an
+administrator) then this command will fail.
+
+-shutdownforce: Logoff, shutdown, and switch off the computer (if the computer supports it).
+Note that this will forcibly shutdown the computer, e.g. applications with unsaved data will be
+forcibly closed. SyncBackSE cannot guarantee that the computer will be shutdown. Windows
+does a shutdown asynchronously, meaning SyncBackSE can be told the computer will
+shutdown even though something could stop that shutdown, e.g. Windows itself, another
+application, a driver, a user, etc. If you do not have the access rights in Windows (e.g. you are
+not an administrator) then this command will fail.
+
+-shutdownhybrid: This is the same as -shutdown, except on Windows 8 and newer
+systems it will perform a hybrid shutdown of the system. A hybrid shutdown prepares the
+system for a faster start-up.
+
+-logoff: Logoff (logout) from the current Windows account. Keep in mind that it will logoff the
+user in the session it is run in. For example, a scheduled task will run in its own session if it's
+set to run if logged in or not. So the -logoff switch will not logoff the current user. If the
+scheduled task is set to run only if the user is logged in then it will logoff the current user.
+
+-monoff: Switches off all attached display monitors. This is unlikely to work if the profile is run
+from a different session, e.g. run via the task scheduler.
+
+-reboot: Reboot the computer (if the computer supports it). SyncBackSE cannot guarantee
+that the computer will be rebooted. Windows does a reboot asynchronously, meaning
+SyncBackSE can be told the computer will reboot even though something could stop the
+reboot, e.g. Windows itself, another application, a driver, a user, etc. If you do not have the
+access rights in Windows (e.g. you are not an administrator) then this command will fail.
+
+-rebootforce:  Reboot the computer (if the computer supports it). Note that this will forcibly
+reboot the computer, e.g. applications with unsaved data will be forcibly closed. SyncBackSE
+cannot guarantee that the computer will be rebooted. Windows does a reboot
+asynchronously, meaning SyncBackSE can be told the computer will reboot even though
+something could stop the reboot, e.g. Windows itself, another application, a driver, a user,
+etc. If you do not have the access rights in Windows (e.g. you are not an administrator) then
+this command will fail.

@@ -1,0 +1,47 @@
+Browse .ahk, *.*
+
+
+AhkMerge_works_4.ahk
+OK	[ ] Exclude Comments,  [ ] Exclude Headers, [ ] Exclude Unused...
+OK	 [ ] Exclude Comments, [ ] Exclude Headers, [x] Exclude Unused...
+OK	[ ] Exclude Comments,  [x] Exclude Headers, [ ] Exclude Unused...
+OK	[ ] Exclude Comments, [x] Exclude Headers, [x] Exclude Unused...
+OK	[x] Exclude Comments, [ ] Exclude Headers, [ ] Exclude Unused...
+OK	[x] Exclude Comments, [ ] Exclude Headers, [x] Exclude Unused...
+OK	[x] Exclude Comments, [x] Exclude Headers, [ ] Exclude Unused...
+OK	[x] Exclude Comments, [x] Exclude Headers, [x] Exclude Unused...
+
+		
+AhkMerge will:
+1. Recursively scan the ScriptFile for #Include statements.
+2. Merge all of the #Include file.
+3. Merge the ScriptFile.
+4. Excludes all #Includes in all files.
+5. Retain #Requires in the ScriptFile, but excludes from the #Include files.
+6. Save As to user selected file, default is ScriptFile_Merged.ahk
+
+Header:
+;============================== (100)
+;#Include <File>
+;#Include <IniLite>
+;#Include <String_Functions>
+;AhkSetupBuilder.ahk
+;==============================
+;#Include <File>
+FileGetProperties() {
+}
+;==============================
+;#Include <IniLite>
+;#Include <String>
+class IniLite {
+}
+;==============================
+;#Include <String_Functions>
+StrSomething() {
+}
+;==============================
+;#Include <File>
+;#Include <IniLite>
+;#Include <String_Functions>
+;AhkSetupBuilder.ahk
+#Requires AutoHotkey 2.0+

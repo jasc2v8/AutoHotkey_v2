@@ -1,0 +1,41 @@
+
+TestControl
+
+	SF:=SharedFile("MySharedFile.txt")
+	
+	; Server is waiting for client to write and unlock
+	SF.Write(path, args)
+			SF.Write()
+			SF.UnLock()
+			
+	reply:= SF.WaitRead()
+		SF.WaitUnlock()
+		SF.Lock()
+		SF.Read
+
+TestWorker
+
+	SF:=SharedFile("MySharedFile.txt")
+		this.SharedFile:="MySharedFile.txt"
+
+	; Server creates and destroys the SharedFile
+	SF.Create()
+		Create file
+		set access
+		SF.Lock()
+
+	Loop
+	request:= SF.WaitRead()
+		SF.WaitUnlock()
+		SF.Lock()
+		SF.Read(path, args)
+		
+	Output:=RunCMD(request)
+	SF.WaitWrite(output)
+		SF.WaitUnlock()
+		SF.Lock()
+		SF.Write()
+	
+	
+
+Con

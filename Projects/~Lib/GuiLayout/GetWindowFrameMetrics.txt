@@ -1,0 +1,30 @@
+﻿
+
+fullWidth            : 456
+fullHeight           : 419
+clientWidth          : 440
+clientHeight         : 380
+borderWidth          : 8
+borderHeight         : 8
+captionHeight        : 23
+totalNonClientHeight : 39
+
+Gui   : x: 732, y: 306, w: 456, h: 419
+Client: x: 740, y: 337, w: 440, h: 380
+
+8+23+8+380=419
+
+		8	The Window Border Top
+		23	The Title Bar (Caption Area).
+			The System Menu (usually hidden or the icon in the top-left).
+			The Minimize, Maximize/Restore, and Close Buttons.
+			The Menu Bar (if one is present).
+		8	The Control Border
+		380	The Client Area
+		-------------------
+		419 Total = fullHeight (GuiHeight)
+	
+	myText :=g.AddText("w400 h356 BackgroundSilver vText")
+	g.Show("w440 h 380")
+	
+	

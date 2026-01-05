@@ -1,0 +1,1 @@
+C:\Users\Jim\Documents\AutoHotkey\Lib\String_Functions.ahk,C:\Users\Jim\Documents\AutoHotkey\Lib\Debug.ahk,C:\Users\Jim\Documents\AutoHotkey\Lib\String.ahk,C:\Users\Jim\Documents\AutoHotkey\Lib\IniLite.ahk

@@ -1,0 +1,29 @@
+CONTROL
+	RunSkipUACHelper(WorkerPath)
+	pipe.ConnectClient "WORKER"
+	pipe.Write "Request from Control"  (SyncBackPath, SyncBackProfile)
+	reply:= pipe.Read
+	logger.WRite reply
+	pip.Close
+	Exit
+
+RunSkipUACHelper(WorkerPath)
+	Run (no wait) Task AHK_RunSkipUAC
+	pipe.ConnectClient  "AHK_PIPE"
+	pipe.Write WorkerPath
+	
+AHK_RunSkipUAC
+	pipe.CreateServer "AHK_PIPE"
+	WorkerPath:=pipe.Read
+	pipe.Close
+	Run WorkerPath (no wait?) (BackupControlTask.exe) no params!
+
+WORKER
+	pipe.CreateServer "WORKER"
+	Request:=pipe.Read (SyncBackPath, SyncBackProfile)
+	logger.Write Request
+	pipe.Write "Reply from WORKER:  (SyncBackPath, SyncBackProfile)"
+	pipe.Close
+	Exit
+	
+	

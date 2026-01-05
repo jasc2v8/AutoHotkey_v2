@@ -1,0 +1,20 @@
+if no icon, use theme, else use icon
+
+MinGuiWidth := 138
+MinGuiHeight := 
+
+.ahk
+
+Terminal: 0C0C0C (Red=0C Green=0C Blue=0C)
+
+PowerShell: 457AD5 (Red=45 Green=7A Blue=D5)
+
+91C2D1 (Red=91 Green=C2 Blue=D1)
+white: Color:	CDD0B1 (Red=CD Green=D0 Blue=B1)
+blue: Color:	012456 (Red=01 Green=24 Blue=56)
+MsgCustom()
+
+Msg
+Mbox
+
+Msg.ahk

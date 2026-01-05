@@ -1,0 +1,162 @@
+
+Will these compiler directives make this process any easier?
+
+;@Ahk2Exe-SetDescription Calculator
+;@Ahk2Exe-SetMainIcon calc.ico
+;@Ahk2Exe-SetCompanyName Microsoft Corporation
+;@Ahk2Exe-SetCopyright \xA9 Microsoft Corporation. All rights reserved.
+;@Ahk2Exe-SetDescription Windows Calculator
+;@Ahk2Exe-SetInternalName CALC
+;@Ahk2Exe-SetProductName Microsoft\xAE Windows\xAE Operating System
+;@Ahk2Exe-SetVersion 10.0.19041.1
+
+Update templates to include MyAppPublisher name
+
+AhkBuilder set ISS or have the ISS do it?
+
+
+MyApp_34
+
+D:\Software\DEV\Repoistory\AHK2\MyApp\v1.0.0.0\MyApp.ahk
+
+[Compile AHK]
+WinClose VSCode 
+Read AHK script into textBuff (oldVersion)
+Replace ProductVersion from AHK script with ProductVersion+1
+Save as newVersion
+Copy *.ahk to Repository
+
+Compile AHK script
+Open newVersion in VSCode
+
+[Copy] Work Folder <==> Repository
+
+AutoVersion format:
+AhkSetupBuilder_v0.0.0.33.ahk
+;@AHK2EXE_PATH-Set ProductVersion, 0.0.0.9
+
+copy			AhkSetupBuilder_v0.0.0.33.ahk 								to		 AhkSetupBuilder_v0.0.0.34.ahk
+replace		@AHK2EXE_PATH-Set ProductVersion, 0.0.0.9		to		@AHK2EXE_PATH-Set ProductVersion, 0.0.0.34
+backup																					to 	.\Backup\AhkSetupBuilder_v0.0.0.34.ahk		
+
+No Version format:
+AhkSetupBuilder.ahk															to		 AhkSetupBuilder.ahk
+;@AHK2EXE_PATH-Set ProductVersion, 0.0.0.9					to		;@AHK2EXE_PATH-Set ProductVersion, 0.0.0.10
+backup																				to 	.\Backup\AhkSetupBuilder_v0.0.0.9.ahk		
+
+copy to .\Backup?
+
+
+
+
+
+
+DoSaveConfig()
+
+DirCreate("My_Documents\AutoHotkey\AhkBuilder\Config")
+
+copy, A_Temp ... AhkBuilder.ini, My_Documents\AutoHotkey\AhkBuilder\Config\Config.ini
+
+AhkBuilder -- Ahk2Exe and Inno Setup Builder
+
++=====================================================+
+	
+	[AHK Script   ]	[MyApp.ahk							]	[Compile]		[Explore]
+
+	[AHK Exe     ] 	[MyApp.exe							]	[Run] [Stop]	[Explore]
+	
+	[Inno Script]	[MakeSetupSimple.iss			]	[Compile]		[Explore] 
+
+	[Inno Exe     ] 	[MyApp_setup_v1.0.0.0.exe	]	[Run] [Stop]	[Explore]
+	
+	________________________________________________________
+	[Build]  [Config]  [Help]  [Cancel]
++====================================================+
+
+
+AhkBuilder -- Ahk2Exe and Inno Setup Builder
+
++===========================================================+
+	
+	[AHK Script   ]	[MyApp.ahk						]	[Compile]		[Explore]	[ Edit] 
+
+	[Inno Template]	[MakeSetupSimple.iss		]	[Compile]		[Explore]	[ Edit] 
+	
+	[AHK Exe     ] 	[MyApp.exe						]	[Run] [Stop]	[Explore]
+	________________________________________________________________
+	[Build]  [Config]  [Help]  [Cancel]
++===========================================================+
+
++==================================================+
+	[MakeSetupSimple.iss		]	[ISS Template]	[   Edit   ] [Explore]
+	
+	[MyApp.ahk						]	[AHK Script   ]	[Compile] [Explore]
+
+	[MyApp.exe						]	[AHK Exe     ] 	[Compile] [Explore]
+	_____________________________________________________
+											[Load Config] [Save Config] [Cancel]
++==================================================+
+
+Config files: C:\Users\Jim\Documents\AutoHotkey\AhkBuilder\Config\MyConfigName.cfg
+[Settings]
+AHK_PATH=
+ISS_PATH=
+EXE_PATH=
+
+
++==============================================+
+	[AHK Script]	[MyApp.ahk						]	[Compile] [Explore]
+
+	[AHK Exe]	[MyApp.exe						]	[Compile] [Explore]
+	
+	[ISS Template]	[MakeSetupSimple.iss		]	[Compile] [Edit]
+	
+	[Make] [Cancel]
++==============================================+
+
+open file dialog to select exe
+open iss template
+save iss template as exeName.iss
+get exe file properties, details
+StrReplace exeName.iss %Properties%
+make setup: "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" {exe_path}\exeName_Setup_v1.0.0.0.exe
+
+SAMPLE ISS TEMPLATE FILE: SetupMakerSimple.iss
+
+;setup maker defines											; examples
+#define MyAppFilePath "%MyAppFilePath%"		; "D:\Software\DEV\Work\AHK2\Projects\CopyVS\CopyVS.exe"
+#define MyAppIconPath "%MyAppIconPath%"		; "D:\Software\DEV\Work\AHK2\Projects\CopyVS\CopyVS.ico"
+#define MyAppId "%MyAppId%"							; "{{06B12894-ED34-4E96-9446-7314025B2170}}" 												;Installer not exe
+#define MyOutputDir   "%MyAppFilePath%\bin"	; "D:\Software\DEV\Work\AHK2\Projects\CopyVS\bin"
+
+; builtin defines: https://github.com/jrsoftware/issrc/blob/main/Files/ISPPBuiltins.iss						; Visual Studio 2022					; Inno Setup
+#define MyAppName GetFileDescription(MyAppFilePath)           		; Installer for My Application   ; Assembly.Product					; File Description
+#define MyAppExeName GetFileOriginalFilename(MyAppFilePath)   ; MyApplication.exe  				; Product Name							; Product Name
+#define MyAppFileName RemoveFileExt(MyAppExeName)             	; MyApplication
+#define MyAppCopyright GetFileCopyright(MyAppFilePath)        		; Copyright @ 2025				; Assembly.Copyright					; Copyright
+#define MyAppVersion GetFileProductVersion(MyAppFilePath)     	; 1.0.0              						; Assembly.AssemblyVersion		; File Version (exe)
+#define MyAppVersionInfo GetFileProductVersion(MyAppFilePath) 	; 1.0.0              						; Assembly.ProductVersion			; Product Version (series)
+
+INNO SETUP COMMAND LINE:
+
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /Q exeName.iss ; /Quiet (future log file?)
+
+The basic syntax is:
+iscc [options] <script name>
+
+Common options include:
+
+/Q: Quiet compile. It suppresses most output, showing only error messages.
+/Qp: Quiet with progress. It displays a progress bar but no other messages.
+/O<path>: Sets the output directory for the compiled installer. This overrides the OutputDir directive in the script.
+/F<filename>: Specifies the output filename. This overrides the OutputBaseFilename directive in the script.
+/S<name>=<command>: Defines a SignTool command to use for signing the installer.
+/D<name>[=<value>]: Defines a preprocessor variable, useful for passing build-specific information into the script.
+For example, to compile a script quietly and place the output in a specific folder, you would use:
+iscc /Q /O"C:\MyBuilds" "C:\MyProject\MySetup.iss"
+
+
+"D:\Software\DEV\Work\AHK2\Projects\CopyVS\Setup\CopyVS.iss"
+"D:\Software\DEV\Work\AHK2\Projects\CopyVS\Setup\CopyVS.exe"
+
+run "C:\Program Files\SetupMaker\SetupMaker.exe" 

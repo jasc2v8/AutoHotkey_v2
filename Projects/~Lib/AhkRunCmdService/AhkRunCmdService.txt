@@ -1,0 +1,9 @@
+
+The SErvice creates SharedFile.txt with admin privs
+
+Hover, the Client has only user privs
+
+How can the service create the SharedFile with user privs, or
+	change admin to user?
+	
+	

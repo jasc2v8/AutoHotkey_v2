@@ -1,6 +1,0 @@
-[Settings]
-[Configuration]
-AHK=D:\Software\DEV\Work\AHK2\Projects\AhkSetupBuilder\AhkSetupBuilder.ahk
-AHK_EXE=D:\Software\DEV\Work\AHK2\Projects\AhkSetupBuilder\AhkSetupBuilder.exe
-ISS=C:\Users\Jim\Documents\AutoHotkey\AhkSetupBuilder\Templates\Template_OneFile.iss
-ISS_EXE=D:\Software\DEV\Work\AHK2\Projects\AhkSetupBuilder\AhkSetupBuilder_setup_vX.X.X.X.exe

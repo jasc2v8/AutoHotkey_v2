@@ -1,0 +1,54 @@
+
+Client
+sf:= SharedFile("MySharedFile.txt")
+sf.WaitCreate()
+; Server has created SharedFile with sf.UnLock()
+Loop
+	request:=InputBox()
+	sf.Send(request)
+		sf.WaitUnlock()	
+		sf.Lock()					; signal server client start request				
+		sf.Write(request)	
+		sf.Unlock()  			; allow server to receive
+
+	sf.WaitLock() 			; wait for server to start receive
+	sf.WaitUnlock()			; wait for server to finish receive
+	sf.WaitLock() 			; wait for server to start send reply
+	
+	reply:= sf.Receive()
+		sf.WaitUnlock()
+		sf.Lock()
+		reply:=sf.Read()
+		sf.Unlock() 
+	MsgBox reply
+	; IsLocked() = false
+Loop
+
+
+
+
+
+Server
+sf:= SharedFile("MySharedFile.txt")
+sf.Create() ; Created with sf.UnLock()
+Loop
+request:= sf.Receive()
+	sf.WaitLock() 	; wait for client to start request
+	sf.WaitUnlock()	; client finished send request
+	sf.Lock()
+	request:=sf.Read()
+	
+reply:= "ACK: " request
+
+sf.Send(reply)
+	;sf.WaitLock() 	; wait for client to send request
+	;sf.WaitUnlock() ; client finished
+	;sf.Lock()
+	sf.Write(reply)
+	;sf.UnLock()		; allow client to receive
+	sf.WaitLock() 	; client start receive
+	sf.WaitUnlock()  ; client finished receive
+if request = "TERMINATE"
+	sf.Close()
+	exitApp()
+

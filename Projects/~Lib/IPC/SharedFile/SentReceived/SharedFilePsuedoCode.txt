@@ -1,0 +1,27 @@
+Server
+Create()
+SetReceived()
+Loop
+	WaitSent
+		Read
+		SetReceived
+	Do Work
+	Write Reply
+		Write
+		SetSent
+		WaitReceived
+Loop
+
+Client
+Loop
+	; not needed: WaitReceived
+	Write request
+		Write
+		SetSent
+		WaitReceived
+	Read reply
+		WaitSent
+		Read
+		SetReceived
+Loop
+	
