@@ -20,6 +20,18 @@
  *   
  */
 
+StrEndsWith(Haystack, Needle, CaseSense := false) {
+    return InStr(Haystack, Needle, CaseSense, -StrLen(Needle)) = 1
+}
+
+StrStartsWith(Haystack, Needle, CaseSense := false) {
+    return InStr(Haystack, Needle, CaseSense) = 1
+}
+
+StrCompare(str1, str2) {
+    return str1 = str2
+}
+
 SubStrExtract(Text, StartChar, EndChar)
 {
     StartPos := InStr(Text, StartChar) + 1
@@ -46,6 +58,9 @@ CRLF := CR . LF
 ; Library: String
 IsEmpty(str) {
     return str = ''
+}
+StrContains(Haystack, Needle) {
+    return InStr(Haystack, Needle) > 0
 }
 ;-------------------------------------------------------------------------------
 ; FUNCTION: StrEnclose(str, EndChars:='"')
@@ -85,6 +100,16 @@ StrJoinPath(Parts*) {
     while (InStr(joinedPath, Separator Separator) > 0)
         joinedPath := StrReplace(joinedPath, Separator . Separator, Separator)
     return SubStr(joinedPath, 1, -StrLen(Separator))
+}
+;-------------------------------------------------------------------------------
+; FUNCTION: StrSplitPath(path)
+; Purpose: Repeats a string a specified number of times.
+; Returns: The string repeated.
+; Library: String_Functions
+StrRepeat(String, Count) {
+    if (Count <= 0)
+        return ""    
+    return StrReplace(Format("{:" Count "}", ""), " ", String)
 }
 ;-------------------------------------------------------------------------------
 ; FUNCTION: StrSplitPath(path)

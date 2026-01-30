@@ -1,27 +1,26 @@
-﻿; TITLE  :  MyScript v0.0
+﻿; TITLE  :  MyScript v1.0.0.0
 ; SOURCE :  jasc2v8
 ; LICENSE:  The Unlicense, see https://unlicense.org
 ; PURPOSE:  
 ; USAGE  :
 ; NOTES  :
 
-/*
-    TODO:
-*/
+;;TODO: Fix something
 
-#Requires AutoHotkey v2.0+
+#Requires AutoHotkey v2+
 #SingleInstance Force
 #NoTrayIcon
 
 #Include <String>
 
-; #region Globals
+;; Globals
+
 global AHK_EXE_PID := 0
 
 ; #region GUI Create
 MyGuiTitle := "AutoHotkey v2 Template"
 MyGui := Gui(, MyGuiTitle )
-MyGui.BackColor := "4682B4" ; Steel Blue
+MyGui.BackColor := "7DA7CA" ; Steel Blue +2.5 Glaucous ; BackColor := "4682B4" ; Steel Blue
 MyGui.SetFont("S11", "Consolas")
 
 editBoxAhk := MyGui.AddText("w480 h24 BackgroundWhite", A_ScriptFullPath)
@@ -73,7 +72,8 @@ OnGui_Close(*) {
 
 DoSelectFolder(Item) {
 
-    f := FileSelect(1+2, MyText.Text,,'Text Files (*.txt)')
+    ;f := FileSelect(1+2, MyText.Text,,'Text Files (*.txt)')
+    f := DirSelect(MyText.Text, 1+2+4,'Select Folder')
 
     MsgBox f
 

@@ -1,4 +1,4 @@
-﻿; TITLE  :  MyScript v0.0
+﻿; TITLE  :  MyScript v1.0.0.0
 ; SOURCE :  jasc2v8
 ; LICENSE:  The Unlicense, see https://unlicense.org
 ; PURPOSE:  
@@ -9,11 +9,11 @@
     TODO:
 */
 
-#Requires AutoHotkey v2.0+
+#Requires AutoHotkey v2+
 
 class MyClass {
     ; --- Properties (Instance Variables) ---
-    static ClassVersion := "1.0.0" ; Shared across all instances
+    static ClassVersion := "1.0.0.0" ; Shared across all instances
     InstanceID := 0
     IsRunning  := false
 

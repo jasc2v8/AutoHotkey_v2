@@ -10,7 +10,7 @@
 
 #Requires AutoHotkey v2.0+
 
-#Include <String>
+#Include <StringLib>
 
 ; Methods:
 ; ----------------
@@ -34,7 +34,7 @@ class Debug
 
     static FileWrite(Text, Filename:="", Overwrite:=True)
     {
-        Filename := (Filename) ? Filename : A_ScriptDir.JoinPath("Debug.txt")
+        Filename := (Filename) ? Filename : Str.JoinPath(A_ScriptDir, "Debug.txt")
         If (Overwrite AND FileExist(Filename))
             FileDelete(Filename)
         FileAppend(Text "`n", Filename)

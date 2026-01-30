@@ -1,0 +1,39 @@
+ imageres.dll
+	 74 shield blue/yellow
+	107 package builder (AhkSetupBuilder?)
+	115 earth pc neword (download?)
+	176 folder download (download!)
+	209 shield with start button colors
+	230 arrows backup/restore
+*	250 blue squares (AhkLauncher)
+	281 list with R G B squares
+	283 Blue win logo play button
+	298 copy
+	315 toolbox
+	318 media server (backup)
+	353 list-colors
+
+shell32.dll
+	10 NAS
+	14 earth
+*	28 power button (216 small)
+*	46 folder upload (BACKUP)
+	47 window with up/down arrows (backup?)
+*    81 package (AhkSetupBuilder)
+*	123 blue down arrow (download?)
+	147 Green up arrow (backup?)
+	274 backup?
+*	294 backup?
+	315 cog - very large
+
+ddores.dll
+	41 Media Server
+	79 nas
+	
+mstsc.exe
+	20 win8 start button (darK blue)
+	
+dsuiext.dll
+	36 two cogs, one large, one small - nice!
+	
+

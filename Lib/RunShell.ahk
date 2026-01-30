@@ -1,18 +1,17 @@
-﻿; ABOUT: RunCMD v1.0
+﻿#Requires AutoHotkey 2+
 
-#Requires AutoHotkey 2.0+
-
+; TITLE   : RunShell v1.0.0.2
 ; SUMMARY : Runs a command (handles spaces in the arguments) and returns the Output.
 ; RETURNS : StdOut and StdErr: success=Instr(output, "Error")=0, error=Instr(output, "Error")>0
 ; EXAMPLES:
-;   RunCMD(Command)                         ; Determines if Array, CSV, String, and Executable,or CMD.
-;   RunCMD([My App.exe, p1, p2])            ; Array (RunCMD will add quotes as needed).
-;   RunCMD("My App.exe, p1, p2")            ; CSV   (RunCMD will add quotes as needed).
-;   RunCMD("dir /b D:\My Dir")              ; String, CMD
-;   RunCMD("MyApp.exe D:\MyDir")            ; String, EXE (User must add quotes as needed.)
-;   RunCMD(Format('"{}" {}', exe, params))  ; String, EXE (User must add quotes as needed.)
+;   RunShell(Command)                         ; Determines if Array, CSV, String, and Executable,or CMD.
+;   RunShell([My App.exe, p1, p2])            ; Array (RunShell will add quotes as needed).
+;   RunShell("My App.exe, p1, p2")            ; CSV   (RunShell will add quotes as needed).
+;   RunShell("dir /b D:\My Dir")              ; String, CMD
+;   RunShell("MyApp.exe D:\MyDir")            ; String, EXE (User must add quotes as needed.)
+;   RunShell(Format('"{}" {}', exe, params))  ; String, EXE (User must add quotes as needed.)
 ;------------------------------------------------------------------------------------------------
-class RunCMD{
+class RunShell{
 
     static Call(CommandLine) {
 
@@ -109,6 +108,32 @@ class RunCMD{
                 myString .= item . ","
         }
         return RTrim(myString, ",")
+    }
+
+    static ArrayToCSV(InputArray) {
+
+        if (InputArray.Length = 0)
+                return ""
+            
+        CSVString := ""
+        
+        for Index, Value in InputArray {
+            CurrentVal := String(Value)
+            CSVString .= (Index = 1 ? "" : ",") . CurrentVal
+        }
+        
+        return CSVString
+    }
+
+    static ArrayToCmdLine(paramArray) {
+        str := ""
+        for index, value in paramArray {
+            if (InStr(value, A_Space)>0) {
+                value := '"' . value . '"'
+            }
+            str .= value . A_Space
+        }
+        return RTrim(str) ; Remove the trailing space
     }
 
     ; Returns String: Array, Class, CSV, Float, Func, Integer, Map, String
