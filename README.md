@@ -8,6 +8,8 @@
 
 >Library to run any command line without a command window and return StdOut & StdErr.
 
+>Run(Array, CMD, CSV, Executable, Script.ahk, or String)
+
 >Handles spaces in the arguments as needed.
 
 ## [BackupTool](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Tools/BackupTool/BackupTool.ahk)
