@@ -6,13 +6,13 @@
 
 ## [RunLib](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Lib/RunLib.ahk)
 
->Library to run any command line without a command window. 
+>Library to run any command line without a command window and return StdOut & StdErr.
 
 >Handles spaces in the arguments as needed.
 
 ## [BackupTool](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Tools/BackupTool/BackupTool.ahk)
 
->Run SyncBackSE.exe as Admin with no UAC prompt.
+>Run SyncBackSE.exe as Admin without the UAC prompt.
 
 ## [PowerTool](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Tools/PowerTool/PowerTool.ahk)
 
