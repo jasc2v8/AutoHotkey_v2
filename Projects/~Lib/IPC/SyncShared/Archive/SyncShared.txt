@@ -1,0 +1,34 @@
+__New
+	Create hEventClient, hEventServer
+
+WaitRead(CallbackFunction)
+	if Server
+		hEventWait:=hEventClient
+	else
+		hEventWait:=hEventServer
+	Wait for hEventWait
+	CallbackFunction()	ReadSharedResource
+
+Write(String, CallbackFunction)
+	WriteSharedResource
+	if Server
+		hEventWait:=hEventServer
+	else
+		hEventWait:=hEventClient
+	CallbackFunction(String)	WriteSharedResource
+
+WriteSharedResource(String)
+String:=ReadSharedResource
+
+Server
+sync.WaitRead Request
+Process Request
+sync.Write Reply
+WriteSharedResource
+ReadSharedResource
+
+Client
+sync.Write Request
+sync.WaitRead Reply
+WriteSharedResource
+ReadSharedResource

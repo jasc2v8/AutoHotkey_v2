@@ -1,0 +1,156 @@
+
+
+%PROGRAMFILES%\AutoHotkey\v2\AutoHotkey64.exe "D:\Software\DEV\Work\AHK2\Projects\~Lib\AdminLauncher\AdminLauncher.ahk"  "C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe" "monoff" "TEST WITH SPACES"	
+
+
+Use Cases:
+	1. Controller Launches Worker Elevated, Run no Reply or RunWait for Reply
+	2. ShortCut Launches AdminRun.ahk  "MyApp" "MyParams"
+
+	1. Controller Launches Worker Elevated, Run no Reply or RunWait for Reply
+	Controller
+	launcher := AdminRun
+	launcher.Run(commandCSV)
+	launcher.RunWait(commandCSV)
+		Controller Receive()
+		Controller performs post-run actions
+	
+	2. ShortCut Launches AdminRun.ahk  "MyApp" "MyParams"
+	MyShortcut
+	Target="C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\Users\Jim\Documents\AutoHotkey\Lib\AdminRun.ahk"  "MyApp" "MyParams"
+	Target="%PROGRAMFILES%\AutoHotkey\v2\AutoHotkey64.exe" "%USERPROFILE%\Documents\AutoHotkey\Lib\AdminRun.ahk"  "MyApp" "MyParams"
+	
+	All OK:
+	Target="C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "D:\TEST\TestLog.ahk"
+	Target="%PROGRAMFILES%\AutoHotkey\v2\AutoHotkey64.exe" "D:\TEST\TestLog.ahk"
+	Target="%PROGRAMFILES%\AutoHotkey\v2\AutoHotkey64.exe" "%USERPROFILE%\Documents\AutoHotkey\Lib\TestLog.ahk" 
+	Target="%PROGRAMFILES%\AutoHotkey\v2\AutoHotkey64.exe" "%USERPROFILE%\Documents\AutoHotkey\Lib\TestLogArgs.ahk" BACKUP PROFILE POST-ACTION
+	Target="%PROGRAMFILES%\AutoHotkey\v2\AutoHotkey64.exe" "%USERPROFILE%\Documents\AutoHotkey\Lib\TestLogArgs.ahk" "BACKUP" "PROFILE" "POST-ACTION" ; no quotes logged
+	
+	
+	
+	
+	Task AdminLauncher runs AdminLauncher.ahk Worker Params
+
+
+Use Cases:
+	ABANDON 1 & 2, ONLY 3 IS NEEDED!
+	1. Controller Launches Worker Elevated, Run no Reply
+	2. Controller Launches Worker Elevated, RunWait for Reply
+	3. Controller Run AdminLauncher [/wait] Worker Params
+
+1. Controller Launches Worker Elevated, RunWait for Reply
+	Controller StartTask AdminLauncher, launches AdminLauncher.ahk
+	AdminLauncher.Listen()
+	Controller commandCSV:=RunShell(ArrayToCSV(Worker.[exe, ahk], Params))
+	Controller RunWait(commandCSV) to AdminLauncher
+	AdminLauncher.RunWait(commandCSV)
+	AdminLauncher.Send(reply)
+	Controller Receive()
+	Controller performs post-run actions
+
+2. Controller Launches Worker Elevated, Run no Reply
+	Controller StartTask AdminLauncher, launches AdminLauncher.ahk
+	AdminLauncher.Listen()
+	Controller commandCSV:=RunShell(ArrayToCSV(Worker.[exe, ahk], Params))
+	Controller Run(commandCSV) to AdminLauncher 
+	AdminLauncher.Run(commandCSV)
+
+3. Controller Run AdminLauncher [/wait] Worker Params
+	AdminLauncher
+		commandCSV:=RunShell(ArrayToCSV(A_Args))
+		StartTask AdminLauncher, launches AdminLauncher.ahk
+		AdminLauncher.Listen()
+		if /wait
+			AdminLauncher.RunWait(commandCSV)
+			AdminLauncher.Send(reply)
+			Output:=AdminLauncher.Receive()
+			FileAppend Output, StdOut
+		else
+			AdminLauncher.Run(commandCSV)
+			FileAppend Output, t/f/errorCode?
+
+			
+Controller
+launcher := AdminRun
+launcher.Run(commandCSV)
+launcher.RunWait(commandCSV)
+	
+
+
+ABANDON
+	Control and Worker both in the same Script (Avoids separate Control and Worker Scripts)
+	Program.exe Start Task to Run Program.exe /worker and Params, Receive Reply from Program.exe / worker
+	Example: Program.exe starts Task to run Program.exe /worker who runs a Backup Tool, then performs post-action (e.g. shutdown)
+
+Control
+	launcher := AdminLauncher()
+	launcher.StartTask()
+	launcher.Send(Control.ahk, /worker, Program.exe, Param1, ParamN )
+	reply := launcher.Receive()
+
+Task AdminLauncher runs AdminLauncher.ahk
+
+AdminLauncher.ahk
+	launcher:=AdminLauncher(this?)
+	requestCSV:=this.Listen()
+	RunShell(requestCSV)
+	launcher.Send(ACK)
+	
+Control
+	if A_Args
+		RunAsWorker()
+	Gui
+	Submit
+	
+	RunAsWorker()
+		launcher := AdminLauncher()
+		commandCSV := RunShell.ArrayToCSV(A_Args)
+		RunShell(commandCSV)
+		PostActionl(commandCSV)
+
+
+	
+	
+	
+SIGNIFICANTLY SIMPLIFIED WITH INI FILE
+ACK?
+	SendMessage true/false?
+
+Control.exe
+	launcher := AdminLauncher()
+	launcher.Wait()
+	launcher.Receive()
+	
+
+
+
+	ini:=IniFile(A_Temp \ AdminLauncher.ini)
+	ini.WriteSettings("COMMAND_CSV", "C:\Program Files\SyncBack.exe, Profile, Post-Action")
+	launcher := AdminLauncher() ; auto StartTask() launcher.StartTask()
+	
+	launcher := AdminLauncher() 
+	launcher.CommandArray:="C:\Program Files\SyncBack.exe, Profile, Post-Action"
+	launcher.CommandCSV:="C:\Program Files\SyncBack.exe, Profile, Post-Action"
+	launcher.CommandString:='"C:\Program Files\SyncBack.exe" Profile, Post-Action"'
+	launcher.Start()
+	launcher.Run(CommandCSV)
+	
+Task AdminLauncher starts AdminLauncher.ahk at runLevel='highest'
+
+AdminLauncher.ahk
+	commandCSV := ini.ReadSettings("COMMAND_CSV")
+	RunShell(commandCSV)
+	
+A_Temp \AdminLauncher.ini
+	[Settings]
+	WINDOW_TITLE=BackupTool.ahk
+	COMMAND_CSV=BackupTool.ahk /worker, SyncBack.exe, Profile, Post-Action
+	RESULT=Blank=running, value (t/f/errorCode)
+	
+	AdminLauncher.ini
+	+R=busy
+	-R=ready
+	
+	
+

@@ -1,0 +1,10 @@
+
+Sender
+
+; Send "Hello World" to Script A
+Messenger.SendString("Hello World", "ScriptA.ahk ahk_class AutoHotkey")
+
+Receiver
+
+; Listen for messages and show them in a MsgBox
+Messenger.OnReceive((text) => MsgBox("Received: " text))

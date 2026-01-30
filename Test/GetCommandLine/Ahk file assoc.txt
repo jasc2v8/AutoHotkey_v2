@@ -1,0 +1,15 @@
+>assoc .ahk
+.ahk=AutoHotkeyScript
+
+>ftype AutoHotkeyScript
+AutoHotkeyScript="C:\Program Files\AutoHotkey\UX\AutoHotkeyUX.exe" "C:\Program Files\AutoHotkey\UX\launcher.ahk" "%1" %*
+
+Fix assoc Run this in an elevated CMD:
+>ftype AutoHotkeyScript="C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "%1" %*
+
+Verify
+>ftype AutoHotkeyScript
+AutoHotkeyScript="C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "%1" %*
+
+
+> SET PATHEXT
