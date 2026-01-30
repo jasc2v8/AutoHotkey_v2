@@ -1,4 +1,4 @@
-# Featured
+# Featured Projects
 
 ## [RunAdmin](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Lib/RunAdmin.ahk)
 
@@ -12,8 +12,12 @@
 
 ## [BackupTool](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Tools/BackupTool/BackupTool.ahk)
 
->Run SyncBack.exe as Admin with no UAC prompt.
+>Run SyncBackSE.exe as Admin with no UAC prompt.
 
 ## [PowerTool](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Tools/PowerTool/PowerTool.ahk)
 
 >Push Button Gui for Sleep, Signout, Shutdown, Restart, and Display Off. 
+
+## Note
+
+'This repository is for learning purposes.'  Many scripts in this are from many sources.  They may be incomplete and may not work as-is, but are a good starting point to expand and enhance their functionality.
