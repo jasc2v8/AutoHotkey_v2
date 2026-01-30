@@ -6,8 +6,13 @@
  110 cog with small green check mark
 	115 earth pc terminal (download?)
 	176 folder download (download!)
-	209 shield with start button colors
+	169 magifier glass
+	209 shield with WinXP start button colors
 	230 arrows backup/restore
+	231 red circle white X (stop)
+	232 yellow triangle under construction
+	234 green circle white check 
+	237 red square white X
 *	250 blue squares (AhkLauncher)
 	281 list with R G B squares
 	283 Blue win logo play button
@@ -18,15 +23,19 @@
 shell32.dll
 	10 NAS
 	14 earth
-	16 blue terminal (Terminal)
+	16 blue terminal 
+	18 blue terminal with earth globe
 	24 MsgBox Question
 	25 blue action button
 *	28 power button (216 small)
+	35 blue monitor screen
 	46 folder upload (BACKUP)
 	47 window with up/down arrows (backup?)
 *    81 package (AhkSetupBuilder)
+	 91 DOS cog
 *	123 blue down arrow (download?)
 	147 Green up arrow (backup?)
+	239 circle with arrows circling
 	274 backup?
 *	294 backup!
 	315 large cog

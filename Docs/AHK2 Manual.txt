@@ -18,7 +18,7 @@ Array, Map
 	
 	myMap := Map()
 	or
-	MyMap := Map("Key1", "Value1", "Key2", "Value2")
+	MyMap := Map("Key1", "Value1", "Key2", "Value2", "Key3", "Value3")
 	myMap.Set("Key1", "Value1")
 	value := MyMap["Key1"]
 	boolean := MyMap.Has("Key")
@@ -118,7 +118,20 @@ GUID
 	
 Gui Add
 	ButtonOK := g.Add("Button", "Default", "OK")	; ButtonOK is returned as a CtrlObj
-	ButtonOK := g.AddButton("Default", "OK")		;  ButtonOK is returned as a String!
+	ButtonOK := g.AddButton("Default", "OK")		;  ButtonO
+
+static AirSuperiorityBlue   := "72A0C1"
+	MyGui.BackColor := "72A0C1" ; AirSuperiorityBlue
+	
+	;MyGui.BackColor := "4682B4" ; Steel Blue
+	;MyGui.BackColor := StrReplace("6B9BC2", "#") ; Steel Blue Light
+	;MyGui.BackColor := StrReplace("517FBF", "#") ; Steel Blue 5% lighter (ChatGPT)
+	;MyGui.BackColor := StrReplace("5888B9", "#") ; Steel Blue 10% lighter (ChatGPT)
+MyGui.BackColor := StrReplace("628FBE", "#") ; Steel Blue 15% lighter (ChatGPT)
+	;MyGui.BackColor := StrReplace("6B9BC3", "#") ; Steel Blue 20% lighter (ChatGPT)
+	;MyGui.BackColor := StrReplace("74A1C7", "#") ; Steel Blue 25% lighter (ChatGPT)
+
+	MyGui.AddEdit('xm w410 h20 Center Backgroundeffeaa7', SyncBackSelectedProfile) ; #ffeaa7 Sour Lemon (flatuicolors)
 	
 Gui X,Y,W,H
 	SUMMARY:
@@ -279,18 +292,19 @@ Time
 	currentTime := FormatTime(A_Now, "HH:mm:ss")
 
 TraySetIcon
+	Window Icon: Set the Tray icon before creating the GUI; the window will inherit it
 	To change the system tray icon in AHK v2, you use the TraySetIcon function.
 	This changes both the icon you see in the taskbar (bottom right) and the default icon used for any GUIs you create later in the script.
 	To set the icon immediately when the script starts, place this at the very top of your script:
-	#Requires AutoHotkey v2.0
-	; Syntax: TraySetIcon(FileName, IconNumber, Freeze)
-	TraySetIcon("shell32.dll", 44) ; Set tray icon to the Gold Star
+	#Requires AutoHotkey v2+
+	try TraySetIcon("shell32.dll", 44) ; Set tray icon to the Gold Star
+	try TraySetIcon("dsuiext.dll", 36) ; Two cogs
 	
 TrayTip
 	TrayTip "Text", "Title"
+	SetTimer((*) => TrayTip(), -1000)
 	
 	SetTimer(HideTrayTip, -1000) 
-
 	HideTrayTip() {
 		TrayTip() ; Calling with no arguments clears the current notification
 	}
@@ -378,3 +392,10 @@ Script Library Folders
 
 Ternary
 	var := x>y ? 2 : 3
+	
+WinExist("MyScript.ahk ahk_class AutoHotkey")
+
+VSCode
+	C:\Users\Jim\AppData\Local\Programs\Microsoft VS Code\Code.exe
+	"%LOCALAPPDATA%\Programs\Microsoft VS Code\Code.exe"
+	

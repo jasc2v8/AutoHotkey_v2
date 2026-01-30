@@ -1,21 +1,30 @@
 
+RunAdminInstall
+	unzip RunAdminInstall.zip
+	copy RunAdmin.ahk to %LOCALAPPDATA%\Programs\AutoHotkey\RunAdmin\RunAdmin.ahk
+	copy RunAdminIPC.ahk to %USERPROFILE%\Documents\AutoHotkey\Lib\RunAdminIPC.ahk
+	create Task RunAdmin, Target: %LOCALAPPDATA%\Programs\AutoHotkey\RunAdmin\RunAdmin.ahk
+	create Shortcut on Desktop, Target: Ahk_Path RunAdmin.ahk ?
+	copy RunAdminTest.ahk to ?
+		Direct run RunAdminTest p1 p2 p3
+		IPC Run via NamedPipe IPC
+		ShortCut
+	Remove - reverse the above
+
+RunAdminCreateShortCut - or change target
+
+cmd.lnk : %windir%\system32\cmd.exe
+
+AhkSetupBuilder
+	Fix this, did String break it - compile ahk fails
+	
+ObjTree change to class
+ObjView change from (title, obj) to (obj, title
+		
+TaskScheduler
+	[x] Add Shortcut to Startup
+	
 Reset Graphics driver: Ctrl + Shift + Win + B
-
-
-*****************************	
-time to update GitHub!!!
-*****************************	
-
-search for RunTask and fix error return (RunSkipUAC)
-AdminAppLauncher?
-AdminLauncher?
-AdminLaunch
-
-
-AhkTaskManager
-	Ahk Script, get title from PID?, listview
-
-BackupToolSetup.ahk
 
 nssmGuiManager
 see windowservice at bottom
@@ -33,9 +42,6 @@ Added to D:\Software\DEV\Work\AHK2 (Workspace)
 	.vscode\launch.json (has new debugger)
 Add to all project folders?
 
-D:\Software\DEV\Work\AHK2\Examples\Fonts\FontCompare\
-		Cleanup
-		
 D:\Software\DEV\Work\AHK2\Libraries\Nich-Cebolla\
 	?ConfigLibrary
 	
@@ -44,36 +50,20 @@ D:\Software\DEV\Work\AHK2\Libraries\Nich-Cebolla\
 AHK2 TODO
 =======================================================================
 
-FileCopyWin32 in a timer loop for long copy to not freeze gui and callback to update progress?
-	Check CopyVS?
-
 .ahk does not flag virus: Win10 install Avast, check if AHK script is flagged or not?
 
 AhkLauncher
 	Make AhkLauncherSetup portable to other pC
 		Ahk Lib files!?!?!?!???
-	
-AhkMerge
-	Cleanup
 		
 AhkSetupBuilder
 	Fix this, did String break it - compile ahk fails
-
-BackupControlTool
-	No changes
-
-CloseAllWindows
-	No changes
 	
-CopyVS
-	Move ini to TEMP \AhkApps\CopyVS\CopyVS.ini
-
 Debug
 	May abandon, use VSCode Debugger
 	<ListObj> very nice
-	did I incorporate NameOf.ahk?
 	
-Download Control
+DownloadTool
 	[Cancel] do STOP then ExitApp ?
 	delete torrent from QbitTorrent?
 	On close, exit QbitTorrent if running
@@ -84,7 +74,10 @@ Download Control
 Examples / Lib
 	Class MsgBoxGui (allows more chars to be displayed than builtin MsgBox
 	DebugGui (show debug messages)
-	
+
+GitHub
+	Time to update again?
+
 GuiLayout
 	GuiSize()
 		L.GetPos() ; get all gui and client pos
@@ -104,3 +97,4 @@ WindowsService
 		
 ZipInstaller by nirsoft
 	c:\windows\zipinst.exe
+	ZipInstaller.ahk

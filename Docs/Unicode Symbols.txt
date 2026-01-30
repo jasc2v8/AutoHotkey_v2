@@ -1,0 +1,53 @@
+﻿Category	Symbol	Unicode Code	AHK Example
+Navigation		◀ ▶ ▲ ▼	\u25C0 ...	MyGui.Add("Button",, "◀ Back")
+Media	⏸ ⏹ ⏺ ⏭	\u23F8 ...	MyGui.Add("Button",, "⏸ Pause")
+Status	✅ ❌ ⚠️ ℹ️	\u2705 ...	MyGui.Add("Text",, "✅ Success")
+Misc	⚙️ 🔍 📁 🗑️	\u2699 ...	MyGui.Add("Button",, "⚙️ Settings")
+
+
+Category	Symbol	Unicode Code	AHK Example
+Navigation		◀     ▶     ▲    ▼	\u25C0 ...	MyGui.Add("Button",, "◀ Back")
+Media	        ⏸    ⏹    ⏺    ⏭	\u23F8 ...	MyGui.Add("Button",, "⏸ Pause")
+Status	        ✅     ❌   ⚠️    ℹ️	\u2705 ...	MyGui.Add("Text",, "✅ Success")
+Misc	            ⚙️    🔍    📁    🗑️	\u2699 ...	MyGui.Add("Button",, "⚙️ Settings")
+
+Action	Hex Code	AHK Code
+Save	0xE74E	Chr(0xE74E)
+Edit / Pen	0xE70F	Chr(0xE70F)
+Refresh	0xE72C	Chr(0xE72C)
+Settings	0xE713	Chr(0xE713)
+Search	0xE71E	Chr(0xE71E)
+Home	0xE80F	Chr(0xE80F)
+Folder	0xE8B7	Chr(0xE8B7)
+Delete	0xE74D	Chr(0xE74D)
+Warning	0xE7BA	Chr(0xE7BA)
+Info	0xE946	Chr(0xE946)
+
+1. Standard UI Symbols (Segoe UI / Tahoma)
+These are standard across almost all fonts and are best for text-heavy buttons.
+Symbol	Description	Hex Code	AHK v2 Code
+◀	Back / Left	0x25C0	Chr(0x25C0)
+▶	Next / Right	0x25B6	Chr(0x25B6)
+▲	Up	0x25B2	Chr(0x25B2)
+▼	Down	0x25BC	Chr(0x25BC)
+✅	Checkmark	0x2705	Chr(0x2705)
+❌	Cross / Close	0x274C	Chr(0x274C)
+⚠️	Warning	0x26A0	Chr(0x26A0)
+ℹ️	Info	0x2139	Chr(0x2139)
+⚙️	Settings	0x2699	Chr(0x2699)
+🔍	Search	0x1F50D	Chr(0x1F50D)
+
+2. Modern App Icons (Segoe MDL2 Assets)
+These codes require you to set the font to Segoe MDL2 Assets. They provide the professional "Windows 11" look.
+Symbol	Description	Hex Code	AHK v2 Code
+	Home	0xE80F	Chr(0xE80F)
+	Camera	0xE722	Chr(0xE722)
+	Save	0xE74E	Chr(0xE74E)
+	Delete / Trash	0xE74D	Chr(0xE74D)
+	Refresh	0xE72C	Chr(0xE72C)
+	Settings	0xE713	Chr(0xE713)
+	Back Arrow	0xE72B	Chr(0xE72B)
+	Lock	0xE72E	Chr(0xE72E)
+	Calendar	0xE787	Chr(0xE787)
+	Cloud	0xE753	Chr(0xE753)
+
