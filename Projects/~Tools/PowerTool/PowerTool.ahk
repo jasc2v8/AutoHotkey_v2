@@ -1,7 +1,7 @@
 ﻿; TITLE  :  PowerTool v1.0
 ; SOURCE :  jasc2v8
 ; LICENSE:  The Unlicense, see https://unlicense.org
-; PURPOSE:  
+; PURPOSE:  Push Button Gui for Sleep, Signout, Shutdown, Restart, and Display Off.  
 ; USAGE  :
 ; NOTES  :
 
