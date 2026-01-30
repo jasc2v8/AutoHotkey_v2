@@ -1,0 +1,40 @@
+Minimum size 230x210
+Maximum size 1280x720
+
+; --- Input Examples ---
+DataArray := ["Apple", "Banana", "Cherry"]
+DataMap   := Map("Key1", "Value1", "Key2", "Value2")
+DataCSV   := "Red,Green,Blue,Yellow"
+DataLines := "Line One`nLine Two`nLine Three"
+DataText  := "Single Item"
+
+; Example usage:
+ObjList(DataArray, "DataArray")
+ObjList(DataMap, "DataMap")
+ObjList(DataCSV, "DataCSV")
+ObjList(DataLines, "DataLines")
+ObjList(DataText, "DataText")
+
+; Example usage:
+MyDisplay := ObjList(DataArray, "DataArray")
+MyDisplay := ObjList(DataMap, "DataMap")
+MyDisplay := ObjList(DataCSV, "DataCSV")
+MyDisplay := ObjList(DataLines, "DataLines")
+MyDisplay := ObjList(DataText, "DataText")
+
+; Example usage:
+MyDisplay := ObjList(DataArray, "DataArray")
+MyDisplay.Show()
+MyDisplay := ObjList(DataMap, "DataMap")
+MyDisplay.Show()
+MyDisplay := ObjList(DataCSV, "DataCSV")
+MyDisplay.Show()
+MyDisplay := ObjList(DataLines, "DataLines")
+MyDisplay.Show()
+MyDisplay := ObjList(DataText, "DataText")
+MyDisplay.Show()
+
+
+1: Apple
+2: Banana
+3: Cherry

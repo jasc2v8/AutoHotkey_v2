@@ -1,0 +1,6 @@
+HKEY_CURRENT_USER\Software\AHK_Scripts
+
+    __New(SubKey := StrReplace(A_ScriptName, ".ahk")) {
+        this.RootKey := "HKEY_CURRENT_USER\Software\AHK_Scripts"
+        this.SubKey := SubKey
+    }

@@ -1,0 +1,38 @@
+ObjList
+ObjView
+ObjListGui
+
+
+ObjTree - Objects, Arrays, Maps, Strings, String CSV, String List (`n separators)
+ObjGui - Gui Objects Hwnd, Title, currently focused control, and a full list of Controls, showing their Type (Button, Edit, etc.), Name, Hwnd, current Text/Value, and Visibility status.
+
+As of version v2.0.56, the script has evolved from a simple object viewer into a versatile inspector. It identifies the type of data you pass to it and adapts the TreeView structure accordingly.
+
+Here are all the containers and data formats currently supported:
+
+1. AutoHotkey Objects
+	Objects: Standard AHK objects. It iterates through all OwnProps() (properties).
+	Arrays: Indexed lists. It displays the index and the associated value or nested object.
+	Maps: Key-value pairs. It supports any data type as a key and sorts them logically.
+
+	Circular References: The script tracks "Visited" objects to prevent infinite loops, labeling them [Circular Reference].
+
+2. Specialized AHK Types
+	Gui Objects: When you pass a Gui object (e.g., myGui := Gui()), the script lists:
+	Window Hwnd and Title.
+	Currently focused control.
+	A full list of Controls, showing their Type (Button, Edit, etc.), Name, Hwnd, current Text/Value, and Visibility status.
+
+3. String-Based Containers
+	The script "sniffs" raw strings to see if they follow common data patterns:
+	Newline Lists (n): If a string contains line breaks, it creates a [List] node where each line is a separate child entry.
+	CSV Rows (,): If a string contains commas (and no newlines), it creates a [CSV Row] node, splitting the string into columns and trimming whitespace.
+	Raw Values: If the string doesn't match the patterns above, it is simply displayed as a single value node.
+
+
+Container Type,Detection Method,Tree Display Style
+Array,Obj is Array,"[1], [2], [3]..."
+Map,Obj is Map,Key: Value
+Gui,Obj is Gui,[Gui Title] > [Controls] > [Type]
+List,"InStr(str, ""\n"")","Line 1, Line 2..."
+CSV,"InStr(str, "","")","Col 1, Col 2..."

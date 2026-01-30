@@ -1,0 +1,12 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\.ahk]
+@="AutoHotkeyScript"
+
+[HKEY_CLASSES_ROOT\AutoHotkeyScript]
+@="AutoHotkey Script"
+
+[HKEY_CLASSES_ROOT\AutoHotkeyScript\Shell\Open\Command]
+@="\"C:\\Program Files\\AutoHotkey\\UX\\AutoHotkeyUX.exe\" \"%1\" %*"
+
+[-HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.ahk\UserChoice]

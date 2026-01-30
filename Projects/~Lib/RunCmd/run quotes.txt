@@ -1,0 +1,18 @@
+
+; Simple argument
+Run("notepad.exe C:\MyFolder\test.txt")
+
+; Path with spaces (use single quotes for the outer string and double for internal)
+Run('notepad.exe "C:\Documents and Settings\test.txt"')
+
+; Running a program with multiple flags
+Run('chrome.exe --new-window "https://www.autohotkey.com"')
+
+TargetFile := "C:\Temp\Data.txt"
+
+; Method A: Concatenation
+Run("notepad.exe " TargetFile)
+
+; Method B: Format function (cleaner for complex paths)
+Run(Format('notepad.exe "{1}"', TargetFile))
+
