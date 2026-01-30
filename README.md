@@ -20,4 +20,4 @@
 
 ## Note
 
-'This repository is for learning purposes.'  Many scripts in this are from many sources.  They may be incomplete and may not work as-is, but are a good starting point to expand and enhance their functionality.
+**This repository is for learning purposes.**  Many scripts in this are from different sources and have not been fully tested.  They may be incomplete and may not work as-is, but are a good starting point to expand and enhance their functionality.
