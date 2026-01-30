@@ -1,0 +1,21 @@
+AutoStartTask
+
+Schedule Task with runLevel='highest': AdminStart
+
+AdminStart.ahk
+	get cmd line arg: MyApp.ahk or MyApp.exe
+	start Task AdminLauncher
+	send MyApp.ahk or MyApp.exe to AdminLauncher via NamedPipe
+	Exit
+
+Task AdminLauncher runs <AdminLauncher> AdminLauncher.ahk 
+
+ AdminLauncher.ahk
+	receives request to run: MyApp.ahk or MyApp.exe via NamedPipe
+	runs MyApp.ahk or MyApp.exe at runLevel='highest'
+	Exit
+	
+Shortcut target: AdminStart.ahk MyApp.ahk or MyApp.exe
+	
+	
+	

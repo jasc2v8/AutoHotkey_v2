@@ -1,0 +1,23 @@
+
+Task AdminLauncher Target: "C:\ProgramData\AutoHotkey\AdminStart\AdminStart.ahk"
+	(Run AdminLauncher as ahk for NamedPipe IPC)
+
+Shortcut Test Target: "C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\Users\Jim\Documents\AutoHotkey\Lib\AdminLauncher.ahk" "D:\Software\DEV\Work\AHK2\Projects\~Tools\AdminStart\Test.ahk"
+	(Run AdminLauncher with shortcut to read Args)
+
+
+
+SearchBarReset
+"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\ProgramData\AutoHotkey\AdminStart\AdminStart.ahk"  "D:\Software\DEV\Work\AHK2\Projects\~Tools\SearchBarReset\AdminStartSearchBarReset.ahk"
+
+
+TEST
+"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\ProgramData\AutoHotkey\AdminStart\AdminStart.ahk" "D:\Software\DEV\Work\AHK2\Projects\~Tools\AdminStart\Test.ahk"
+
+"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\Users\Jim\Documents\AutoHotkey\Lib\AdminLauncher.ahk" "D:\Software\DEV\Work\AHK2\Projects\~Tools\AdminStart\Test.ahk"
+"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\Users\Jim\Documents\AutoHotkey\Lib\AdminLauncher.ahk" "D:\Software\DEV\Work\AHK2\Projects\~Tools\AdminStart\Test.ahk"
+
+SYNCBACK
+"C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" "C:\ProgramData\AutoHotkey\AdminStart\AdminStart.ahk" "C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe"
+
+

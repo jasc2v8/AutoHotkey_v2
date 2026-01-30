@@ -1,0 +1,7 @@
+Limitations to Consider
+Dynamic Calls: Functions called via SetTimer, Hotkey, or %VarName%() are difficult to detect via static analysis. You may need to manually include those.
+
+Classes: Merging individual methods from a class is risky; usually, it is safer to include the entire class if any part of it is used.
+
+Nested Braces: The parser must count { and } to ensure it captures the entire function body correctly.
+

@@ -1,0 +1,13 @@
+---------------------------
+MyArray to TOML String
+---------------------------
+1 = "item1"
+2 = "item2"
+3 = "item3"
+
+---------------------------
+MyMap to TOML String
+---------------------------
+Key1 = "Value1"
+Key2 = "Value2"
+Key3 = "Value3"

@@ -1,0 +1,15 @@
+Cursor Name,ID,Description
+IDC_ARROW,32512,Standard selection arrow
+IDC_IBEAM,32513,Text insertion bar
+IDC_WAIT,32514,Busy (Hourglass/Circle)
+IDC_CROSS,32515,Precision crosshair
+IDC_UPARROW,32516,Vertical arrow
+IDC_SIZENWSE,32642,Double arrow (Top-left to bottom-right)
+IDC_SIZENESW,32643,Double arrow (Top-right to bottom-left)
+IDC_SIZEWE,32644,Horizontal double arrow
+IDC_SIZENS,32645,Vertical double arrow
+IDC_SIZEALL,32646,Four-pointed move arrow
+IDC_NO,32648,Slashed circle (Not allowed)
+IDC_HAND,32649,Link select (Hand)
+IDC_APPSTARTING,32650,"Arrow with small ""busy"" circle"
+IDC_HELP,32651,Arrow with question mark

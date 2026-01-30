@@ -1,0 +1,22 @@
+
+FileCreateShortcut
+
+no icon if ahk
+
+icon if compiled in exe
+
+__New(TrayTipTimeout:=1500, IconFile:="", IconNumber:=0)
+
+
+FileCreateShortcut: dll, exe, or icon
+
+
+"C:\Users\Jim\Documents\AutoHotkey\Lib\Icons\under-construction.ico"
+
+
+I didn't word it properly, but my focus is on running .ahk files, not .exe files compiled with an icon.
+I get too many false A/V positives with .exe files so I run .ahk files.
+No gui is needed for the tray icon, but is used for the task bar icon running an .ahk script.
+Great info about FileCreateShortcut, thanks!
+I suppose I could change to 
+

@@ -1,0 +1,164 @@
+﻿; Version 1.0.0.15
+
+/**
+ * Scans a script string to identify top-level classes, functions, and #Include directives.
+ * Returns an array of CSV strings: "Type, Name/Path, Line, Length"
+ * @param {String} ScriptText - The raw code to analyze.
+ * @param {String} BaseDir - The directory used to resolve relative paths (defaults to A_ScriptDir).
+ * @returns {Array} - An array of strings ["Type,Name,Line,Length", ...]
+ */
+ScanScriptToCSV(ScriptText, BaseDir := A_ScriptDir) {
+    if (ScriptText = "")
+        return
+
+    CSVResults := []
+    BraceDepth := 0
+    CurrentItem := unset
+
+    Lines := StrSplit(ScriptText, "`n", "`r")
+
+    for Index, RawLine in Lines {
+        Line := Trim(RawLine)
+        
+        IsActive := IsSet(CurrentItem)
+
+        ; Skip processing for empty lines/comments unless we are counting inside a block
+        if (Line = "" || SubStr(Line, 1, 1) = ";") {
+            if (IsActive)
+                CurrentItem.LineCount++
+            
+            continue
+        }
+
+        PreBraceDepth := BraceDepth
+        StrReplace(Line, "{", , , &OpenCount)
+        StrReplace(Line, "}", , , &CloseCount)
+        BraceDepth += OpenCount - CloseCount
+
+        ; Only identify definitions at the root level (Depth 0)
+        if (PreBraceDepth = 0) {
+            Match := ""
+            FoundType := ""
+            ItemName := ""
+
+            ; 1. Check for Class
+            if RegExMatch(Line, "i)^class\s+(?P<Name>[a-zA-Z0-9_]+)", &Match) {
+                FoundType := "Class"
+                ItemName := Match["Name"]
+            } 
+            ; 2. Check for Function (standard or fat-arrow)
+            else if RegExMatch(Line, "i)^(?P<Name>[a-zA-Z0-9_]+)\(.*\)\s*(\{?|=>)", &Match) {
+                FoundType := "Function"
+                ItemName := Match["Name"]
+            } 
+            ; 3. Check for #Include
+            else if RegExMatch(Line, "i)^#Include(?:Again)?\s+(?P<Path>.+)", &Match) {
+                RawPath := Match["Path"]
+                IsLib := (SubStr(Trim(RawPath), 1, 1) = "<")
+                
+                ; Character list for trim: space, double-quote, single-quote, <, >
+                CleanPath := Trim(RawPath, " `"'<>")
+                
+                ResolvedPath := ""
+                if (IsLib) {
+                    ; Standard AHK library locations
+                    PathsToTry := [
+                        BaseDir "\Lib\" CleanPath ".ahk",
+                        A_MyDocuments "\AutoHotkey\Lib\" CleanPath ".ahk"
+                    ]
+                    if SplitPath(A_AhkPath,, &AhkDir) {
+                        PathsToTry.Push(AhkDir "\Lib\" CleanPath ".ahk")
+                    }
+                    for TryPath in PathsToTry {
+                        if (TryPath != "" && FileExist(TryPath)) {
+                            ResolvedPath := TryPath
+                            break
+                        }
+                    }
+                } else {
+                    ; Relative or Absolute path
+                    if (InStr(CleanPath, ":") || SubStr(CleanPath, 1, 2) = "\\") {
+                        ResolvedPath := CleanPath
+                    } else {
+                        ResolvedPath := BaseDir "\" CleanPath
+                    }
+                }
+
+                ; Push Include CSV immediately as it is a single line
+                PathVal := ResolvedPath || CleanPath
+                CSVResults.Push("Include," . PathVal . "," . Index . ",1")
+                continue
+            }
+
+            ; Initialize tracker for Class or Function blocks
+            if (FoundType != "") {
+                CurrentItem := {
+                    Type: FoundType, 
+                    Name: ItemName, 
+                    StartLine: Index, 
+                    LineCount: 1
+                }
+                
+                ; Fat arrow functions end on the same line
+                if (FoundType = "Function" && InStr(Line, "=>")) {
+                    CSVResults.Push(CurrentItem.Type . "," . CurrentItem.Name . "," . CurrentItem.StartLine . "," . CurrentItem.LineCount)
+                    CurrentItem := unset
+                }
+                
+                continue
+            }
+        }
+
+        ; Increment count if we are currently inside a block
+        if IsSet(CurrentItem) {
+            CurrentItem.LineCount++
+            
+            ; Block closed when depth returns to 0
+            if (BraceDepth = 0) {
+                CSVResults.Push(CurrentItem.Type . "," . CurrentItem.Name . "," . CurrentItem.StartLine . "," . CurrentItem.LineCount)
+                CurrentItem := unset
+            }
+        }
+    }
+
+    return CSVResults
+}
+
+; --- Example Usage ---
+
+ExampleCode := "
+(
+#Include "Lib\NetworkTools.ahk"
+#Include <JSON>
+
+class DatabaseManager {
+    Connect() {
+        MsgBox("Connecting...")
+    }
+}
+
+ProcessData(input) {
+    if (input = "")
+        return
+    
+    return StrUpper(input)
+}
+
+QuickLog(msg) => FileAppend(msg "`n", "log.txt")
+)"
+
+; Get the Array of CSV strings
+
+ScriptCode:= FileRead("D:\Software\DEV\Work\AHK2\Projects\~Tools\AhkMerge\BackupToolTest.ahk")
+;ScriptCode:= FileRead("C:\Users\Jim\Documents\AutoHotkey\Lib\String_Functions.ahk")
+;CSVArray := ScanScriptToCSV(ExampleCode)
+CSVArray := ScanScriptToCSV(ScriptCode)
+
+; Build display string
+Output := "Type,Name/Path,Line,Length`n"
+Output .= "---------------------------`n"
+for Row in CSVArray {
+    Output .= Row . "`n"
+}
+
+MsgBox(Output)

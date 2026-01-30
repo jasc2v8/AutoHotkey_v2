@@ -1,0 +1,14 @@
+
+GetIncludesRecurse(ScriptPath, IncludeFileMap:=Map())
+
+	Script := FileRead(ScriptPath)
+	
+	Loop Script
+		if #Include
+			Get IncludeFilePath
+			If NOT IncludeFileMap.Has(IncludeFilePath)
+				IncludeFileMap.Set(IncludeFilePath, 1)
+				GetIncludesRecurse(IncludeFilePath, IncludeFileMap)
+				
+	return IncludeFileMap
+}

@@ -1,0 +1,102 @@
+
+
+objMap := ScanScriptToMap(ScriptText, ScriptFullPath)
+
+	objMap := ScanObjectsToMap(ScriptText, ScriptFullPath)
+	objMap := CountBlocks(ScriptText, ScriptFullPath)
+	return objMap
+	
+	
+Example of a function embedded in a function block:
+
+PickerExit(_col)
+
+PickerExit(_col) {
+    global col := _col
+    inputEdit.Value := col.Full
+    ConvertColor(col)
+}
+
+PickerExit(_col)
+{
+    global col := _col
+    inputEdit.Value := col.Full
+    ConvertColor(col)
+}
+
+1st pass:
+Function_PickerExit, 5
+ConvertColor, 8
+
+2nd pass:
+Function_PickerExit, 5, 5, path
+ConvertColor, 8, 1, path
+
+
+
+IncludeFileArray
+	C:\Users\Jim\Documents\AutoHotkey\Lib\IniFile.ahk
+	C:\Users\Jim\Documents\AutoHotkey\Lib\String_Functions.ahk
+
+IncludeMap
+	Class_IniFile,21,106,C:\Users\Jim\Documents\AutoHotkey\Lib\IniFile.ahk
+	Function_IsEmpty,134,132,C:\Users\Jim\Documents\AutoHotkey\Lib\String_Functions.ahk
+	
+MainScriptMap
+	Class_IniFile,21,106,D:\Software\DEV\Work\AHK2\Projects\~Tools\AhkMerge\BackupToolTest.ahk
+	Function_IsEmpty,134,132,D:\Software\DEV\Work\AHK2\Projects\~Tools\AhkMerge\BackupToolTest.ahk
+
+Choose MainScriptFile
+
+MainScript := Read MainScriptFile
+
+IncludeFileArray := GetIncludes(MainScript)
+
+IncludeMap := GetIncludeMap(IncludeFileArray)
+						for file in FileArray
+						script := FileRead(file)
+						Map := ScanScript(script)
+						return Map
+
+MainScriptMap := GetMainScriptMap(MainScript)
+								Map := ScanScript(Script)
+								return Map
+
+MergedScript := Merge(MainScriptMap, IncludeMap)
+
+	for each key in IncludeMap
+	
+		if IncludeMap.Key StartsWith "Class_" {
+			codeBlock .= GetCode(IncludeMap(key))
+			continue			
+		}
+		
+		if MainScriptMap.Has(key)
+		
+			codeBlock .= GetCode(IncludeMap(key)) 
+			
+			if !IsEmpty(codeBlock)
+				buffer .= codeBlock
+			
+		else
+
+			continue
+			
+		
+ GetCode(IncludeMap(ItemCSV[name]) 
+	
+	if Class
+	
+		codeBlock .= ReadClass(IncludeFile)  ; entire file (comments?)
+	
+	else if Function
+	
+        functionName := Trim(split[1])
+        includeFile  := Trim(split[2])
+        lineNumber   := Trim(split[3])
+        lineCount    := Trim(split[4])
+		
+		codeBlock .= ReadCodeBlock(IncludeFile, lineNumber, lineCount) 
+			
+		return codeBlock
+

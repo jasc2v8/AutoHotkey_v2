@@ -1,0 +1,18 @@
+Starting All tests...
+----------------------------------------
+LOGIC RESULTS:
+PASS: CamelCase
+PASS: Slug
+PASS: FormatBytes
+PASS: WordCount
+PASS: IsType
+
+BENCHMARK RESULTS (1000 runs):
+Str.Camel: 0.003031 ms (Avg)
+Str.Slug: 0.002650 ms (Avg)
+Str.FormatBytes: 0.001782 ms (Avg)
+Str.Random: 0.010087 ms (Avg)
+Str.WordCount: 0.002835 ms (Avg)
+
+----------------------------------------
+Done.

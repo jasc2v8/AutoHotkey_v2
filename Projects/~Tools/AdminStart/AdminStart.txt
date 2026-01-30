@@ -1,0 +1,35 @@
+MyApp.lnk
+Target="D:\Software\DEV\Work\AHK2\Projects\~Tools\AdminStart\AdminStart.exe" Myapp.ahk params
+
+MyApp.lnk
+Target="D:\Software\DEV\Work\AHK2\Projects\~Tools\AdminStart\AdminStart.exe" SearchBarReset.ahk
+
+AdminStart.exe
+	launcher := AdminLauncher()
+	launcher.StartTask()
+	cmd:=RunShell.ArrayToCmdLine(A_Args)
+	launcher.StartWorker(cmd)
+	Exit
+
+AdminStartGui
+Create the shortcut in shell::startup
+
+	
+SearchBarReset /q ; quiet
+
+Save to
+	Current Directory
+	Desktop
+	Startup
+	
+	
+AdminLauncher.ahk
+	if A_Args
+		StartTask
+		Send cmdLine
+	else
+		this.Listen()
+
+		
+	
+	
