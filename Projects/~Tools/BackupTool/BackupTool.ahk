@@ -1,91 +1,98 @@
-﻿; TITLE   : BackupTool  v1.0
+﻿; TITLE   : BackupTool v3.3.0.23
 ; SOURCE  : Gemini and jasc2v8
 ; LICENSE : The Unlicense, see https://unlicense.org
 ; PURPOSE : Run SyncBack.exe as Admin with no UAC prompt.
-; OVERVIEW: BackupTool run Task AdminLauncher, which runs AdminLauncher.ahk, which runs BackupWorker at runLevel='highest'
+; OVERVIEW: BackupTool starts Task RunAdmin, which runs RunAdmin.ahk in Receive() mode.
+;           BackupTool sends via NamedPipe IPC SyncbackSE.exe PROFILE command, at runLevel='highest'
 ;           Uses NamedPipe IPC to communicate with other scripts.
-; SCRIPTS : BackupTool.ahk => run Task AdminLauncher => AdminLauncher.ahk => BackupControlWorker.ahk
+; SCRIPTS : BackupTool.ahk => run Task RunAdmin => RunAdmin.ahk => BackupControlWorker.ahk
 
 /*
   TODO:
+    
 */
-#Requires AutoHotkey 2.0+
-#SingleInstance Force
-#NoTrayIcon
+#Requires AutoHotkey 2+
+#SingleInstance Off ; must allow multiple instances
 TraySetIcon('shell32.dll', 294) ; Backup/Restore Icon
 
-#Include <AdminLauncher>
-#Include <IniFile>
+#Include <Colors>
+#Include <RunAdminIPC>
 #Include <LogFile>
-#Include <NamedPipe>
-#Include <RunCMD>
+#Include <RegSettings>
+#Include <RunLib>
+#Include <ProcessMonitor>
+#Include <SystemCursor>
 
 ; #region Version Block
 
 ; Language codes (en-US=1033): https://www.autoitscript.com/autoit3/docs/appendix/OSLangCodes.htm
 ;@Ahk2Exe-Set CompanyName, jasc2v8
 ;@Ahk2Exe-Set FileDescription, Backup Tool
-;@Ahk2Exe-Set FileVersion, 1.0.0.0
+;@Ahk2Exe-Set FileVersion, 3.3.0.23
 ;@Ahk2Exe-Set InternalName, BackupTool
 ;@Ahk2Exe-Set Language, 1033
 ;@Ahk2Exe-Set LegalCopyright, ©2025 jasc2v8
 ;@Ahk2Exe-Set LegalTrademarks, NONE™
 ;@Ahk2Exe-Set OriginalFilename, BackupTool.exe
 ;@Ahk2Exe-Set ProductName, BackupTool
-;@Ahk2Exe-Set ProductVersion, 1.0.0.0
-;@Ahk2Exe-SetMainIcon D:\Software\DEV\Work\AHK2\Projects\~Tools\BackupTool\Icons\backup.ico
-
+;@Ahk2Exe-Set ProductVersion, 3.3.0.23
+;@Ahk2Exe-SetMainIcon .\backup.ico
 ;@Inno-Set AppId, {{C65404BE-5F4B-4A2D-962E-389622530D4D}}
 ;@Inno-Set AppPublisher, jasc2v8
 
-; #region Duplicate Check
+;
+; #region Classes
+;
 
-; DetectHiddenWindows true
-; SetTitleMatchMode 1
-
-; if WinExist("Backup Control Tool") {
-;   MsgBox "Activating..."
-;   WinActivate("A")
-
-; }
+class SyncBackParams {
+  static Path       := "C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe"
+  static Profile    := "TEST"
+  static PostAction := "Nothing"
+}
 
 ; #region Globals
 
 global LogPath          := "D:\BackupTool.log"
 global logger           := LogFile(LogPath, "CONTROL", true)  ; true=Enable, false=Disable
 
-global WorkerPath       := EnvGet("PROGRAMDATA") "\AutoHotkey\AdminLauncher\BackupWorker.ahk"
+global WorkerPath       := "D:\Software\DEV\Work\AHK2\Projects\~Tools\BackupTool\BackupTool.ahk /worker"
 
 global SyncBackPath     := "C:\Program Files (x86)\SyncBackSE\SyncBackSE.exe"
 global SyncBackProfiles := EnvGet("LOCALAPPDATA") "\2BrightSparks\SyncBack\Profiles Backup"
 global SyncBackLogDir   := EnvGet("LOCALAPPDATA") "\2BrightSparks\SyncBack\Logs"
+global SyncBackPostAction := "Nothing"
 global DefaultProfile   := "~Backup JIM-PC folders to JIM-SERVER"
+global SyncBackProcessName  := "SyncBackSE.exe"
 
 global SoundSuccess     := "C:\Windows\Media\Windows Notify Calendar.wav"
 global SoundError       := "C:\Windows\Media\Windows Critical Stop.wav"
 
-global INI_PATH         := EnvGet("PROGRAMDATA") "\AutoHotkey\BackupTool\BackupTool.ini"
-global INI              := IniFile(INI_PATH)
+global settings         := RegSettings()
 
-global SyncBackSelectedProfile := INI.ReadSettings("PROFILE")
+SyncBackParams.Profile := settings.Read("PROFILE")
 
 global IsRunning        := false
+global CancelPressed    := false
+global StartTime := 0
+global BackupJob:=""
+global BackupRequest :=""
+
+global pm := 0
 
 ; #region Create Gui
 
-MyGui := Gui("-AlwaysOnTop", "Backup Tool v1.0")
-MyGui.BackColor := "4682B4" ; Steel Blue
+MyGui := Gui("-AlwaysOnTop", "Backup Tool v3.1.0.1")
+MyGui.BackColor := Colors.AirSuperiorityBlue
 
 ; #region Create Controls
 
-MyGui.SetFont("S11 CBlack w405", "Segouie UI")
-TextProfile := MyGui.AddEdit('xm w410 h20 Center Backgrounda1e3a5', SyncBackSelectedProfile)
+MyGui.SetFont("S10", "Segouie UI")
+TextProfile := MyGui.AddEdit('xm w410 h20 Center Background' Colors.LemonChiffon, SyncBackParams.Profile)
 ButtonSelectProfile := MyGui.AddButton("yp w60 h20", "Profile")
 
-MyGui.SetFont("S10 cWhite w700", "Segouie UI")
 MyGui.AddGroupBox("xm w480 h100", "Action after Backup:")
 
-MyGui.SetFont("S11 CBlack w400", "Segouie UI")
+;MyGui.SetFont("S11 CBlack w400", "Segouie UI")
 TextFiller      := MyGui.AddText("xm yp+40 w0 +Hidden")
 ButtonNothing   := MyGui.AddButton("yp w70", "Nothing")
 ButtonMonOff    := MyGui.AddButton("yp w70", "MonOff")
@@ -126,88 +133,129 @@ MyGui.Show()
 ; Focus on the default button to Unselect the text in the profile box
 ControlFocus("Sleep", MyGui)
 
+global sc := SystemCursor(MyGui, "AppStarting")
+
+pm := ProcessMonitor("SyncBackSE.exe")
+
+;
 ; #region Functions
+;
 
 ButtonCancel_Click(Ctrl, Info) {
- ExitApp()
+
+  if !ProcessExist(SyncBackProcessName) {
+    ExitApp()
+
+  } else {
+
+    buttonPress:= Msgbox("Stop Backup Job?", "Cancel Pressed", "YesNo Icon?")
+
+    if (buttonPress = "Yes")
+    {
+      if ProcessExist(SyncBackProcessName)
+      {
+        ProcessClose(SyncBackProcessName)
+        pm.Stop()
+      } 
+    }
+  }
 }
 
-ButtonCommon_Click(Ctrl, Info){
-  global IsRunning
+;
+; #region START
+;
 
-  if (IsRunning) {
-    SoundBeep
-    return
-  }
+ButtonCommon_Click(Ctrl, Info){
 
   WriteStatus("Ready.")
 
-  SyncBackPostAction:= Ctrl.Text
-
   timedOut := CountdownAndBlock(Ctrl.Text, 5)
-
-  ; #region START
 
   if (timedOut) {
 
-    WriteStatus("Running...")
+    SyncBackParams.PostAction := Ctrl.Text
 
-    IsRunning := true
+    StartBackup() ; Waits for Process to exist
 
-    WinSetTransparent(200, MyGui.Hwnd)
+    pm.Start(OnFinishedNotify, OnStatusNotify, OnStopNotify)
 
-    ;
-    ; Start the Task AdminLauncher which runs AdminLauncher.ahk
-    ;
+    ToggleButtons()
 
-    logger.Write("Run Task")
+    sc.Start()
+  }
 
-    launcher:= AdminLauncher()
+}
 
-    launcher.StartTask()
+OnFinishedNotify(Reason) {
+    WriteStatus(Reason . " at: " pm.Now ", Elapsed: " pm.Elapsed)
 
-    logger.Write("Run Worker")
+    sc.Stop()
 
-    ;
-    ; Start the Worker at runLevel='highest'
-    ;
+    SoundPlay "C:\Windows\Media\Windows Hardware Insert.wav"
 
-    launcher.Run(WorkerPath)
-
-    ;
-    ; Send BackupRequest to Worker
-    ;
-
-    BackupRequest:= RunCMD.ToCSV(SyncBackPath, SyncBackPostAction, SyncBackSelectedProfile)
-
-    launcher.Send(BackupRequest)
-
-    logger.Write("Sent Request: " BackupRequest)
-
-    ;
-    ; Receive the reply from the Worker after it runs the PostAction
-    ;
-
-    reply:= launcher.Receive()
-
-    logger.Write("Reply Received: " reply)
-
-    ;
-    ; Report Finished.
-    ;
-
-    logger.Write("Finished.")
-
-    WriteStatus("Finished.")
-
-    IsRunning := false
-
-    ; restore if user minimized
+    ; Restore if user minimized
     WinActivate(MyGui.Hwnd)
 
-    WinSetTransparent("Off", MyGui.Hwnd)
+    ToggleButtons()
 
+    if (Reason = "Finished")
+      PostActionHandler()
+
+}
+
+OnStatusNotify(Status) {
+    WriteStatus("Backup then " SyncBackParams.PostAction . " " . Status . " at: " pm.Now ", Elapsed: " pm.Elapsed)
+}
+
+OnStopNotify(Reason) {
+    WriteStatus(Reason . " at: " pm.Now ", Elapsed: " pm.Elapsed)
+
+    SoundPlay "C:\Windows\Media\Windows Hardware Fail.wav"
+    
+    ; Restore if user minimized
+    WinActivate(MyGui.Hwnd)
+
+    ToggleButtons()
+
+    sc.Stop()
+
+}
+
+StartBackup() {
+
+  WriteStatus("Backup then " SyncBackParams.PostAction " Started at: " FormatTime(A_Now, "HH:mm:ss"))
+
+  ;
+  ; Start the Task RunAdmin which runs RunAdmin.ahk, which launches this script as worker
+  ;
+
+  logger.Write("Run Task")
+
+  ipc:= RunAdminIPC()
+
+  ipc.StartTask()
+
+  ;
+  ; Send BackupRequest to RunAdmin
+  ;
+
+  ;MsgBox SyncBackParams.Path "`n`n" SyncBackParams.Profile
+
+  BackupRequest:= ipc.ToCSV("/Run," SyncBackParams.Path, SyncBackParams.Profile)
+
+  logger.Write("Send BackupRequest: " BackupRequest)
+
+  ipc.Send(BackupRequest)
+
+  timeout := ProcessWait(SyncBackProcessName) 
+
+  logger.Write("Send timeout: " timeout)
+
+  if (timeout=0) {
+    MsgBox "Timeout Waiting for Process: " SyncBackProcessName
+    return
   }
+
 }
 
 ButtonLogs_Click(Ctrl, Info) {
@@ -219,14 +267,13 @@ ButtonClear_Click(Ctrl, Info) {
 }
 
 ButtonSelectProfile_Click(Ctrl, Info) {
-  global SyncBackSelectedProfile
   WriteStatus("Ready.")
   selection := FileSelect(0, SyncBackProfiles)
   if (selection != "") {
     SplitPath(selection, , , , &OutNameNoExt)
-    SyncBackSelectedProfile := OutNameNoExt
-    TextProfile.Text := SyncBackSelectedProfile
-    INI.WriteSettings("PROFILE", SyncBackSelectedProfile)
+    SyncBackParams.Profile:= OutNameNoExt
+    TextProfile.Text := OutNameNoExt
+    settings.Write("PROFILE", OutNameNoExt)
   }
 }
 
@@ -308,19 +355,112 @@ CountdownAndBlock(Title, Seconds)
   }
 }
 
+ToggleButtons() {
+
+    static IsActive := true
+    
+    IsActive := !IsActive
+    
+    if (IsActive) {
+      for GuiCtrlObj in MyGui
+          if (GuiCtrlObj.Type = "Button") and (GuiCtrlObj.Text != "Cancel")
+              GuiCtrlObj.Enabled := true
+    } else {
+      for GuiCtrlObj in MyGui
+          if (GuiCtrlObj.Type = "Button") and (GuiCtrlObj.Text != "Cancel")
+              GuiCtrlObj.Enabled := false
+    }
+
+    ControlFocus("Cancel", MyGui)
+}
+
 WriteStatus(Message) {
   SB.Text := '    ' Message
 }
 
 ReadIni() {
-  profilePath := INI.ReadSettings("PROFILE")
+  profilePath := settings.Read("PROFILE")
   if (profilePath = '') {
     profilePath := DefaultProfile
-    INI.WriteSettings("PROFILE", profilePath)
+    settings.Write("PROFILE", profilePath)
   }
   return profilePath
 }
 
 WriteIni(profilePath) {
-  INI.WriteSettings("PROFILE", profilePath)
+  settings.Write("PROFILE", profilePath)
+}
+
+PostActionHandler() {
+
+    ; BackupParameters = (SyncBackPath, SyncBackParams, SyncBackProfile)
+
+    ; parse params
+    ; -hybernate      DllCall('PowrProf\SetSuspendState','Int',1,'Int',0,'Int',0,'Int',0) ; Hibernate Mode (S4) (USB off, mouse)
+    ; -logoff         Shutdown(0)     ; 0=Logoff, 1=Shutdown, 2=Reboot, 4=Force, 8=Power down
+    ; -logoffforce    Shutdown(0+3)   ; 0=Logoff, 1=Shutdown, 2=Reboot, 4=Force, 8=Power down
+    ; -monoff         SendMessage 0x0112, 0xF170, 2,, "Program Manager"  ; 0x0112 is WM_SYScommandLine, 0xF170 is SC_MONITORPOWER.
+    ; -shutdown       Shutdown(1+8)   ; 0=Logoff, 1=Shutdown, 2=Reboot, 4=Force, 8=Power down
+    ; -shutdownforce  Shutdown(1+3)   ; 0=Logoff, 1=Shutdown, 2=Reboot, 4=Force, 8=Power down
+    ; -sleep          DllCall('PowrProf\SetSuspendState','Int',0,'Int',0,'Int',0,'Int',0) ; Sleep Mode (S3) USB poweron, mouse will wakeup
+    ; -standby        alias for -sleep
+
+    ; if (BackupParameters = "")
+    ;   ExitApp()
+
+    ;logger.Write("DEBUG BackupParameters: [" BackupParameters "]")
+
+    ; Get Post Action from Parameters (SyncBackPath, SyncBackParams, SyncBackProfile)
+    ; split := StrSplit(BackupParameters, ",")
+    ; if (split.Length < 3) {
+    ;     logger.Write("ERROR Expected 3 parameters, got: " split.Length)
+    ;     return
+    ; }
+
+    ;postAction:= split[2]
+
+    postAction :=  SyncBackParams.PostAction
+
+    ;MsgBox postAction, "POST ACTION"
+
+    logger.Write("DEBUG SyncBackParams.PostAction: [" SyncBackParams.PostAction "]")
+
+    switch postAction, CaseSense:="Off" {
+        case "MonOff":
+            action:= "-monoff"
+        case "LogOff":
+            action:= "-logoffforce"
+        case "Sleep":
+            action:= "-sleep"
+        case "Hibernate":
+            action:= "-hybernate"
+        case "Shutdown":
+            action:= "-shutdown"
+        default:
+            action:= "Nothing"
+    }
+
+    logger.Write("postAction: [" postAction "]")
+
+    switch action {
+        case "-monoff":
+            SendMessage 0x0112, 0xF170, 2,, "Program Manager"  ; 0x0112 is WM_SYScommandLine, 0xF170 is SC_MONITORPOWER.
+        case "-logoff", "-signoff":
+            Shutdown(0)  ; PowerControlTool
+        case "-sleep", "-standby":
+            DllCall('PowrProf\SetSuspendState', 'Int', 0, 'Int', 0, 'Int', 0, 'Int') ; Sleep with USB power off
+        case "-hybernate":
+            DllCall('PowrProf\SetSuspendState', 'Int', 1, 'Int', 0, 'Int', 0, 'Int') ; SAME AS SLEEP! PowerControlTool
+        case "-shutdown":
+            Shutdown(9)  ; PowerControlTool
+        case "-shutdownforce":
+            Shutdown(13) 
+        case "-logoffforce", "-signoffforce":
+            Shutdown(4)
+        default:
+            doNothing:=true
+    }
+
+    logger.Write("FINISH: [" postAction "]") ; may not have time to write this.
+
 }
