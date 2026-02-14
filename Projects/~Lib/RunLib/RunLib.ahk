@@ -7,7 +7,7 @@
 ;           output := runner.RunWait(Array, bat, CMD, CSV, Executable, Script.ahk, Script.ps1, or String)
 ; RETURNS: StdOut and StdErr: success=Instr(output, "Error")=0, error=Instr(output, "Error")>0
 ; EXAMPLE:
-;   runner.Run(Command)                         ; Determines if Array, CMD, CSV, Executable, Script.ahk, or String.
+;   runner.Run(Command)                         ; Determines if Array, bat, CMD, CSV, Executable, Script.ahk, Script.ps1, or String.
 ;   runner.Run([My App.exe, p1, p2, pN])        ; Array (Adds quotes as needed).
 ;   runner.Run("My App.ahk, p1, p2, pN")        ; CSV   (Adds quotes as needed).
 ;   runner.Run('dir /b "D:\My Dir"'')           ; String, CMD (User must add quotes as needed, or pass an Array or CSV Command.)
