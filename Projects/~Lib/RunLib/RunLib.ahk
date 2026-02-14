@@ -1,4 +1,4 @@
-﻿; TITLE  :  RunLib v1.0.0.4
+﻿; TITLE  :  RunLib v1.0.0.5
 ; SOURCE :  jasc2v8
 ; LICENSE:  The Unlicense, see https://unlicense.org
 ; PURPOSE:  Library to run any Command line without a Command window. Handles spaces in the arguments as needed.
