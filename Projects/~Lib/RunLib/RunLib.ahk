@@ -13,7 +13,7 @@
 ;   runner.Run('dir /b "D:\My Dir"'')           ; String, CMD (User must add quotes as needed, or pass an Array or CSV Command.)
 ;   runner.Run("MyApp.exe D:\MyDir")            ; String, EXE (User must add quotes as needed, or pass an Array or CSV Command.)
 ;   runner.Run(Format('"{}" {}', exe, params))  ; String, EXE (User must add quotes as needed, or pass an Array or CSV Command.)
-; NOTES  :
+; NOTES:
 ;   If FileExist(program[.exe]) then run as exe, else run as A_ComSpec cmd.
 ;   If Script.ahk then prepend A_AhkPath to command.
 ;   If Script.ps1 then prepend powershell policy to command.
@@ -78,6 +78,7 @@ class RunLib {
         return 'Error: Could not attach console.'
     }
 
+    ; Utility Functions to form command with program and parameters
     ArrayToCSV(ParamsArray) {
         if (ParamsArray.Length = 0)
              return ""
@@ -146,6 +147,7 @@ class RunLib {
             for param in CommandArray
                 newArray.Push(param)
             CommandArray:= newArray
+            
         } else if (Ext = "ps1") {
             newArray:= Array()
             newArray.Push("powershell.exe")
@@ -181,7 +183,7 @@ class RunLib {
     _IsExe(Param) {
 
         ; SplitPath will return ext and params after the extension.
-        ; Example: 'MyApp.exe param' will return 'exe param'
+        ; Example: 'MyApp.exe param' will return 'exe params'
         SplitPath(Param,,,&Ext)
 
         if (SubStr(Ext, 1, 3) = "exe")
