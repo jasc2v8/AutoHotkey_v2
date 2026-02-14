@@ -118,7 +118,7 @@ class RunLib {
 
     ; --- Private/Internal Methods ---
 
-    ; Determines if Array, CMD, CSV, Executable, or String and returns a command line with quotes added as needed.
+    ; Determines if Array, bat, CMD, CSV, Executable, ahk, ps1, or String and returns a command line with quotes added as needed.
     _ParseCommand(Command, &IsExe) {
 
         if (Type(Command)="String") and (InStr(Command,',')) {
