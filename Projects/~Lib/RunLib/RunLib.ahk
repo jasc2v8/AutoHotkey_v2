@@ -4,7 +4,7 @@
 ; PURPOSE:  Library to run any Command line without a Command window. Handles spaces in the arguments as needed.
 ; USAGE  :  runner := RunLib()
 ;           runner.Run(Array, bat, cmd, CSV, Executable, Script.ahk, Script.ps1, or String)
-;           output := runner.RunWait(Array, CMD, CSV, Executable, Script.ahk, or String)
+;           output := runner.RunWait(Array, CMD, CSV, Executable, Script.ahk, Script.ps1, or String)
 ; RETURNS: StdOut and StdErr: success=Instr(output, "Error")=0, error=Instr(output, "Error")>0
 ; EXAMPLE:
 ;   runner.Run(Command)                         ; Determines if Array, CMD, CSV, Executable, Script.ahk, or String.
