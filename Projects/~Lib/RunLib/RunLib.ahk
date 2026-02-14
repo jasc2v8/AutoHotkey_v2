@@ -1,9 +1,9 @@
-﻿; TITLE  :  RunLib v1.0.0.2
+﻿; TITLE  :  RunLib v1.0.0.4
 ; SOURCE :  jasc2v8
 ; LICENSE:  The Unlicense, see https://unlicense.org
 ; PURPOSE:  Library to run any Command line without a Command window. Handles spaces in the arguments as needed.
 ; USAGE  :  runner := RunLib()
-;           runner.Run(Array, CMD, CSV, Executable, Script.ahk, or String)
+;           runner.Run(Array, bat, cmd, CSV, Executable, Script.ahk, Script.ps1, or String)
 ;           output := runner.RunWait(Array, CMD, CSV, Executable, Script.ahk, or String)
 ; RETURNS: StdOut and StdErr: success=Instr(output, "Error")=0, error=Instr(output, "Error")>0
 ; EXAMPLE:
@@ -16,6 +16,7 @@
 ; NOTES  :
 ;   If FileExist(program[.exe]) then run as exe, else run as A_ComSpec cmd.
 ;   If Script.ahk then prepend A_AhkPath to command.
+;   If Script.ps1 then prepend powershell policy to command.
 ;   WshShell object: http://msdn.microsoft.com/en-us/library/aew9yb99
 
 /*
@@ -49,6 +50,7 @@ class RunLib {
             shell.Run(A_ComSpec ' /Q /C ' cmdLine, ShowWindow:=false, Wait:=false)
     }
 
+    ; Run a Command and return StdOut+StdErr. Console window is hidden.
     RunWait(Command) {
 
         cmdLine := this._ParseCommand(Command, &IsExe)
@@ -135,11 +137,21 @@ class RunLib {
         }
 
         ; If ahk then prepend with autohotkey.exe
+        ; Else if ps1 then prepend with powershell policy
         SplitPath(CommandArray[1],,,&Ext)
 
         if (Ext = "ahk") {
             newArray:= Array()
             newArray.Push(A_AhkPath)
+            for param in CommandArray
+                newArray.Push(param)
+            CommandArray:= newArray
+        } else if (Ext = "ps1") {
+            newArray:= Array()
+            newArray.Push("powershell.exe")
+            newArray.Push("-ExecutionPolicy")
+            newArray.Push("Bypass")
+            newArray.Push("-File")
             for param in CommandArray
                 newArray.Push(param)
             CommandArray:= newArray
@@ -177,10 +189,4 @@ class RunLib {
         else
             return false
     }
-
-    ; _Initialize() {
-    ; }
-
-    ; __Delete() {
-    ; }
 }
