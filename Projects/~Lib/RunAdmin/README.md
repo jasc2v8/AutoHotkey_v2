@@ -26,7 +26,7 @@
             RunAdmin.ahk captures the A_Args and sends via NamedPipe IPC to RunAdmin.ahk elevated.
             RunAdmin.ahk elevated runs the A_Args (PROGRAM PARAMETERS) elevated.
 
-		Can also be used as RunWait with reply. Case 2 is recommended over this method.
+		Can also be used as RunWait with reply.
 
             A_AhkPath RunAdmin.ahk /RunWait PROGRAM PARAMETERS
                       RunAdmin.exe /RunWait PROGRAM PARAMETERS
