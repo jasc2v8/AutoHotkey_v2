@@ -8,7 +8,9 @@
 
 >Library to run any command line without a command window and return StdOut & StdErr.
 
->Run(Array, CMD, CSV, Executable, Script.ahk, or String)
+>CommandLine: Array, CSV, or String.
+
+>Extensions: ahk, bat, cmd, exe, ps1, or none (built-in command e.g. dir).
 
 >Handles spaces in the arguments as needed.
 
