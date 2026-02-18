@@ -4,11 +4,13 @@
 
 >Run a script.ahk or script.exe elevated without the UAC prompt.
 
-## [RunLib](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Lib/RunAdmin)
+## [RunLib](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Lib/RunLib.ahk)
 
 >Library to run any command line without a command window and return StdOut & StdErr.
 
->Run(Array, CMD, CSV, Executable, Script.ahk, or String)
+>CommandLine: Array, CSV, or String.
+
+>Extensions: ahk, bat, cmd, exe, ps1, or none (built-in command e.g. dir).
 
 >Handles spaces in the arguments as needed.
 
