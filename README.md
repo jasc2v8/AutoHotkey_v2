@@ -14,11 +14,11 @@
 
 >Handles spaces in the arguments as needed.
 
-## [BackupTool](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Tools/BackupTool/BackupTool.ahk)
+## [BackupTool](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Tools/BackupTool/)
 
 >Run SyncBackSE.exe as Admin without the UAC prompt.
 
-## [PowerTool](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Tools/PowerTool/PowerTool.ahk)
+## [PowerTool](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Tools/PowerTool/)
 
 >Push Button Gui for Sleep, Signout, Shutdown, Restart, and Display Off. 
 
