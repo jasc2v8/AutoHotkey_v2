@@ -4,7 +4,7 @@
 
 >Run a script.ahk or script.exe elevated without the UAC prompt.
 
-## [RunLib](Projects/~Lib/RunAdmin)
+## [RunLib](https://github.com/jasc2v8/AutoHotkey_v2/tree/b7a7ddd794ebf37911c018ecbbf4c8651b767ca2/Projects/~Lib/RunAdmin)
 
 >Library to run any command line without a command window and return StdOut & StdErr.
 
