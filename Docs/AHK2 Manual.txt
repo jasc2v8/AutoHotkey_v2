@@ -167,6 +167,12 @@ Gui X,Y,W,H
 		
 		Left Border=8 + Client width=400 + Right Border=8 = 416 (match Gui above)
 
+Gui_Size(thisGui, MinMax, Width, Height) {
+    if (MinMax = -1) 
+        return
+    Anchor([ScriptEdit, MyGui["Divider"]], "w")
+    Anchor([MyGui["Browse"], MyGui["Merge"], MyGui["Cancel"]], "x")
+}
 
 Hex
 	dec := 4095
