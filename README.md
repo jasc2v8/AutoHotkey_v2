@@ -1,6 +1,6 @@
 # Featured Projects
 
-## [RunAdmin](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Lib/RunAdmin.ahk)
+## [RunAdmin](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Lib/RunAdmin)
 
 >Run a script.ahk or script.exe elevated without the UAC prompt.
 
