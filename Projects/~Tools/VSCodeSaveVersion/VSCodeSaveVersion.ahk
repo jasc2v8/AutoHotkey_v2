@@ -1,4 +1,4 @@
-; TITLE  :  VSCodeSaveVersion v1.1.0.4
+; TITLE  :  VSCodeSaveVersion v1.1.0.12
 ; SOURCE :  jasc2v8 and https://www.autohotkey.com/boards/viewtopic.php?t=102798
 ; LICENSE:  The Unlicense, see https://unlicense.org
 ; PURPOSE:  Saves the AHK script in VSCode as the current or a new version: 1.0.0.0 becomes 1.0.0.1
@@ -10,7 +10,7 @@
 #Requires AutoHotkey 2+
 #SingleInstance Force
 
-; if VSCode not active then return
+;if VSCode not active then return
 if !WinActive("ahk_exe Code.exe")
     return
 
@@ -23,7 +23,7 @@ TraySetIcon(vsCodePath)
 
 ; #region GUI Create
 
-MyGuiTitle := "VSCodeSaveVersion v1.1.0.4"
+MyGuiTitle := "VSCodeSaveVersion v1.1.0.11"
 MyGui := Gui("+AlwaysOnTop", MyGuiTitle )
 MyGui.BackColor := "72A0C1" ; AirSuperiorityBlue
 MyGui.SetFont("S10", "Segoe UI")
@@ -68,27 +68,25 @@ ButtonCopyToApps_Click(Ctrl, Info) {
 }
 
 CopyToDir(TargetDir) {
+        
+    ScriptPath := GetScriptPath()
 
-    currentPath := GetVSCodePath()
-
-    if (currentPath = "")
-        return
-
-    buttonPress:= MsgBox("Copy:`n`n"  currentPath "`n`nto:`n`n" TargetDir, "Copy", "YesNo Icon?")
+    buttonPress:= MsgBox("Copy:`n`n"  ScriptPath "`n`nto:`n`n" TargetDir, "Copy", "YesNo Icon?")
 
     if (buttonPress="Yes") {
 
-        SplitPath(currentPath,  &filename)
+        SplitPath(ScriptPath,  &filename)
 
         newPath := Trim(TargetDir, "\") "\" filename
 
         if FileExist(newPath) {
             buttonPress:= MsgBox("Overwrite existing file?", "Copy", "YesNo Icon?")
             if (buttonPress="Yes")
-            FileCopy(currentPath, newPath, Overwrite:=true)
+            FileCopy(ScriptPath, newPath, Overwrite:=true)
         } else {
-            FileCopy(currentPath, newPath)
+            FileCopy(ScriptPath, newPath)
         }
+        MsgBox("File:`n`n" ScriptPath "`n`nCopied To:`n`n" newPath, "Success", "Iconi")
     }
 }
 
@@ -96,14 +94,13 @@ SaveVersion(IncrementVersion:=false) {
 
     WinActivate("ahk_exe Code.exe")
 
-    ; Get Window title
-    WindowTitle := WinGetTitle("ahk_exe Code.exe")
-
     ; Extract the Script Title from the Window Title: "SaveAsVersion.ahk - SaveAsVersion - Visual Studio Code"
     ; \S+	Matches one or more non-whitespace characters. This includes letters, numbers, and symbols, but stops as soon as it hits a space, tab, or newline.
     ; \.	Matches a literal dot. In RegEx, a plain . is a wildcard, so the backslash \ is required to "escape" it so it specifically looks for a period.
     ; ahk	Matches the literal sequence of characters "ahk"
-    ScriptTitle := RegExMatch(WindowTitle, "\S+\.ahk", &Match) ? Match[0] : ""
+    ;ScriptTitle := RegExMatch(WindowTitle, "\S+\.ahk", &Match) ? Match[0] : ""
+
+    ScriptPath := GetScriptPath()
 
     ; Backup clipboard
     OldClipboard := ClipboardAll()
@@ -153,10 +150,7 @@ SaveVersion(IncrementVersion:=false) {
         Version:= OldVersion
     }
 
-    ; Save
-    SaveAs(ScriptTitle, Version)
-
-    WinWaitClose("Save As")
+    SaveAs(ScriptPath, Version)
 
     WinActivate(MyGui.Hwnd)
 
@@ -231,20 +225,24 @@ ReplaceAllVersions(ScriptContent, NewVersion) {
 
 }
 
-SaveAs(ScriptTitle, Version) {
+SaveAs(ScriptPath, Version) {
 
-    oldFilePath := A_ScriptDir "\" ScriptTitle
-    newFilePath := A_ScriptDir "\" StrReplace(ScriptTitle, ".ahk") "_" Trim(Version) ".ahk"
+    oldFilePath := ScriptPath
+
+    newFilePath := StrReplace(ScriptPath, ".ahk") "_" Trim(Version) ".ahk"
 
     ; FileSelect(Options, RootDir\Filename, Title, Filter)
     ; Option "S" = Save mode
     ; Option "16" = Prompt to overwrite if file exists
-    SelectedFile := FileSelect("S16", newFilePath, "Save a Copy", "Ahk Script (*.ahk)")
+    SelectedFile := FileSelect("S16", newFilePath, "Save As", "Ahk Script (*.ahk)")
 
     if (SelectedFile = "")
         return
 
     try {
+
+        if FileExist(SelectedFile)
+            FileDelete(SelectedFile)
         FileCopy(oldFilePath, SelectedFile, Overwrite:=false)
         MsgBox("File saved to:`n`n" SelectedFile, "Success", "Iconi")
     } catch Error as e {
@@ -253,11 +251,7 @@ SaveAs(ScriptTitle, Version) {
 
 }
 
-GetVSCodePath() {
-    if !WinActive("ahk_exe Code.exe") {
-        MsgBox("VS Code is not the active window.")
-        return
-    }
+GetScriptPath() {
 
     ; Save current clipboard to restore it later
     OldClipboard := ClipboardAll()
