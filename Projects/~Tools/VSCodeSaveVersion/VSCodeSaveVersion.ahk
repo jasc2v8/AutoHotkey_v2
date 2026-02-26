@@ -1,10 +1,10 @@
-; TITLE  :  VSCodeSaveVersion v1.0.0.12
+; TITLE  :  VSCodeSaveVersion v1.1.0.4
 ; SOURCE :  jasc2v8 and https://www.autohotkey.com/boards/viewtopic.php?t=102798
 ; LICENSE:  The Unlicense, see https://unlicense.org
-; PURPOSE:  Saves the AHK script in VSCode as the current or a new verion: MyScript X.X.X.X+1
-; NOTES  :  Scans the script for all occurances of the file version X.X.X.X
+; PURPOSE:  Saves the AHK script in VSCode as the current or a new version: 1.0.0.0 becomes 1.0.0.1
+; NOTES  :  Scans the script for all occurrences of the file version X.X.X.X
 ;           Increments build version by one. Example: 1.0.0.0 becomes 1.0.0.1
-;           Replace all occurances of the file version whith the new version
+;           Replace all occurrences of the file version whith the new version
 ;           Options to copy to Lib or Apps folder.
 
 #Requires AutoHotkey 2+
@@ -23,13 +23,13 @@ TraySetIcon(vsCodePath)
 
 ; #region GUI Create
 
-MyGuiTitle := "VSCodeSaveVersion v1.0.0.12"
+MyGuiTitle := "VSCodeSaveVersion v1.1.0.4"
 MyGui := Gui("+AlwaysOnTop", MyGuiTitle )
 MyGui.BackColor := "72A0C1" ; AirSuperiorityBlue
 MyGui.SetFont("S10", "Segoe UI")
 
-ButtonSaveAs     := MyGui.AddButton("ym w75 h50 Default", "Save As")
-ButtonSaveAsNew  := MyGui.AddButton("yp w75 h50", "Save As`n New")
+ButtonSaveAs     := MyGui.AddButton("ym w75 h50 Default", "Save Copy As")
+ButtonSaveAsNew  := MyGui.AddButton("yp w75 h50", "Save Copy As New")
 ButtonCopyToLib  := MyGui.AddButton("yp w75 h50", "Copy To`n Lib")
 ButtonCopyToApps := MyGui.AddButton("yp w75 h50", "Copy To`n Apps")
 buttonCancel     := MyGui.AddButton("yp w75 h50", "Cancel")
@@ -233,13 +233,23 @@ ReplaceAllVersions(ScriptContent, NewVersion) {
 
 SaveAs(ScriptTitle, Version) {
 
-    newFilename := StrReplace(ScriptTitle, ".ahk") "_" Trim(Version) ".ahk"
+    oldFilePath := A_ScriptDir "\" ScriptTitle
+    newFilePath := A_ScriptDir "\" StrReplace(ScriptTitle, ".ahk") "_" Trim(Version) ".ahk"
 
-    Send("^+s")
-    WinWait("Save As")
-    Send(newFilename)
+    ; FileSelect(Options, RootDir\Filename, Title, Filter)
+    ; Option "S" = Save mode
+    ; Option "16" = Prompt to overwrite if file exists
+    SelectedFile := FileSelect("S16", newFilePath, "Save a Copy", "Ahk Script (*.ahk)")
 
-    ; User can press Save or Cancel.
+    if (SelectedFile = "")
+        return
+
+    try {
+        FileCopy(oldFilePath, SelectedFile, Overwrite:=false)
+        MsgBox("File saved to:`n`n" SelectedFile, "Success", "Iconi")
+    } catch Error as e {
+        MsgBox("Failed to save file.`n`nError: " e.Message, "Error", "IconX")
+    }
 
 }
 
