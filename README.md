@@ -24,7 +24,8 @@
 
 ## [VSCodeSaveVersion](https://github.com/jasc2v8/AutoHotkey_v2/blob/main/Projects/~Tools/VSCodeSaveVersion/)
 
->Saves the AHK script in VSCode as the current or a new verion: 1.0.0.0 becomes 1.0.0.1 
+>Saves the AHK script in VSCode as the current or a new verion: 1.0.0.0 becomes 1.0.0.1
+
 ## Note
 
 **This repository is for learning purposes.**  Many scripts in this are from different sources and have not been fully tested.  They may be incomplete and may not work as-is, but are a good starting point to expand and enhance their functionality.

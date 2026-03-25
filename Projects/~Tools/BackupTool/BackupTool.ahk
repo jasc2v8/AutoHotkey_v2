@@ -1,4 +1,4 @@
-﻿; TITLE   : BackupTool v3.3.0.23
+﻿; TITLE   : BackupTool v3.3.0.28
 ; SOURCE  : Gemini and jasc2v8
 ; LICENSE : The Unlicense, see https://unlicense.org
 ; PURPOSE : Run SyncBack.exe as Admin with no UAC prompt.
@@ -16,11 +16,11 @@
 TraySetIcon('shell32.dll', 294) ; Backup/Restore Icon
 
 #Include <Colors>
-#Include <RunAdminIPC>
 #Include <LogFile>
-#Include <RegSettings>
-#Include <RunLib>
 #Include <ProcessMonitor>
+#Include <RegSettings>
+#Include <RunAdminIPC>
+#Include <RunLib>
 #Include <SystemCursor>
 
 ; #region Version Block
@@ -28,14 +28,14 @@ TraySetIcon('shell32.dll', 294) ; Backup/Restore Icon
 ; Language codes (en-US=1033): https://www.autoitscript.com/autoit3/docs/appendix/OSLangCodes.htm
 ;@Ahk2Exe-Set CompanyName, jasc2v8
 ;@Ahk2Exe-Set FileDescription, Backup Tool
-;@Ahk2Exe-Set FileVersion, 3.3.0.23
+;@Ahk2Exe-Set FileVersion, 3.3.0.28
 ;@Ahk2Exe-Set InternalName, BackupTool
 ;@Ahk2Exe-Set Language, 1033
 ;@Ahk2Exe-Set LegalCopyright, ©2025 jasc2v8
 ;@Ahk2Exe-Set LegalTrademarks, NONE™
 ;@Ahk2Exe-Set OriginalFilename, BackupTool.exe
 ;@Ahk2Exe-Set ProductName, BackupTool
-;@Ahk2Exe-Set ProductVersion, 3.3.0.23
+;@Ahk2Exe-Set ProductVersion, 3.3.0.28
 ;@Ahk2Exe-SetMainIcon .\backup.ico
 ;@Inno-Set AppId, {{C65404BE-5F4B-4A2D-962E-389622530D4D}}
 ;@Inno-Set AppPublisher, jasc2v8
@@ -53,7 +53,7 @@ class SyncBackParams {
 ; #region Globals
 
 global LogPath          := "D:\BackupTool.log"
-global logger           := LogFile(LogPath, "CONTROL", true)  ; true=Enable, false=Disable
+global logger           := LogFile(LogPath, "CONTROL", false)  ; true=Enable, false=Disable
 
 global WorkerPath       := "D:\Software\DEV\Work\AHK2\Projects\~Tools\BackupTool\BackupTool.ahk /worker"
 
@@ -187,7 +187,7 @@ ButtonCommon_Click(Ctrl, Info){
 }
 
 OnFinishedNotify(Reason) {
-    WriteStatus(Reason . " at: " pm.Now ", Elapsed: " pm.Elapsed)
+    WriteStatus(Reason . " at: " pm.Now ", Elapsed: " pm.Elapsed ", Action: " SyncBackParams.PostAction)
 
     sc.Stop()
 
@@ -239,8 +239,6 @@ StartBackup() {
   ; Send BackupRequest to RunAdmin
   ;
 
-  ;MsgBox SyncBackParams.Path "`n`n" SyncBackParams.Profile
-
   BackupRequest:= ipc.ToCSV("/Run," SyncBackParams.Path, SyncBackParams.Profile)
 
   logger.Write("Send BackupRequest: " BackupRequest)
@@ -249,7 +247,7 @@ StartBackup() {
 
   timeout := ProcessWait(SyncBackProcessName) 
 
-  logger.Write("Send timeout: " timeout)
+  logger.Write("DEBUG Send timeout: " timeout)
 
   if (timeout=0) {
     MsgBox "Timeout Waiting for Process: " SyncBackProcessName
@@ -423,7 +421,7 @@ PostActionHandler() {
 
     ;MsgBox postAction, "POST ACTION"
 
-    logger.Write("DEBUG SyncBackParams.PostAction: [" SyncBackParams.PostAction "]")
+    logger.Write("DEBUG SyncBackParams.PostAction: [" postAction "]")
 
     switch postAction, CaseSense:="Off" {
         case "MonOff":
@@ -440,7 +438,7 @@ PostActionHandler() {
             action:= "Nothing"
     }
 
-    logger.Write("postAction: [" postAction "]")
+    logger.Write("action: [" action "]")
 
     switch action {
         case "-monoff":
@@ -448,9 +446,13 @@ PostActionHandler() {
         case "-logoff", "-signoff":
             Shutdown(0)  ; PowerControlTool
         case "-sleep", "-standby":
-            DllCall('PowrProf\SetSuspendState', 'Int', 0, 'Int', 0, 'Int', 0, 'Int') ; Sleep with USB power off
+            ; DllCall('PowrProf\SetSuspendState', 'Int', bHibernate, 'Int', bForce, 'Int', bWakeupEventsDisabled)
+            ; Parameter 1 0=bHibernate FALSE, 1=Suspend/Sleep
+            ; Parameter 2 ignored
+            ; Parameter 3 0=bWakeupEventsDisabled FALSE, 1=wake-up events remain enabled
+            DllCall('PowrProf\SetSuspendState', 'Int', 0, 'Int', 0, 'Int', 1, 'Int') ; Sleep with USB power ON
         case "-hybernate":
-            DllCall('PowrProf\SetSuspendState', 'Int', 1, 'Int', 0, 'Int', 0, 'Int') ; SAME AS SLEEP! PowerControlTool
+            DllCall('PowrProf\SetSuspendState', 'Int', 1, 'Int', 0, 'Int', 0, 'Int') ; hybernate with USB power OFF
         case "-shutdown":
             Shutdown(9)  ; PowerControlTool
         case "-shutdownforce":
