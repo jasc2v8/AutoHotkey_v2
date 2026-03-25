@@ -13,15 +13,15 @@
 #SingleInstance Force
 TraySetIcon('imageres.dll', 315) ; toolbox
 
-#Include <RunAdminIPC>
+#Include <NamedPipe>
 
 ; #region Globals
 
-global WorkerPath   := A_ScriptDir "\RunAdminDemoWorker.ahk"
+;global WorkerPath   := A_ScriptDir "\RunAdminDemoWorker.ahk"
 
 global SoundSuccess := "C:\Windows\Media\Windows Notify Calendar.wav"
 
-global ipc:= RunAdminIPC()
+global ipc:= NamedPipe()
 
 ; #region Create Gui
 
@@ -57,13 +57,16 @@ ButtonStart_Click(Ctrl, Info) {
 
   ; kill process if exists due to previous error
   DetectHiddenWindows true
+  
   if WinExist("RunAdmin.ahk ahk_class AutoHotkey")
     ProcessClose(WinGetPID())
 
   ; Start RunAdmin in Listen() mode...
   WriteStatus("Start Task..")
 
-  ipc.StartTask()
+  StartTask()
+
+;  ipc.Create()
 
   ; Send request - robocopy Job Summary output only
   requestCSV:= "/RunWait, robocopy.exe /e /is c:\windows\temp c:\windows\test /NJH /NDL /NFL /NC /NS"
@@ -71,17 +74,22 @@ ButtonStart_Click(Ctrl, Info) {
   ipc.Send(requestCSV)
 
   ; Receive reply
+  ;ipc.Connect()
   reply:= ipc.Receive()
+
+;  ipc.Close()
 
   MsgBox reply, "Reply"
 
   ; Start RunAdmin again
-  ipc.StartTask()
+  StartTask()
 
   ; Send another requestCSV
+;  ipc.Create()
   ipc.Send("/RunWait, rmdir /s /q c:\windows\test")
 
   ; Receive reply
+  ;ipc.Connect()
   reply:= ipc.Receive()
 
   ; Report finished
@@ -92,8 +100,17 @@ ButtonStart_Click(Ctrl, Info) {
   if (reply != "ACK: `n")
     MsgBox '[' reply ']', "Reply"
 
+;  ipc.Close()
+
 }
 
 WriteStatus(Message) {
   SB.Text := '  ' Message
+}
+
+StartTask(TaskName:="RunAdmin") {
+    cmd := Format('schtasks /run /tn "{}"', TaskName)
+    r := RunWait(A_ComSpec ' /c ' cmd, , "Hide")
+    if (r) 
+        throw Error("Failed to run task: " TaskName)
 }

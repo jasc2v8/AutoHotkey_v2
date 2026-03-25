@@ -1,4 +1,4 @@
-﻿; TITLE  :  RunAdminCreateTask v1.0.0.0
+﻿; TITLE  :  RunAdminCreateTask v1.1.0.0
 ; SOURCE :  Gemini and jasc2v8
 ; LICENSE:  The Unlicense, see https://unlicense.org
 ; PURPOSE:  Create Scheduled Task RunAdmin
@@ -17,11 +17,14 @@
     target:= GetTaskTarget("RunAdmin")
 
     if (target) {
-        guiTitle:="Modify Task Executable"
-        btnTitle:="Modify"
+        guiTitle:="Change Task Executable"
+        btnTitle:="Change"
+        MsgBox "Task already exists in the Task Scheduler.`n`nManually delete then run again to create a new Task.", "Task Exist", "Icon!"
+        ExitApp()
     } else {
         guiTitle:="Create Task"
         btnTitle:="Create"
+        target := EnvGet("USERPROFILE") "\Documents\AutoHotKey\Lib\RunAdmin.ahk"
     }
 
     g := Gui("", guiTitle)
@@ -49,14 +52,11 @@
     g.AddText("xm w100", "Run User:")
     rUser := g.AddEdit("x+10 w200 +ReadOnly", A_UserName)
 
-    btnRow := g.AddButton("xm y+20 w80", btnTitle)
+    btnCreate := g.AddButton("xm y+20 w80", "Create")
 
     btnCancel := g.AddButton("yp w80 Default", "Cancel").OnEvent("Click", (*)=>ExitApp())
 
-    btnRow.OnEvent("Click", (*) => (
-        RunAsAdmin("/create", name.Value, exe.Value, sched.Text, sDate.Value, sTime.Value, rLevel.Text, rUser.Value),
-        g.Destroy()
-    ))
+    btnCreate.OnEvent("Click", btnCreate_Click)
 
     g.Show()
 
@@ -65,21 +65,45 @@
 
     ; #region Functions
 
+    btnCreate_Click(*) {
+
+        cmd := "schtasks " .
+            " /" btnTitle .
+            " /tn " name.Value .
+            " /tr " exe.Value .
+            " /sc " sched.Text .
+            " /sd " sDate.Value .
+            " /st " sTime.Value .
+            " /rl " rLevel.Text .
+            " /ru " rUser.Value
+
+        ;MsgBox cmd, "debug"
+
+        r := ExecSilent(cmd)
+
+        if (r) {
+            MsgBox("Success", "Create Task", "OK Icon!")
+        } else {
+            MsgBox("Error", "Create Task", "OK IconX")
+        }
+
+        ExitApp()
+    }
+
     Button_Click(*) {
 
         f := FileSelect(, g["Target"].Value)
-        ;f := FileSelect(0,"C:\Users\Jim\AppData\Local\Programs\AutoHotkey\RunAdmin\", "MyTitle")
     }
 
-    RunAsAdmin(action, p*)
+    ExecSilent(cmd)
     {
-        params := ""
-        for val in p
-            params .= ' "' val '"'
-        
-        Run('*RunAs "' A_AhkPath '" "' A_ScriptFullPath '" /__Admin "' action '"' params, , "Hide")
+        result := true
+        shell := ComObject("WScript.Shell")
+        try shell.Exec(cmd)
+        catch
+            result := false
+        return result
     }
-
 
 /**
  * Retrieves the executable path/arguments of a scheduled task
